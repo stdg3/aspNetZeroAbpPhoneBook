@@ -1,0 +1,43 @@
+﻿@using Abp.Configuration;
+@using CCPDemo
+@using CCPDemo.Configuration
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ChangeProfilePicture")))
+
+<div class="modal-body">
+    <form id="ChangeProfilePictureModalForm" method="POST" action="@(ApplicationPath + "Profile/UploadProfilePicture")">
+        @if (ViewBag.UserId != null)
+        {
+            <input type="hidden" id="userId" value="@ViewBag.UserId">
+        }
+        @{
+            var canUseGravatarProfilePicture = await SettingManager.GetSettingValueAsync<bool>("App.UserManagement.AllowUsingGravatarProfilePicture");
+        }
+        @if (canUseGravatarProfilePicture)
+        {
+            <div class="mb-5">
+                <label for="Profile_UseGravatarProfilePicture" class="form-check form-switch form-check-custom form-check-solid mb-5">
+                    <input id="Profile_UseGravatarProfilePicture" type="checkbox" name="UseGravatarProfilePicture" class="form-check-input" @(await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseGravatarProfilePicture) ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UseGravatarProfilePicture")
+                    </span>
+                </label>
+            </div>
+        }
+        
+        <div class="input-group mb-3">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" name="ProfilePicture" id="ProfilePicture"
+                       @(canUseGravatarProfilePicture && await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.UseGravatarProfilePicture) ? "disabled=\"disabled\"" : "")
+                >
+                <label class="custom-file-label form-label" id="ProfilePictureLabel"
+                       for="ProfilePicture">@L("ChooseAFile")</label>
+            </div>
+            <span class="form-text text-muted col-lg-12">@L("ProfilePicture_Change_Info", AppConsts.MaxProfilePictureBytesUserFriendlyValue)</span>
+        </div>
+        
+    </form>
+    <img id="ProfilePictureResize" src=""/>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

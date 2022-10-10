@@ -1,0 +1,39 @@
+﻿@using CCPDemo.Authorization
+@model CCPDemo.Web.Areas.App.Models.DynamicEntityPropertyValues.DynamicEntityPropertyValueManageAllViewModel
+
+
+<div class="modal-body p-0 m-0">
+    @Html.HiddenFor(x => x.EntityId)
+    @Html.HiddenFor(x => x.EntityFullName)
+
+    <div class="card card-custom">
+        <div class="card-header align-items-center border-0 mt-4">
+            <span class="text-dark">
+                <span class="font-weight-bold" style="font-size:1.1em">@L("EntityFullName"):&thinsp;</span> @Model.EntityFullName
+            </span>
+            <div class="card-toolbar">
+                <span class="font-weight-bold" style="font-size:1.1em">@L("EntityRowId"): &thinsp;</span> @Model.EntityId
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="align-items-center">
+                <table id="DynamicEntityPropertyValuesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                    <thead>
+                    <tr>
+                        <th>@L("PropertyName")</th>
+                        <th>@L("Values")</th>
+                        @if (IsGranted(AppPermissions.Pages_Administration_DynamicEntityPropertyValue_Delete))
+                        {
+                            <th style="width: 50px">@L("Actions")</th>
+                        }
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

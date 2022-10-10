@@ -1,0 +1,158 @@
+﻿@using Abp.Application.Editions
+@using Abp.Application.Services.Dto
+@using Abp.Extensions
+@using CCPDemo
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Editions
+@model CreateEditionModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("CreateNewEdition")))
+
+<div class="modal-body">
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#EditionInformationsTab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                @L("EditionProperties")
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#FeaturesTab" class="nav-link" data-bs-toggle="tab" role="tab">
+                @L("Features")
+            </a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane pt-5 active" id="EditionInformationsTab" role="tabpanel">
+
+            <form name="EditionInformationsForm" role="form" novalidate class="form-validation">
+
+                <div class="mb-5 ">
+                    <label for="DisplayName" class="form-label">@L("EditionName")</label>
+                    <input class="form-control@(Model.Edition.DisplayName.IsNullOrEmpty() ? " " : " edited")"
+                           type="text"
+                           name="DisplayName"
+                           id="DisplayName"
+                           value="@Model.Edition.DisplayName"
+                           required
+                           maxlength="@Edition.MaxDisplayNameLength">
+                </div>
+
+                <label class="form-label">@L("SubscriptionPrice")</label>
+                <div class="radio-inline mb-5">
+                    <label for="EditEdition_IsFree" class="radio">
+                        <input id="EditEdition_IsFree" name="SubscriptionPrice" type="radio">
+                        <span></span>
+                        @L("Free")
+                    </label>
+                    <label for="EditEdition_IsPaid" class="radio">
+                        <input id="EditEdition_IsPaid" name="SubscriptionPrice" type="radio">
+                        <span></span>
+                        @L("Paid")
+                    </label>
+                </div>
+
+                <div class="paid-features">
+                    <input type="hidden" name="currency" value="@CCPDemoConsts.CurrencySign" />
+                    <div class="row SubscriptionPrice">
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="DailyPrice" class="form-label">@L("DailyPrice")</label>
+                                <input name="DailyPrice"
+                                       id="DailyPrice"
+                                       type="text"
+                                       class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="WeeklyPrice" class="form-label">@L("WeeklyPrice")</label>
+                                <input name="WeeklyPrice"
+                                       id="WeeklyPrice"
+                                       type="text"
+                                       class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="MonthlyPrice" class="form-label">@L("MonthlyPrice")</label>
+                                <input name="MonthlyPrice"
+                                       id="MonthlyPrice"
+                                       type="text"
+                                       class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="AnnualPrice" class="form-label">@L("AnnualPrice")</label>
+                                <input name="AnnualPrice"
+                                       id="AnnualPrice"
+                                       type="text"
+                                       class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="EditEdition_IsTrialActive" class="form-check form-check-custom form-check-solid">
+                            <input id="EditEdition_IsTrialActive" type="checkbox" name="IsTrialActive" class="form-check-input" value="true" />
+                            <span class="form-check-label">
+                                @L("IsTrialActive")
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="mb-5 trial-day-count">
+                        <label for="TrialDayCount" class="form-label">@L("TrialDayCount")</label>
+                        <input class="form-control"
+                               type="number"
+                               name="TrialDayCount"
+                               id="TrialDayCount">
+                    </div>
+
+                    <div>
+                        <label for="EditEdition_IsWaitingDayActive" class="form-check form-check-custom form-check-solid">
+                            <input id="EditEdition_IsWaitingDayActive" type="checkbox" name="IsWaitingDayActive" class="form-check-input" value="true" />
+                            <span class="form-check-label">
+                                @L("WaitAfterSubscriptionExpireDate")
+                            </span>
+                        </label>
+                    </div>
+
+                    <div class="mb-5 waiting-day-after-expire">
+                        <label for="WaitingDayAfterExpire" class="form-label">@L("WaitingDayAfterExpire")</label>
+                        <input class="form-control"
+                               type="number"
+                               name="WaitingDayAfterExpire"
+                               id="WaitingDayAfterExpire">
+                    </div>
+
+                    <label class="form-label">@L("WhatWillDoneAfterSubscriptionExpiry")</label>
+                    <div class="radio-inline mb-5">
+                        <label for="EditEdition_ExpireAction_DeactiveUser" class="radio">
+                            <input id="EditEdition_ExpireAction_DeactiveUser" name="ExpireAction" @(!Model.Edition.ExpiringEditionId.HasValue ? "checked=\" checked\"" : "" ) type="radio">
+                            <span></span>
+                            @L("DeactiveTenant")
+                        </label>
+                        <label for="EditEdition_ExpireAction_AssignEdition" class="radio">
+                            <input id="EditEdition_ExpireAction_AssignEdition" name="ExpireAction" @(Model.Edition.ExpiringEditionId.HasValue ? "checked=\" checked\"" : "" ) type="radio">
+                            <span></span>
+                            @L("AssignToAnotherEdition")
+                        </label>
+                    </div>
+
+                    <div class="mb-5 edition-list">
+                        @Html.DropDownList("ExpiringEditionId", Model.FreeEditionItems.Select(i => i.ToSelectListItem()), new { @class = "form-select" + (Model.Edition.DisplayName.IsNullOrEmpty() ? "" : " edited") })
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="tab-pane pt-5" id="FeaturesTab" role="tabpanel">
+            @await Html.PartialAsync("~/Areas/App/Views/Common/_FeaturesTree.cshtml", Model)
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

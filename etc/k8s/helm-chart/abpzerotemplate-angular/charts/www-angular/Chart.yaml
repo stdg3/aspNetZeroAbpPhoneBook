@@ -1,0 +1,6 @@
+apiVersion: v2
+name: www-angular
+appVersion: "1.0"
+description: CCPDemo Angular WWW Application
+version: 1.0.0
+type: application

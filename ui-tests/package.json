@@ -1,0 +1,63 @@
+{
+  "name": "vs-ui-tests",
+  "version": "1.0.0",
+  "description": "UI Tests",
+  "main": "index.js",
+  "scripts": {
+    "build:jest": "npx tsc -p tsconfig.jest.json",
+    "codegen:angular": "npx playwright-cli codegen http://localhost:4200",
+    "codegen:mvc": "npx playwright-cli codegen https://localhost:44303",
+    "test": "npm run build:jest && npx jest -i",
+    "test:ci": "npm run build:jest && npx cross-env NODE_ENV=production npx jest -i",
+    "lint": "eslint . --ext .ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:aspnetzero/aspnet-zero-core.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aspnetzero/aspnet-zero-core/issues"
+  },
+  "homepage": "https://github.com/aspnetzero/aspnet-zero-core",
+  "dependencies": {
+    "@jest/reporters": "^26.5.2",
+    "@jest/test-result": "^26.5.2",
+    "@jest/test-sequencer": "^26.5.2",
+    "@jest/types": "^26.5.2",
+    "@octokit/rest": "^18.0.6",
+    "@octokit/types": "^5.5.0",
+    "@types/ejs": "^3.0.4",
+    "@types/lodash": "^4.14.162",
+    "ejs": "^3.1.5",
+    "fs-extra": "^9.0.1",
+    "lodash": "^4.17.20",
+    "pixelmatch": "^5.2.1",
+    "playwright": "^1.21.1",
+    "pngjs": "^6.0.0",
+    "simple-git": "^3.7.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.2",
+    "@types/jest": "^26.0.14",
+    "@types/pixelmatch": "^5.2.2",
+    "@types/pngjs": "^3.4.2",
+    "@typescript-eslint/eslint-plugin": "^4.4.0",
+    "@typescript-eslint/parser": "^4.4.0",
+    "cross-env": "^7.0.2",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.10.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest-playwright": "^0.2.1",
+    "jest": "^26.5.2",
+    "jest-playwright-preset": "^1.3.1",
+    "playwright-cli": "^0.5.2",
+    "prettier": "^2.1.2",
+    "ts-jest": "^26.4.1",
+    "typescript": "^4.0.3"
+  }
+}

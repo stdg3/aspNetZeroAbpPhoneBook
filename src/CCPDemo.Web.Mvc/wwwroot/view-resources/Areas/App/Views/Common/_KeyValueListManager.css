@@ -1,0 +1,23 @@
+﻿.key-value-items-list {
+    height: auto;
+    overflow-y: auto;
+    background-color: #e5e5e5;
+    padding: 5px;
+    resize: vertical;
+}
+
+    .key-value-items-list .alert-text {
+        overflow: auto;
+    }
+    
+.key-value-items-list .editBtn{
+    position: absolute;
+    top: 5px;
+    right: 40px;
+}
+
+.key-value-items-list .closeBtn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}

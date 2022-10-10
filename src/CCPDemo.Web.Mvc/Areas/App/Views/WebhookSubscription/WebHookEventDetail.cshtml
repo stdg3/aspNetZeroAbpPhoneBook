@@ -1,0 +1,97 @@
+﻿@using CCPDemo.Authorization
+@model Abp.Webhooks.WebhookEvent
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/WebhookSubscriptions/Detail.css" asp-append-version="true"/>
+}
+
+@section Scripts
+{
+    <script>
+        var webhookEventId = "@Html.Raw(Model.Id)";
+    </script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/webhook-event-detail.js" asp-append-version="true"></script>
+}
+
+@{
+    int maxDataLength = 300;
+}
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("WebhookEventDetail")"></abp-page-subheader>
+    <div class="@(await GetContainerClass()) d-flex flex-column-fluid">
+        <div class="container">
+            <div class="card" id="portlet-detail">
+                <div class="card-body">
+                    <div class="mb-5 row">
+                        <label class="col-2 form-label">@L("WebhookEvent")</label>
+                        <div class="col-10">
+                            @Model.WebhookName
+                        </div>
+                    </div>
+                    <div class="mb-5 row">
+                        <label class="col-2 form-label">@L("CreationTime")</label>
+                        <div class="col-10">
+                            @Model.CreationTime
+                        </div>
+                    </div>
+
+                    <div class="mb-5 row">
+                        <label class="col-2 form-label">@L("Data")</label>
+                        <div class="col-10 text-break">
+                            @if (Model.Data.Length <= maxDataLength)
+                            {
+                                @Model.Data
+                            }
+                            else
+                            {
+                                <p>
+                                    <span id="dataDots">@Model.Data.Substring(0, maxDataLength). . .</span>
+                                    <span id="dataMore" class="d-none">@Model.Data</span>
+                                </p>
+                                <button class="btn btn-outline-primary btn-sm" id="dataShowMoreBtn">@L("ShowData")</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header align-items-center border-0 mt-4">
+                    <h3 class="card-title align-items-start flex-column">
+                        <span class="font-weight-bolder text-dark">@L("WebhookSendAttempts")</span>
+                    </h3>
+                    <div class="card-toolbar">
+                        <button id="refresh-send-attempts-btn" class="btn btn-outline-brand btn-sm btn-icon btn-icon-md">
+                            <i class="flaticon2-refresh"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="align-items-center">
+                        <table id="WebhookEventDetailSendAttemptsTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                            <thead>
+                            <tr>
+                                <th style="width: 10px"></th>
+                                <th style="width: 60px;text-align: center">@L("Actions")</th>
+                                <th style="width: 60px;text-align: center">@L("WebhookSubscriptionId")</th>
+                                <th style="text-align: center">@L("WebhookEndpoint")</th>
+                                <th style="width: 60px;">@L("CreationTime")</th>
+                                <th style="width: 120px;">@L("HttpStatusCode")</th>
+                                <th>@L("Response")</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="SendAttemptDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

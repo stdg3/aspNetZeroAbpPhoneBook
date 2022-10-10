@@ -1,0 +1,22 @@
+﻿@using CCPDemo.Localization
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+    <link href="~/view-resources/Views/Payment/GetPaymentResult.css" rel="stylesheet"/>
+}
+
+<div class="login-form align-middle m-0" style="height: 350px">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
+            @L("PaymentCouldNotCompleted")
+        </h3>
+        <div class=" my-5">
+            <i class="fas fa-times fa-4x text-danger"></i>
+        </div>
+        <a class="btn btn-info" href="@Url.Action("Index", "SubscriptionManagement", new {Area = "App"})"> @L("GoToSubscriptionManagement")</a>
+    </div>
+</div>

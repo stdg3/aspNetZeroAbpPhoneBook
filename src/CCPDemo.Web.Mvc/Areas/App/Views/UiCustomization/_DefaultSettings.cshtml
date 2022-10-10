@@ -1,0 +1,69 @@
+﻿@model CCPDemo.Configuration.Dto.ThemeSettingsDto
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a href="#DefaultLayout" class="nav-link active" data-bs-toggle="tab" role="tab">
+            @L("UiCustomization_Layout")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#DefaultMenu" class="nav-link" data-bs-toggle="tab" role="tab">
+            @L("UiCustomization_Menu")
+        </a>
+    </li>
+</ul>
+<div class="tab-content m-5">
+    <div id="DefaultLayout" class="tab-pane active">
+        <input type="hidden" name="Theme" value="default"/>
+        <form class="LayoutSettingsForm">
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="DarkMode" class="form-check-input" value="true" @(Model.Layout.DarkMode ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UiCustomization_DarkMode")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+    <div id="DefaultMenu" class="tab-pane">
+        <form class="MenuSettingsForm">
+            <h5 class="mb-2">@L("UiCustomization_MenuSkin")</h5>
+            <div class="mb-5">
+                @Html.DropDownList("AsideSkin", new SelectList(new List<SelectListItem> {new SelectListItem {Text = L("UiCustomization_Light"), Value = "light"}, new SelectListItem {Text = L("UiCustomization_Dark"), Value = "dark"}}, "Value", "Text", Model.Menu.AsideSkin), new {@class = "form-select col-md-4 col-sm-12", id = "AsideSkin"})
+            </div>
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="AllowAsideMinimizing" class="form-check-input" value="true" @(Model.Menu.AllowAsideMinimizing ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UiCustomization_AllowAsideMinimizing")
+                    </span>
+                </label>
+            </div>
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="DefaultMinimizedAside" class="form-check-input" value="true" @(Model.Menu.DefaultMinimizedAside ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UiCustomization_DefaultMinimizedAside")
+                    </span>
+                </label>
+            </div>
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="HoverableAside" value="true" class="form-check-input" @(Model.Menu.HoverableAside ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UiCustomization_HoverableAside")
+                    </span>
+                </label>
+            </div>
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="SearchActive" class="form-check-input" value="true" @(Model.Menu.SearchActive ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("ShowMenuSearchInput")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+</div>

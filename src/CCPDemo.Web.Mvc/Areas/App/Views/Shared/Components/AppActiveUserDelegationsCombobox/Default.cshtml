@@ -1,0 +1,20 @@
+﻿@model CCPDemo.Web.Areas.App.Models.Layout.ActiveUserDelegationsComboboxViewModel
+@{
+    Layout = null;
+}
+@if (Model.UserDelegationConfiguration.IsEnabled && Model.UserDelegations.Count > 0)
+{
+    <div class="@Model.CssClass">
+        <div class="topbar-wrapper">
+            <span class="topbar-icon topbar-icon-brand">
+                <select id="ActiveUserDelegationsCombobox" class="form-control form-control-sm" data-value="0">
+                    <option value="0">@L("SwitchToUser")</option>
+                    @foreach (var userDelegation in Model.UserDelegations)
+                    {
+                        <option value="@userDelegation.Id" data-username="@userDelegation.Username">@userDelegation.Username (@L("ExpiresAt",userDelegation.EndTime))</option>
+                    }
+                </select>
+            </span>
+        </div>
+    </div>
+}

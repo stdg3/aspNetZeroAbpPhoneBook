@@ -1,0 +1,127 @@
+﻿@using Abp.Json
+@using CCPDemo.MultiTenancy
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Tenants
+@model CreateTenantViewModel
+<script>
+    window.passwordComplexitySetting = @Html.Raw(Model.PasswordComplexitySetting.ToJsonString(indented: true));
+</script>
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("CreateNewTenant")))
+
+<div class="modal-body" id="CreateTenantInformationsForm">
+    <form name="TenantInformationsForm">
+        <div class="mb-5">
+            <label for="TenancyName" class="form-label">@L("TenancyName")</label>
+            <input id="TenancyName" class="form-control" type="text" name="TenancyName" required maxlength="@Tenant.MaxTenancyNameLength" regex="@Tenant.TenancyNameRegex">
+        </div>
+
+        <div class="mb-5 no-hint">
+            <label for="Name" class="form-label">@L("Name")</label>
+            <input id="Name" type="text" name="Name" class="form-control" required maxlength="@Tenant.MaxNameLength">
+        </div>
+
+        <div class="checkbox-list">
+            <label class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_UseHostDb" type="checkbox" name="UseHostDb"class="form-check-input" value="true" checked="checked">
+                <span class="form-check-label">
+                    @L("UseHostDatabase")
+                </span>
+            </label>
+        </div>
+
+        <div class="form-group mb-5 no-hint" style="display: none">
+            <label for="ConnectionString" class="form-label">@L("DatabaseConnectionString")</label>
+            <input id="ConnectionString" type="text" name="ConnectionString" class="form-control" required maxlength="@Tenant.MaxConnectionStringLength">
+        </div>
+        
+        <div class="mb-5">
+            <label for="AdminName" class="form-label">@L("AdminName")</label>
+            <input id="AdminName" type="text" name="AdminName" class="form-control" required maxlength="@CCPDemo.Authorization.Users.User.MaxNameLength" value="@CCPDemo.Authorization.Users.User.AdminUserName">
+        </div>
+        
+        <div class="mb-5">
+            <label for="AdminSurname" class="form-label">@L("AdminSurname")</label>
+            <input id="AdminSurname" type="text" name="AdminSurname" class="form-control" required maxlength="@CCPDemo.Authorization.Users.User.MaxSurnameLength" value="@CCPDemo.Authorization.Users.User.AdminUserName">
+        </div>
+
+        <div class="mb-5">
+            <label for="AdminEmailAddress" class="form-label">@L("AdminEmailAddress")</label>
+            <input id="AdminEmailAddress" type="email" name="AdminEmailAddress" class="form-control" required maxlength="@CCPDemo.Authorization.Users.User.MaxEmailAddressLength">
+        </div>
+
+        <div class="checkbox-list">
+            <label class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_SetRandomPassword" type="checkbox" name="SetRandomPassword" class="form-check-input" value="true" checked="checked"/>
+                <span class="form-check-label">
+                    @L("SetRandomPassword")
+                </span>
+            </label>
+        </div>
+
+        <div class="mb-5 no-hint tenant-admin-password" style="display: none">
+            <label for="CreateTenant_AdminPassword" class="form-label">@L("Password")</label>
+            <input id="CreateTenant_AdminPassword" type="password" name="AdminPassword" class="form-control" maxlength="@CCPDemo.Authorization.Users.User.MaxPlainPasswordLength" autocomplete="new-password">
+        </div>
+
+        <div class="mb-5 tenant-admin-password" style="display: none">
+            <label for="AdminPasswordRepeat" class="form-label">@L("PasswordRepeat")</label>
+            <input id="AdminPasswordRepeat" type="password" name="AdminPasswordRepeat" class="form-control" maxlength="@CCPDemo.Authorization.Users.User.MaxPlainPasswordLength" equalto="#CreateTenant_AdminPassword" autocomplete="new-password">
+        </div>
+
+        <div class="mb-5 no-hint">
+            <label for="EditionId" class="form-label">@L("Edition")</label>
+            <select class="form-select" id="EditionId" name="EditionId">
+                @foreach (var edition in Model.EditionItems)
+                {
+                    <option value="@edition.Value" data-isfree="@edition.IsFree">@edition.DisplayText</option>
+                }
+            </select>
+        </div>
+
+        <div class="checkbox-list subscription-component">
+            <label for="CreateTenant_IsUnlimited" class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_IsUnlimited" type="checkbox" name="IsUnlimited" class="form-check-input" value="true"/>
+                <span class="form-check-label">
+                    @L("UnlimitedTimeSubscription")
+                </span>
+            </label>
+        </div>
+
+        <div class="mb-5 subscription-component">
+            <label for="SubscriptionEndDateUtc" class="form-label">@L("SubscriptionEndDateUtc")</label>
+            <input id="SubscriptionEndDateUtc" type="datetime" name="SubscriptionEndDateUtc" class="form-control date-time-picker" required>
+        </div>
+
+        <div class="checkbox-list subscription-component">
+            <label for="CreateTenant_IsInTrialPeriod" class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_IsInTrialPeriod" type="checkbox" name="IsInTrialPeriod" class="form-check-input" value="true"/>
+                <span class="form-check-label">
+                    @L("IsInTrialPeriod")
+                </span>
+            </label>
+        </div>
+
+        <div class="checkbox-list">
+            <label for="CreateTenant_ShouldChangePasswordOnNextLogin" class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_ShouldChangePasswordOnNextLogin" type="checkbox" name="ShouldChangePasswordOnNextLogin" class="form-check-input" value="true" checked="checked">
+                <span class="form-check-label">
+                    @L("ShouldChangePasswordOnNextLogin")
+                </span>
+            </label>
+            <label for="CreateTenant_SendActivationEmail" class="form-check form-check-custom form-check-solid mb-2">
+                <input id="CreateTenant_SendActivationEmail" type="checkbox" name="SendActivationEmail" class="form-check-input" value="true" checked="checked">
+                <span class="form-check-label">
+                    @L("SendActivationEmail")
+                </span>
+            </label>
+            <label for="CreateTenant_IsActive" class="form-check form-check-custom form-check-solid">
+                <input id="CreateTenant_IsActive" type="checkbox" name="IsActive" class="form-check-input" value="true" checked="checked">
+                <span class="form-check-label">
+                    @L("Active")
+                </span>
+            </label>
+        </div>
+    </form>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

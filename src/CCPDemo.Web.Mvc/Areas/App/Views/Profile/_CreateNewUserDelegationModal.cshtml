@@ -1,0 +1,27 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("DelegateNewUser")))
+
+<div class="modal-body" id="DelegateUserModalForm">
+    <form name="DelegateUserModalForm" role="form" novalidate class="form-validation">
+        <div class="mb-5">
+            <label for="UsernameOrEmailAddress" class="form-label">@L("UserName")</label>
+            <div class="input-group">
+                <input id="UsernameOrEmailAddress" class="form-control" type="text" required readonly="readonly" disabled="disabled">
+                <button class="btn btn-primary" type="button">@L("Search")</button>
+            </div>
+            <input id="TargetUserId" class="form-control" type="hidden" name="TargetUserId" required>
+        </div>
+
+        <div class="mb-5">
+            <label for="StartTime" class="form-label">@L("StartTime")</label>
+            <input id="StartTime" type="text" name="StartTime" class="form-control date-time-picker" required>
+        </div>
+
+        <div class="mb-5">
+            <label for="EndTime" class="form-label">@L("EndTime")</label>
+            <input id="EndTime" type="text" name="EndTime" class="form-control date-time-picker" required>
+        </div>
+    </form>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

@@ -1,0 +1,26 @@
+﻿@using CCPDemo.Localization
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Views/Stripe/GetPaymentResult.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+    <link href="~/view-resources/Views/Payment/GetPaymentResult.css" rel="stylesheet"/>
+}
+
+<input type="hidden" id="paymentId" value="@ViewBag.PaymentId"/>
+<div class="login-form align-middle m-0" style="height: 250px">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg text-center">@L("PleaseWait")</h3>
+        <p class="text-muted font-weight-bold font-size-h4 text-center">
+            @L("ReceivingPaymentResult") @L("PleaseWait")
+        </p>
+    </div>
+    <div id="loading" class=" my-5">&emsp;</div>
+</div>

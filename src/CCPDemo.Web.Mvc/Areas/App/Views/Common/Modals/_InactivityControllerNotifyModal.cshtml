@@ -1,0 +1,19 @@
+﻿@using CCPDemo.Configuration
+@using Abp.Configuration
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<div class="modal-header">
+    <h5 class="modal-title">
+        <span>@L("YourSessionIsAboutToExpire")</span>
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+</div>
+<div class="modal-body">
+    <p id="countdown-information">@L("SessionExpireRedirectingInXSecond", (await SettingManager.GetSettingValueAsync<int>(AppSettings.UserManagement.SessionTimeOut.TimeOutSecond)) / 2)</p>
+    <div class="progress">
+        <div class="progress-bar progress-bar-striped active" role="progressbar" style="min-width: 15px; width: 65%;">
+            <span id="countdown-holder">21s</span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,131 @@
+﻿@using Abp.Web.Mvc.Alerts
+@using CCPDemo.Localization
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppActiveUserDelegationsCombobox
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppChatToggler
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppLanguageSwitch
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppLogo
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppMenu
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppQuickThemeSelect
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppRecentNotifications
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppSubscriptionBar
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppToggleDarkMode
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppUserMenu
+@using CCPDemo.Web.Areas.App.Views.Shared.Themes.Theme12.Components.AppTheme12Footer
+@using CCPDemo.Web.Areas.App.Views.Shared.Themes.Theme12.Components.AppTheme12Brand
+@using CCPDemo.Web.Areas.App.Views.Shared.Themes.Theme13.Components.AppTheme13Brand
+@using CCPDemo.Web.Areas.App.Views.Shared.Themes.Theme13.Components.AppTheme13Footer
+
+@inject IAlertManager AlertManager
+@{
+    Layout = "~/Areas/App/Views/Layout/_Layout.cshtml";
+    var theme = await GetTheme();
+}
+
+@section Styles{
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/theme13/css/style@(theme.BaseSettings.Layout.DarkMode ? ".dark" : "").bundle@(CultureHelper.IsRtl ? ".rtl" : "").css" asp-append-version="true"/>
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/theme13/plugins/global/plugins@(theme.BaseSettings.Layout.DarkMode ? ".dark" : "").bundle.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/Common/Styles/Themes/theme13/metronic-customize.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/fonts/fonts-asap-condensed.css" asp-append-version="true"/>
+    @await RenderSectionAsync("Styles", false)
+}
+
+@section Scripts{
+    @await RenderSectionAsync("Scripts", false)
+}
+
+<div class="d-flex flex-column flex-root">
+    <div class="page d-flex flex-row flex-column-fluid">
+        <div id="kt_aside" class="aside aside-dark aside-hoverable" data-kt-drawer="true" data-kt-drawer-name="aside" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="{default:'200px', '300px': '250px'}" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_mobile_toggle">
+            <div class="aside-logo flex-column-auto" id="kt_aside_logo">
+                @await Component.InvokeAsync(typeof(AppTheme13BrandViewComponent))
+                <div id="kt_aside_toggle" class="btn btn-icon w-auto px-0 btn-active-color-primary aside-toggle" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="aside-minimize">
+                    <span class="svg-icon svg-icon-1 rotate-180">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M11.2657 11.4343L15.45 7.25C15.8642 6.83579 15.8642 6.16421 15.45 5.75C15.0358 5.33579 14.3642 5.33579 13.95 5.75L8.40712 11.2929C8.01659 11.6834 8.01659 12.3166 8.40712 12.7071L13.95 18.25C14.3642 18.6642 15.0358 18.6642 15.45 18.25C15.8642 17.8358 15.8642 17.1642 15.45 16.75L11.2657 12.5657C10.9533 12.2533 10.9533 11.7467 11.2657 11.4343Z" fill="black"></path>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            <div class="aside-menu flex-column-fluid">
+                @await Component.InvokeAsync(typeof(AppMenuViewComponent), new { currentPageName = ViewBag.CurrentPageName, isLeftMenuUsed = true })
+            </div>
+        </div>
+        <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+            <div id="kt_header" style="" class="header align-items-stretch">
+                <div class="container-fluid d-flex align-items-stretch justify-content-between">
+                    <div class="d-flex align-items-center d-lg-none ms-n3 me-1" title="Show aside menu">
+                        <div class="btn btn-icon btn-active-color-white" id="kt_aside_mobile_toggle">
+                            <i class="bi bi-list fs-1"></i>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
+                        <a href="@Url.Action("Index", "Home", new {area = string.Empty})" class="d-lg-none">
+                            @await Component.InvokeAsync(typeof(AppLogoViewComponent), new {logoSkin = "dark-sm"})
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-stretch justify-content-end flex-lg-grow-1">
+                        <div class="d-flex align-items-stretch flex-shrink-0">
+                            <div class="topbar d-flex align-items-stretch flex-shrink-0">
+                                @await Component.InvokeAsync(typeof(AppActiveUserDelegationsComboboxViewComponent))
+                                @await Component.InvokeAsync(typeof(AppSubscriptionBarViewComponent), new { 
+                                    cssClass = "btn btn-icon btn-active-color-primary position-relative w-30px h-30px w-md-40px h-md-40px me-2" 
+                                })
+                                @await Component.InvokeAsync(typeof(AppQuickThemeSelectViewComponent), new { 
+                                    cssClass = "btn btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px me-2" 
+                                })
+                                @await Component.InvokeAsync(typeof(AppLanguageSwitchViewComponent), new { 
+                                    cssClass = "btn btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px me-2" 
+                                })
+                                @await Component.InvokeAsync(typeof(AppRecentNotificationsViewComponent), new { 
+                                    cssClass = "btn btn-relative btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px position-relative me-2" 
+                                })
+                                @await Component.InvokeAsync(typeof(AppChatTogglerViewComponent), new { 
+                                    cssClass = "btn btn-relative btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px position-relative me-2" 
+                                })
+                                @await Component.InvokeAsync(typeof(AppToggleDarkModeViewComponent), new
+                                {
+                                    cssClass = "btn btn-relative btn-icon btn-active-color-primary w-30px h-30px w-md-40px h-md-40px position-relative me-2",
+                                    isDarkModeActive = theme.BaseSettings.Layout.DarkMode
+                                })
+                                @await Component.InvokeAsync(typeof(AppUserMenuViewComponent), new { 
+                                    togglerCssClass = "btn btn-icon btn-active-color-primary h-30px w-auto h-md-40px px-5",
+                                    textCssClass = "opacity-90 font-weight-bolder font-size-base d-none d-md-inline me-4",
+                                    symbolCssClass = "symbol symbol-30px",
+                                    symbolTextCssClas = "symbol-label fs-2 fw-bold bg-danger text-white" 
+                                })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                <div class="post d-flex flex-column-fluid" id="kt_post">
+                    <div id="kt_content_container" class="@(await GetContainerClass())">
+                        @if (AlertManager.Alerts.Any())
+                        {
+                            <div id="AbpPageAlerts">
+                                @foreach (var alertMessage in AlertManager.Alerts)
+                                {
+                                    <div class="alert alert-@alertMessage.Type.ToString().ToLower() @Html.Raw(alertMessage.Dismissible ? "alert-dismissible" : "")" role="alert">
+                                        <div class="alert-text">
+                                            <h4 class="alert-heading">
+                                                @alertMessage.Title
+                                            </h4>
+                                            <p>@alertMessage.Text</p>
+                                        </div>
+                                        @if (alertMessage.Dismissible)
+                                        {
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+            @await Component.InvokeAsync(typeof(AppTheme13FooterViewComponent))
+        </div>
+    </div>
+</div>

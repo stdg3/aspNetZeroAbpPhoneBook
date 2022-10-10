@@ -1,0 +1,52 @@
+﻿@using CCPDemo.Localization
+@using CCPDemo.Web.Authentication.TwoFactor
+@using CCPDemo.Authentication.TwoFactor
+@model CCPDemo.Web.Models.Account.VerifySecurityCodeViewModel
+
+@section Scripts
+{
+    <script>
+        var remainingSeconds = @TwoFactorCodeCacheItem.DefaultSlidingExpireTime.TotalSeconds;    
+    </script>
+    <script abp-src="/view-resources/Views/Account/VerifySecurityCode.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("VerifySecurityCode")</h3>
+    </div>
+    <form class="form verify-security-code-form" asp-action="VerifySecurityCode" method="post">
+        <p>@L("VerifySecurityCode_Information")</p>
+
+        @Html.Hidden("returnUrl", Model.ReturnUrl)
+        @Html.Hidden("provider", Model.Provider)
+        @Html.Hidden("rememberMe", Model.RememberMe)
+
+        <div class="mb-5">
+            @Html.TextBoxFor(m => m.Code, new {@class = "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6", required = "required", placeholder = Model.Code})
+        </div>
+
+        @if (Model.IsRememberBrowserEnabled)
+        {
+            <div class="mb-5 mt-4">
+                <label class="form-check form-check-custom form-check-solid">
+                    @Html.CheckBoxFor(m => m.RememberBrowser, new {@class = "form-check-input"}) 
+                    <span class="form-check-label">
+                        @L("RememberThisBrowser")
+                    </span>
+                </label>
+            </div>
+        }
+
+        <div class="pb-lg-0 pb-5">
+            <span>&nbsp;</span>
+            <input type="submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 me-3" value="@L("Submit")"/>
+            <span class="remaining-time-counter ml-5 text-danger"></span>
+        </div>
+
+    </form>
+</div>

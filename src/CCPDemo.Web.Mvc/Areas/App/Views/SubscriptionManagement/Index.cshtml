@@ -1,0 +1,190 @@
+﻿@using CCPDemo.Editions
+@using CCPDemo.MultiTenancy.Payments
+@using CCPDemo.Web.Areas.App.Models.Editions
+@using CCPDemo.Web.Areas.App.Startup
+@model SubscriptionDashboardViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.SubscriptionManagement;
+    var tenant = Model.LoginInformations.Tenant;
+    var tenantEdition = Model.LoginInformations.Tenant.Edition;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/SubscriptionManagement/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Subscription")"></abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div id="SettingsTabPanel" class="tabbable-line">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a href="#SubscriptionManagementInformationTab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                                @L("SubscriptionInformation")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#SubscriptionManagementPaymentHistoryTab" data-bs-toggle="tab" role="tab" class="nav-link">
+                                @L("PaymentHistory")
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content m-5">
+                        <div class="tab-pane active" id="SubscriptionManagementInformationTab">
+                            <form>
+                                <h3 class="mb-5 mt-10">@L("YourPlan")</h3>
+                                <div class="card shadow-sm col-md-6 col-lg-4">
+                                    <div class="card-header">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-12 mt-10">
+                                                    <small class="text-muted text-uppercase d-block">
+                                                        @L("Edition")
+                                                    </small>
+                                                    <h3 class="d-inline">
+                                                        @tenantEdition.DisplayName
+                                                    </h3>
+                                                    @if (tenantEdition.IsFree)
+                                                    {
+                                                        <span class="badge badge-success">@L("Free")</span>
+                                                    }
+                                                    else if (tenant.IsInTrialPeriod)
+                                                    {
+                                                        <span class="badge badge-warning">@L("Trial")</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div class="row my-5">
+                                                <div class="col-md-6">
+                                                    <small class="text-muted text-uppercase d-block">
+                                                        @L("SubscriptionStartDate")
+                                                    </small>
+                                                    <h3 class="d-inline">
+                                                        @tenant.CreationTime.ToString("d")
+                                                    </h3>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <small class="text-muted text-uppercase d-block">
+                                                        @L("SubscriptionEndDate")
+                                                    </small>
+                                                    <h3 class="d-inline">
+                                                        @tenant.SubscriptionDateString
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="container">
+                                            <small class="text-muted text-uppercase d-block mb-5">
+                                                @L("WhatsIncludedInYourPlan")
+                                            </small>
+                                            @if (tenant.FeatureValues.Any())
+                                            {
+                                                @foreach (var feature in tenant.FeatureValues)
+                                                {
+                                                    <span class="@(feature.Value == "false" ? "text-muted" : "text-success") text-left d-block mb-2">
+                                                        @if (feature.Value == "false")
+                                                        {
+                                                            <i class="far fa-times-circle text-muted"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="far fa-check-circle text-success"></i>
+                                                        }
+                                                        @feature.Name
+                                                        @if (!feature.Value.Equals("true") && !feature.Value.Equals("false"))
+                                                        {
+                                                            <span>: @Html.Raw(feature.Value)</span>
+                                                        }
+                                                    </span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <p>
+                                                    @L("NoFeaturesInYourPlan")
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="mb-5 row @(Model.LoginInformations.Tenant.SubscriptionPaymentType == SubscriptionPaymentType.RecurringAutomatic ? "" : "d-none")">
+                                            <div class="col-md-12">
+                                                <a id="btnDisableRecurringPayments" href="javascript:;" class="btn btn-secondary btn-lg w-100">
+                                                    @L("DisableRecurringPayments")
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-5 row @(Model.LoginInformations.Tenant.SubscriptionPaymentType == SubscriptionPaymentType.RecurringManual ? "" : "d-none")">
+                                            <div class="col-md-12">
+                                                <a id="btnEnableRecurringPayments" href="javascript:;" class="btn btn-info btn-lg w-100">
+                                                    @L("EnableRecurringPayments")
+                                                </a>
+                                            </div>
+                                        </div>
+                                        @if (!Model.LoginInformations.Tenant.HasRecurringSubscription() && !tenantEdition.IsFree && !tenant.IsInTrialPeriod)
+                                        {
+                                            <div class="mb-5 row">
+                                                <div class="col-md-12">
+                                                    <a id="btnExtend" href="@Url.Action("Extend", "Payment", new { area = "", upgradeEditionId = tenant.Edition.Id, editionPaymentType = EditionPaymentType.Extend })" class="btn btn-info btn-lg w-100">
+                                                        @L("Extend")
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (tenant.IsInTrialPeriod)
+                                        {
+                                            <div class="mb-5 row">
+                                                <div class="col-md-12">
+                                                    <a href="@Url.Action("Buy", "Payment", new { area = "", editionId = tenant.Edition.Id, editionPaymentType = (int)EditionPaymentType.BuyNow, tenantId = AbpSession.TenantId })" class="btn btn-info btn-lg w-100">
+                                                        @L("BuyNow")
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                        else if (!tenantEdition.IsHighestEdition)
+                                        {
+                                            <div class="mb-5 row">
+                                                <div class="col-md-12">
+                                                    <a href="@Url.Action("SelectEdition", "TenantRegistration", new { area = "", editionPaymentType = EditionPaymentType.Upgrade })" class="btn btn-warning btn-lg w-100">
+                                                        @L("Upgrade")
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="SubscriptionManagementPaymentHistoryTab" class="tab-pane">
+                            <table id="PaymentHistoryTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@L("Invoice")</th>
+                                    <th>@L("ProcessTime")</th>
+                                    <th>@L("Edition")</th>
+                                    <th>@L("Gateway")</th>
+                                    <th>@L("Amount")</th>
+                                    <th>@L("Status")</th>
+                                    <th>@L("Period")</th>
+                                    <th>@L("DayCount")</th>
+                                    <th>@L("ExternalPaymentId")</th>
+                                    <th>@L("InvoiceNo")</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

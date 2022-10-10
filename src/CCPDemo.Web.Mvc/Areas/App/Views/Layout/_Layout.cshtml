@@ -1,0 +1,205 @@
+﻿@using System.Globalization
+@using Abp.AspNetCore.Mvc.Caching
+@using Abp.AspNetZeroCore.Timing
+@using Abp.CachedUniqueKeys
+@using Abp.Configuration
+@using Abp.MultiTenancy
+@using Abp.Web.Mvc.Alerts
+@using CCPDemo.Features
+@using CCPDemo.Web.Resources
+@using Abp.Web.Security.AntiForgery
+@using CCPDemo.Configuration
+@using CCPDemo.UiCustomization
+@using CCPDemo.UiCustomization.Dto
+@using CCPDemo.Url
+@using CCPDemo.Web.Areas.App.Models.Layout
+@using CCPDemo.Web.Session
+@using CultureHelper = CCPDemo.Localization.CultureHelper
+@inject ScriptPaths ScriptPaths
+@inject AppTimes AppTimes
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@inject IWebUrlService WebUrlService
+@inject IPerRequestSessionCache SessionCache
+@inject IAlertManager AlertManager
+@inject ICachedUniqueKeyPerUser CachedUniqueKeyPerUser
+@inject IGetScriptsResponsePerUserConfiguration GetScriptsResponsePerUserConfiguration
+@{
+    AbpAntiForgeryManager.SetCookie(Context);
+
+    var isChatEnabled = AbpSession.MultiTenancySide == MultiTenancySides.Host || IsFeatureEnabled(AppFeatures.ChatFeature);
+    var headerViewModel = new HeaderViewModel();
+    UiCustomizationSettingsDto theme = await GetTheme();
+}
+<!DOCTYPE html>
+<html lang="en" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<head prefix="og: http://ogp.me/ns#">
+    <title>CCPDemo</title>
+    <meta charset="utf-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <meta property="og:title" content="CCPDemo" />
+    <meta property="og:image" content="@headerViewModel.GetLogoUrl(ApplicationPath, theme.BaseSettings.Menu.AsideSkin)" />
+    <meta property="og:description" content="Base solution for your next web application" />
+    <meta property="og:url" content="@($" {Context.Request.Scheme}://{Context.Request.Host}{Context.Request.Path}{Context.Request.QueryString}")">
+
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/vendors.bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/app-layout-libs.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/common-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/Common/Scripts/Datatables/datatables@(CultureHelper.IsRtl ? "-rtl" : "").css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/Common/Styles/metronic-customize.css" asp-append-version="true" />
+
+    @if (CultureHelper.IsRtl)
+    {
+        <link rel="stylesheet" href="@(ApplicationPath)Common/Styles/abp-zero-template-rtl.css" asp-append-version="true" />
+    }
+
+    @if (isChatEnabled)
+    {
+        <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Layout/_ChatBar.css" asp-append-version="true" />
+    }
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Layout/_Layout.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", false)
+
+    @{
+        var loginInfo = await SessionCache.GetCurrentLoginInformationsAsync();
+    }
+    @if (loginInfo?.Tenant?.CustomCssId != null)
+    {
+        <!-- id parameter is used to prevent caching -->
+        <link id="TenantCustomCss" rel="stylesheet" href="@Url.Action("GetCustomCss", "TenantCustomization", new {area = string.Empty, tenantId = loginInfo?.Tenant?.Id})" asp-append-version="true" />
+    }
+
+    <script type="text/javascript">
+        @* This is used to get the application's root path from javascript.
+            It's useful if you're running application in a virtual directory under IIS. *@
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+</head>
+<!-- END HEAD -->
+<!-- begin::Body -->
+<body id="kt_body" class="header-@(theme.BaseSettings.Header.DesktopFixedHeader ? "fixed" : "static")
+      @(theme.BaseSettings.Header.MobileFixedHeader ? "header-mobile-fixed " : "") header-tablet-and-mobile-fixed
+      @((theme.BaseSettings.Menu.FixedAside && !theme.IsTopMenuUsed) ? "aside-fixed" : "")
+      quick-panel-@(CultureHelper.IsRtl ? "left" : "right") demo-panel-@(CultureHelper.IsRtl ? "left" : "right")
+      @(theme.IsLeftMenuUsed ? "aside-left-enabled aside-enabled" : "")
+      toolbar-enabled @((theme.BaseSettings.Header.DesktopFixedHeader || theme.BaseSettings.Header.MobileFixedHeader) && theme.BaseSettings.SubHeader.FixedSubHeader ? "toolbar-fixed" : "")
+      aside-left-offcanvas @(!theme.IsLeftMenuUsed ? "toolbar-transparent" : "") @(theme.IsLeftMenuUsed ? "toolbar-" + theme.BaseSettings.SubHeader.SubheaderStyle : "")
+      @("aside-" + (theme.BaseSettings.Menu.FixedAside ? "fixed" : "static"))
+      @(theme.IsTopMenuUsed ? "header-minimize-" + (theme.BaseSettings.Header.MinimizeDesktopHeaderType) : "")
+      @(theme.BaseSettings.Menu.EnableSecondary ? "aside-secondary-enabled" : "aside-secondary-disabled")
+      @(theme.BaseSettings.Footer.FixedFooter && theme.BaseSettings.Layout.LayoutType != "fixed" ? "footer-fixed" : "")
+      @(theme.BaseSettings.Layout.DarkMode ? "dark-mode" : "")" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px" data-kt-aside-minimize="@(theme.BaseSettings.Menu.DefaultMinimizedAside ? "on" : "off")">
+    <!-- begin:: Page -->
+    @RenderBody()
+    <!-- end:: Page -->
+    <!-- begin::Scrolltop -->
+    <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+        <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+        <span class="svg-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="black"></rect>
+                <path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="black"></path>
+            </svg>
+        </span>
+        <!--end::Svg Icon-->
+    </div>
+    <!-- end::Scrolltop -->
+    <!-- begin::Chat Bar -->
+    @if (isChatEnabled)
+    {
+        @await Html.PartialAsync("~/Areas/App/Views/Layout/_ChatBar.cshtml")
+    }
+    <!-- end::Chat Bar -->
+    <!-- begin::Theme Selection Panel -->
+    @if (await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsQuickThemeSelectEnabled))
+    {
+        @await Html.PartialAsync("~/Areas/App/Views/Layout/_ThemeSelectionPanel.cshtml")
+    }
+    <!-- end::Theme Selection Panel -->
+    <!--begin::Base Scripts -->
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/app-layout-libs.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/@theme.BaseSettings.Theme.ToLowerInvariant()-scripts.bundle.js" asp-append-version="true"></script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="@(ApplicationPath)AbpServiceProxies/GetAll?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+
+    @if (GetScriptsResponsePerUserConfiguration.IsEnabled)
+    {
+        <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(await CachedUniqueKeyPerUser.GetKeyAsync(GetScriptsResponsePerUserCache.CacheName))" type="text/javascript"></script>
+    }
+    else
+    {
+        <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+    }
+
+    <script type="text/javascript">
+        abp.localization.currentCulture = $.extend({}, abp.localization.currentCulture, { displayNameEnglish: '@CultureInfo.CurrentUICulture.EnglishName' });
+        abp.localization.defaultSourceName = '@LocalizationSourceName';
+        moment.locale('@(GetMomentLocale())'); //Localizing moment.js
+    </script>
+
+    <script src="@(ApplicationPath)view-resources/Areas/App/Views/_Bundles/signalr.bundle.min.js" asp-append-version="true"></script>
+
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/common-scripts.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/app-common-scripts.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/Layout/_Header.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/Layout/_Layout.js" asp-append-version="true"></script>
+    @if (await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.IsQuickThemeSelectEnabled))
+    {
+        <script src="@(ApplicationPath)view-resources/Areas/App/Views/Layout/_ThemeSelectionPanel.js" asp-append-version="true"></script>
+    }
+
+    @if (isChatEnabled)
+    {
+        <script src="@(ApplicationPath)view-resources/Areas/App/Views/Layout/_ChatBar.js" asp-append-version="true"></script>
+        <script src="@(ApplicationPath)Common/Scripts/Chat/chat.signalr.js" asp-append-version="true"></script>
+    }
+    @if (await SettingManager.GetSettingValueAsync<bool>(AppSettings.UserManagement.SessionTimeOut.IsEnabled) && AbpSession.UserId.HasValue)
+    {
+        <script src="@(ApplicationPath)view-resources/Areas/App/Views/_Bundles/InactivityController.min.js" asp-append-version="true"></script>
+    }
+    <script src="~@ScriptPaths.JQuery_Validation_Localization" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.JQuery_Timeago_Localization" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.Select2_Localization" asp-append-version="true"></script>
+
+    <script src="@(ApplicationPath)view-resources/Areas/App/Views/Layout/_ToggleDarkMode.js" asp-append-version="true"></script>
+    @if (theme.BaseSettings.Menu.SearchActive)
+    {
+        <script src="~/view-resources/Areas/App/Views/Layout/_MenuSearchBar.min.js" asp-append-version="true"></script>
+    }
+
+    <!--end::Base Scripts -->
+    <!--begin::Page Snippets -->
+    @await RenderSectionAsync("Scripts", false)
+    <script>
+        app.supportsTenancyNameInUrl = @(WebUrlService.SupportsTenancyNameInUrl.ToString().ToLower());
+    </script>
+    <!--end::Page Snippets -->
+    <!--begin: svg symbols for alerts-->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+        </symbol>
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+        </symbol>
+        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+        </symbol>
+        <symbol id="warning-icon" fill="none" viewBox="0 0 24 24">
+            <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="black"></path>
+            <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="black"></path>
+        </symbol>
+    </svg>
+    <!--end: svg symbols for alerts-->
+</body>
+<!-- end::Body -->
+</html>

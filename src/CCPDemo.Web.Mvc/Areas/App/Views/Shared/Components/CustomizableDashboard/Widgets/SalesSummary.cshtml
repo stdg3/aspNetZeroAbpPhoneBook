@@ -1,0 +1,77 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom SalesSummaryContainer h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="font-weight-bolder text-dark">Sales Summary</span>
+        </h3>
+        <div class="card-toolbar">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn m-btn--pill btn-secondary active">
+                    <input type="radio" name="SalesSummaryDateInterval" autocomplete="off" checked="" value="1">
+                    Daily
+                </label>
+                <label class="btn m-btn--pill btn-secondary">
+                    <input type="radio" name="SalesSummaryDateInterval" autocomplete="off" value="2">
+                    Weekly
+                </label>
+                <label class="btn m-btn--pill btn-secondary">
+                    <input type="radio" name="SalesSummaryDateInterval" autocomplete="off" value="3">
+                    Monthly
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-9" style="height: 260px;">
+                <div id="salesStatisticsLoading" style="text-align: center;">
+                    <div class="kt-blockui" style="display: inline-block; margin-top: 120px;">
+                        <span>Loading...</span>
+                        <span>
+                            <div class="loader loader-brand "></div>
+                        </span>
+                    </div>
+                </div>
+                <canvas id="salesStatistics"></canvas>
+            </div>
+            <div class="col-3">
+                <div class="row h-100 list-separated">
+                    <div class="col-12">
+                        <h6>
+                            Total Sales
+                        </h6>
+                        <div>
+                            <span id="totalSales" class="counterup m--font-danger m--font-bolder">...</span> <span class="text-danger text-bold">$</span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h6>
+                            Revenue
+                        </h6>
+                        <div class="uppercase font-hg font-green-haze">
+                            <span id="revenue" class="counterup m--font-warning m--font-bolder">...</span> <span class="text-warning text-bold">$</span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h6>
+                            Expenses
+                        </h6>
+                        <div class="uppercase font-hg font-purple">
+                            <span id="expenses" class="counterup m--font-success m--font-bolder">...</span> <span class="text-success text-bold">$</span>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <h6>
+                            Growth
+                        </h6>
+                        <div class="uppercase font-hg font-blue-sharp">
+                            <span id="growth" class="counterup m--font-info m--font-bolder">...</span> <span class="text-info text-bold">$</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

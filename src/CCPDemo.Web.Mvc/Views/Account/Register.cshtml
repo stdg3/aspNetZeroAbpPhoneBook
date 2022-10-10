@@ -1,0 +1,81 @@
+﻿@model CCPDemo.Web.Models.Account.RegisterViewModel
+@using Abp.Json
+@using CCPDemo.Localization
+@using CCPDemo.Web.Security.Recaptcha
+@addTagHelper *, Owl.reCAPTCHA
+
+@section Scripts
+{
+    <script>
+        window.passwordComplexitySetting = @Html.Raw(Model.PasswordComplexitySetting.ToJsonString(indented: true));
+    </script>
+
+    @if (ViewBag.UseCaptcha)
+    {
+        <recaptcha-script-v3/>
+        <recaptcha-script-v3-js action="register" execute="false"/>
+    }
+
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/account-register.min.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("SignUp")</h3>
+    </div>
+    <form class="form register-form" asp-action="Register" method="post">
+
+        @if (@ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                <div class="alert-icon">
+                    <i class="fa fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-text">@ViewBag.ErrorMessage</div>
+            </div>
+        }
+
+        <input type="hidden" name="IsExternalLogin" value="@Model.IsExternalLogin.ToString()"/>
+        <input type="hidden" name="ExternalLoginAuthSchema" value="@Model.ExternalLoginAuthSchema"/>
+        <input type="hidden" name="SingleSignOn" value="@Model.SingleSignIn"/>
+        <input type="hidden" name="ReturnUrl" value="@Model.ReturnUrl"/>
+        @if (ViewBag.UseCaptcha)
+        {
+            <input type="hidden" name="@RecaptchaValidator.RecaptchaResponseKey" id="recaptchaResponse"/>
+        }
+
+        <div class="mb-5">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="@L("Name")" name="Name" required value="@Model.Name" maxlength="@CCPDemo.Authorization.Users.User.MaxNameLength"/>
+        </div>
+        <div class="mb-5 ">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="@L("Surname")" name="Surname" required value="@Model.Surname" maxlength="@CCPDemo.Authorization.Users.User.MaxSurnameLength"/>
+        </div>
+        <div class="mb-5 ">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" placeholder="@L("EmailAddress")" name="EmailAddress" required value="@Model.EmailAddress" maxlength="@CCPDemo.Authorization.Users.User.MaxEmailAddressLength"/>
+        </div>
+
+        @if (!Model.IsExternalLogin)
+        {
+            <div class="mb-5">
+                <input class="form-control input-ltr form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" autocomplete="new-password" placeholder="@L("UserName")" name="UserName" value="@Model.UserName" required maxlength="@CCPDemo.Authorization.Users.User.MaxUserNameLength"/>
+            </div>
+            <div class="mb-5 pwstrength-div">
+                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" autocomplete="new-password" id="RegisterPassword" placeholder="@L("Password")" name="Password" required/>
+            </div>
+            <div class="mb-5 ">
+                <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" autocomplete="new-password" placeholder="@L("PasswordRepeat")" name="PasswordRepeat" required/>
+            </div>
+        }
+
+        <div class="pb-lg-0 pb-5">
+            <a asp-action="Login">
+                <button type="button" id="register-back-btn" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">@L("Back")</button>
+            </a>
+            <button type="submit" id="register-submit-btn" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 me-3">@L("Submit")</button>
+        </div>
+    </form>
+</div>

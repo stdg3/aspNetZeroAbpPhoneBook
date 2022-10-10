@@ -1,0 +1,75 @@
+﻿@using Abp.Extensions
+@using Microsoft.AspNetCore.Html
+@using CCPDemo
+@using CCPDemo.Configuration
+@{
+    var activeTheme = await SettingManager.GetSettingValueAsync(AppSettings.UiManagement.Theme);
+}
+
+<!-- begin::Quick Sidebar -->
+<div id="kt_explore"
+     data-kt-drawer="true"
+     data-kt-drawer-name="explore"
+     data-kt-drawer-activate="true"
+     data-kt-drawer-overlay="true"
+     data-kt-drawer-width="{default:'350px', 'lg': '475px'}"
+     data-kt-drawer-direction="end"
+     data-kt-drawer-toggle="#kt_demo_panel_toggle"
+     data-kt-drawer-close="#kt_explore_close">
+    <div class="card shadow-none rounded-0 w-100">
+        <div class="card-header" id="kt_explore_header">
+            <h3 class="card-title fw-bolder text-gray-700">@L("SelectATheme")</h3>
+            <div class="card-toolbar">
+                <button type="button" class="btn btn-sm btn-icon btn-active-light-primary me-n5" id="kt_explore_close">
+                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                    <span class="svg-icon svg-icon-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black"></rect>
+                            <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black"></rect>
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </button>
+            </div>
+        </div>
+        <div class="card-body" id="kt_explore_body">
+            <div id="kt_explore_scroll" class="scroll-y me-n5 pe-5" data-kt-scroll="true" data-kt-scroll-height="auto" data-kt-scroll-wrappers="#kt_explore_body" data-kt-scroll-dependencies="#kt_explore_header" data-kt-scroll-offset="5px">
+                <div class="row g-5">
+                    @RenderThemeSelection(AppConsts.ThemeDefault, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme2, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme3, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme4, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme5, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme6, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme7, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme8, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme9, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme10, activeTheme)
+                    @RenderThemeSelection(AppConsts.Theme11, activeTheme)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end::Quick Sidebar -->
+
+@functions {
+
+    private IHtmlContent RenderThemeSelection(string theme, string activeTheme)
+    {
+        var image = ApplicationPath + "Common/Images/metronic-themes/" + theme + ".png";
+        var activeClass = activeTheme == theme ? "border-success" : "";
+        var html = "<div class=\"col-6\">" +
+                   "<div class=\"overlay overflow-hidden position-relative border border-4 theme-selection-link rounded " + activeClass + "\" data-theme=\"" + theme + "\">" +
+                   "<div class=\"overlay-wrapper\">" +
+                   "<img src=\"" + image + "\" alt=\"" + theme + "\" class=\"w-100\">" +
+                   "</div>" +
+                   "<div class=\"overlay-layer bg-dark bg-opacity-10\">" +
+                   "<button class=\"btn btn-sm btn-success shadow\">" + L("Theme_" + theme.ToPascalCase()) + "</button>" +
+                   "</div>" +
+                   "</div>" +
+                   "</div>";
+
+        return Html.Raw(html);
+    }
+}

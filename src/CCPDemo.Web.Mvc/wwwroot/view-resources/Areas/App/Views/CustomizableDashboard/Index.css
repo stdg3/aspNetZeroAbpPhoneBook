@@ -1,0 +1,188 @@
+﻿input[name="SalesSummaryDateInterval"] {
+    display: none;
+}
+
+.grid-stack-item {
+    color: #2c3e50;
+    text-align: center;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin: 0;
+    top: -2px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+.grid-stack-item-content {
+    border: 1px dashed transparent;
+    transition: .5s all;
+}
+
+.grid-stack-item-content .kt-portlet {
+    margin: 0 !important;
+}
+
+.ui-draggable-handle .grid-stack-item-content {
+    border-color: #9ea2b5;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.grid-stack {
+    transition: .5s all;
+}
+
+.grid-stack:hover .ui-draggable-handle.ui-resizable .grid-stack-item-content,
+.grid-stack:hover .ui-draggable-handle .grid-stack-item-content {
+    opacity: .4;
+}
+
+.grid-stack:hover .ui-draggable-handle.ui-resizable:hover .grid-stack-item-content,
+.grid-stack:hover .ui-draggable-handle:hover .grid-stack-item-content {
+    opacity: 1;
+    border-color: #00bb77;
+    box-shadow: 4px 4px 2px rgba(0, 0, 0, 0.1);
+}
+
+.grid-stack:hover .ui-draggable-handle.ui-resizable:hover.ui-resizable-resizing .grid-stack-item-content,
+.grid-stack:hover .ui-draggable-handle:hover.ui-draggable-dragging .grid-stack-item-content {
+    border-color: #ff0000;
+    box-shadow: 35px 35px 15px rgba(0, 0, 0, 0.1);
+}
+
+.deleteWidgetButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 22px;
+    padding: 0 7px !important;
+    height: 22px;
+    border-radius: 0 0 0 10px;
+    box-shadow: none;
+    outline: none;
+    text-align: center;
+    border: 0 !important;
+    z-index: 1002;
+}
+
+.grid-stack-item-content:hover .deleteWidgetButton {
+    background: #f4516c !important;
+    color: #fff !important;
+}
+
+.add-new-widget {
+    padding: 0 10px;
+}
+
+@media screen and (max-width: 1024px) {
+    .kt-portlet.m-content .kt-portlet__head-toolbar .m-tabs-line {
+        padding-top: 40px;
+    }
+}
+
+.div-dashboard-customization {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 100;
+    background-color: #cecece;
+    border-radius: 10px;
+    padding: 15px
+}
+
+.div-dashboard-customization .border-right {
+    border-right: 1px solid white;
+}
+
+#div-pages-nav .nav-pills {
+    margin: 0 !important;
+}
+
+#div-pages-nav .nav-pills .nav-item {
+    background-color: white;
+    box-shadow: 1px 1px 5px #c1c1c1;
+    border-radius: 0.25rem;
+}
+
+#btn-modal-filter-open {
+    margin-right: 8px
+}
+
+.ui-draggable-disabled .ui-draggable-handle {
+    cursor: unset;
+}
+
+#filterModal h5 {
+    margin-bottom: 15px;
+}
+
+.mCustomScrollBox{
+    border-radius: 0.42rem;
+}
+
+.mCSB_container{
+    height:100% !important;
+}
+
+.card .card-body{
+    background-color: #fff;
+}

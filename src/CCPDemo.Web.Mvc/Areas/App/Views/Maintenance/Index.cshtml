@@ -1,0 +1,93 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Maintenance
+@using CCPDemo.Web.Areas.App.Startup
+@model MaintenanceViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Host.Maintenance;
+}
+
+@section Styles {
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Maintenance/Index.css" asp-append-version="true"/>
+}
+
+@section Scripts {
+    <script abp-src="/view-resources/Areas/App/Views/Maintenance/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Maintenance")"></abp-page-subheader>
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div id="SettingsTabPanel" class="tabbable-line">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a href="#CachesTab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                                @L("Caches")
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#WebSiteLogsTab" data-bs-toggle="tab" role="tab" class="nav-link">
+                                @L("WebSiteLogs")
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane pt-5 active" id="CachesTab" role="tabpanel">
+                            <div class="row mb-3 mt-5">
+                                <div class="col-xl-6">
+                                    <p>@L("CachesHeaderInfo")</p>
+                                </div>
+                                <div class="col-xl-6 text-end">
+                                    <button id="ClearAllCachesButton" class="btn btn-primary float-end">
+                                        <i class="fa fa-recycle"></i> @L("ClearAll")
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                        <tbody>
+                                        @foreach (var cache in Model.Caches)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <span>@cache.Name</span>
+                                                    <button class="btn btn-primary btn-sm pull-right btn-clear-cache" data-cache-name="@cache.Name">
+                                                        <i class="fa fa-recycle"></i> @L("Clear")
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane pt-5" id="WebSiteLogsTab" role="tabpanel">
+                            <div class="row mt-5 mb-3">
+                                <div class="col-xl-6">
+                                    <p>@L("WebSiteLogsHeaderInfo")</p>
+                                </div>
+                                <div class="col-xl-6 text-end">
+                                   <button id="RefreshButton" class="btn btn-primary float-end">
+                                        <i class="fa fa-sync"></i> @L("Refresh")
+                                    </button>
+                                    <button id="DownloadAllLogsbutton" class="btn btn-secondary float-end me-5">
+                                        <i class="fa fa-download"></i> @L("DownloadAll")
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div id="WebSiteLogsContent" class="web-log-view full-height">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

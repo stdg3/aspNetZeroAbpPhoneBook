@@ -1,0 +1,40 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.CustomizableDashboard
+@using CCPDemo.Web.Areas.App.Startup
+@inject DashboardViewConfiguration DashboardViewConfiguration
+@model AddWidgetViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("AddWidget")))
+
+<div class="modal-body">
+
+    @if (Model.Widgets.Any())
+    {
+        <input hidden id="DashboardName" value="@Model.DashboardName" />
+        <input hidden id="PageId" value="@Model.PageId" />
+        <div class="mb-5">
+            <label for="exampleFormControlSelect1" class="form-label">Example select</label>
+            <select class="form-select" id="WidgetSelect">
+                @for (int i = 0; i < Model.Widgets.Count; i++)
+                {
+                    var widget = Model.Widgets[i];
+                    <option value="@widget.Id">@L(widget.Name)</option>
+                }
+            </select>
+            @for (int i = 0; i < Model.Widgets.Count; i++)
+            {
+                var widget = Model.Widgets[i];
+                var widgetViewDefinition = DashboardViewConfiguration.WidgetViewDefinitions[widget.Id];
+                <input hidden id="@(widget.Id + "Height")" value="@widgetViewDefinition.DefaultHeight" />
+                <input hidden id="@(widget.Id + "Width")" value="@widgetViewDefinition.DefaultWidth" />
+            }
+        </div>
+    }
+    else
+    {
+        <p>@L("NoWidgetAvailableMessage")</p>
+    }
+
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

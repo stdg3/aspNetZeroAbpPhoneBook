@@ -1,0 +1,44 @@
+<div class="card-header">
+    <div class="card-title">
+        <h3 class="card-label">
+            Input Mask
+        </h3>
+    </div>
+</div>
+<div class="card-body">
+    <form role="form" class="form">
+
+        <div class="mb-5">
+            <label for="DateInputMask" class="form-label">Date</label>
+            <div class="input-group">
+                <input id="DateInputMask" type="text" class="form-control input-mask" data-inputmask="'alias': 'datetime', 'inputFormat': 'yyyy-mm-dd'">
+                <button class="btn btn-primary test-btn-input-mask" type="button">@L("Submit")</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <label for="NumericInputMaskLength" class="form-label">Numeric with length</label>
+            <div class="input-group">
+                <input id="NumericInputMaskLength" type="text" class="form-control input-mask" data-inputmask="'mask': '9', 'repeat': 10, 'greedy' : false">
+                <button class="btn btn-primary test-btn-input-mask" type="button">@L("Submit")</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <label for="NumericInputMask" class="form-label">Numeric with mask</label>
+            <div class="input-group">
+                <input id="NumericInputMask" type="text" class="form-control input-mask" data-inputmask="'mask': '99-9999999'">
+                <button class="btn btn-primary test-btn-input-mask" type="button">@L("Submit")</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <label for="CurrencyInputMask" class="form-label">Currency</label>
+            <div class="input-group">
+                <input id="CurrencyInputMask" type="text" class="form-control input-mask" data-inputmask="'alias': 'numeric', 'groupSeparator': ',', 'autoGroup': true, 'digits': 2, 'digitsOptional': false, 'prefix': '$ ', 'placeholder': '0'">
+                <button class="btn btn-primary test-btn-input-mask" type="button">@L("Submit")</button>
+            </div>
+        </div>
+
+    </form>
+</div>

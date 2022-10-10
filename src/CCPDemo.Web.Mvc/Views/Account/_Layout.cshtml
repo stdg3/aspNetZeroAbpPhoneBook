@@ -1,0 +1,117 @@
+﻿@using System.Threading.Tasks
+@using Abp.AspNetZeroCore.Timing
+@using Abp.Configuration.Startup
+@using Abp.Timing
+@using Abp.Web.Security.AntiForgery
+@using CCPDemo.Timing
+@using CCPDemo.UiCustomization.Dto
+@using CCPDemo.Url
+@using CCPDemo.Web.Resources
+@using CultureHelper = CCPDemo.Localization.CultureHelper
+@using Abp.CachedUniqueKeys
+@using Abp.AspNetCore.Mvc.Caching
+@using Abp.Configuration
+@using CCPDemo.Configuration
+@inject ScriptPaths ScriptPaths
+@inject AppTimes AppTimes
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@inject IMultiTenancyConfig MultiTenancyConfig
+@inject IWebResourceManager WebResourceManager
+@inject IWebUrlService WebUrlService
+@inject ICachedUniqueKeyPerUser CachedUniqueKeyPerUser
+@inject IGetScriptsResponsePerUserConfiguration GetScriptsResponsePerUserConfiguration
+@{
+    Layout = null;
+    AbpAntiForgeryManager.SetCookie(Context);
+    UiCustomizationSettingsDto theme = await GetTheme();
+}
+<!DOCTYPE html>
+<html lang="en" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<head>
+    <meta charset="utf-8" />
+    <title>CCPDemo</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+
+    @* Fill these meta tags upon your project specification *@
+    <meta content="CCPDemo" name="description" />
+    <meta content="CCPDemo" name="keywords">
+    <meta content="CCPDemo" name="author" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/vendors.bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/default/css/style@(theme.BaseSettings.Layout.DarkMode ? ".dark": "").bundle@(CultureHelper.IsRtl ? ".rtl" : "").css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/account-layout-libs.css" asp-append-version="true" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/common-styles.css" asp-append-version="true" />
+
+    @if (CultureHelper.IsRtl)
+    {
+        <link rel="stylesheet" href="/Common/Styles/abp-zero-template-rtl.css" asp-append-version="true" />
+    }
+
+    <link rel="stylesheet" abp-href="/view-resources/Views/Account/_Layout@(CultureHelper.IsRtl ? "-rtl" : "").css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", false)
+
+    <script type="text/javascript">
+        @* This is used to get the application's root path from javascript.
+            It's useful if you're running application in a virtual directory under IIS. *@
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+
+</head>
+<body class="header-fixed header-mobile-fixed subheader-fixed subheader-enabled subheader-solid aside-enabled aside-fixed">
+    <div class="d-flex flex-column flex-root">
+        <div class="d-flex flex-column flex-column-fluid bgi-position-y-bottom position-x-center bgi-no-repeat bgi-size-contain bgi-attachment-fixed" style="background-image: url(/metronic/assets/media/svg/illustrations/login@(theme.BaseSettings.Layout.DarkMode ? "-dark": "").png)">
+            <div class="d-flex flex-center flex-column flex-column-fluid p-10 pb-lg-20">
+                <vc:account-logo skin="@(theme.BaseSettings.Layout.DarkMode ? "dark": "light")"></vc:account-logo>
+                <div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
+                    @if (!(ViewBag.DisableTenantChange ?? false) && MultiTenancyConfig.IsEnabled && !WebUrlService.SupportsTenancyNameInUrl)
+                    {
+                        <div class="tenant-change-box mb-5">
+                            <vc:tenant-change></vc:tenant-change>
+                        </div>
+                    }
+                    @RenderBody()
+                </div>
+            </div>
+            <div class="d-flex flex-center flex-column-auto p-10">
+                <div class="d-flex align-items-center fw-bold fs-6">
+                    <vc:account-languages></vc:account-languages>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/account-layout-libs.js" asp-append-version="true"></script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/AbpServiceProxies/GetAll?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+    @if (GetScriptsResponsePerUserConfiguration.IsEnabled)
+    {
+        <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(await CachedUniqueKeyPerUser.GetKeyAsync(GetScriptsResponsePerUserCache.CacheName))" type="text/javascript"></script>
+    }
+    else
+    {
+        <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(AppTimes.StartupTime.Ticks)" type="text/javascript"></script>
+    }
+
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/common-scripts.js" asp-append-version="true"></script>
+    <script src="~@ScriptPaths.JQuery_Validation_Localization" asp-append-version="true"></script>
+
+    @WebResourceManager.RenderScripts()
+
+    @await RenderSectionAsync("Scripts", false)
+    <script>
+        app.supportsTenancyNameInUrl = @(WebUrlService.SupportsTenancyNameInUrl.ToString().ToLower());
+
+        jQuery(document).ready(function () {
+            if (window.CurrentPage) {
+                CurrentPage.init();
+            }
+        });
+    </script>
+</body>
+</html>

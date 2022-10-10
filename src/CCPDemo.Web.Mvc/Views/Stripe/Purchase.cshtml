@@ -1,0 +1,71 @@
+﻿@using System.Globalization
+@using CCPDemo
+@using CCPDemo.Localization
+@using CCPDemo.Web.Resources
+@model CCPDemo.Web.Models.Stripe.StripePurchaseViewModel
+@inject IWebResourceManager WebResourceManager
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Scripts
+{
+    <script src="https://js.stripe.com/v3"></script>
+    <script abp-src="/view-resources/Views/Stripe/_StripeRedirectToSession.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl":"").css" rel="stylesheet" />
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
+            @L("Purchase")
+        </h3>
+    </div>
+    <hr class="border-green" />
+    <div class="form-actions">
+        <div class="mb-5 row">
+            <label class="col-sm-4 form-label">@L("Item")</label>
+            <div class="col-sm-8 text-end">
+                <p class="form-control-static text-bold">
+                    @Model.Description
+                </p>
+            </div>
+        </div>
+        <div class="mb-5 row">
+            <label class="col-sm-4 form-label">@L("Price")</label>
+            <div class="col-sm-8 text-end">
+                <p class="form-control-static text-bold" id="totalPrice">
+                    @CCPDemoConsts.CurrencySign@(Model.Amount.ToString("N2"))
+                </p>
+            </div>
+        </div>
+        @if (Model.IsRecurring)
+        {
+            if (Model.UpdateSubscription)
+            {
+                <div class="mb-5 row">
+                    <label class="col-sm-12 form-label">@L("RecurringSubscriptionUpgradeNote")</label>
+                </div>
+            }
+            else
+            {
+                <div class="mb-5 row">
+                    <div class="col-sm-12 text-end">
+                        <p class="form-control-static text-bold" id="totalPrice">
+                            @L("AutomaticBilling")
+                        </p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    <input type="hidden" id="sessionId" value="@Model.SessionId" />
+    <input type="hidden" id="stripePublishableKey" value="@Model.Configuration.PublishableKey" />
+
+    <button id="stripe-checkout" class="btn btn-primary btn-block">@L("Purchase")</button>
+</div>

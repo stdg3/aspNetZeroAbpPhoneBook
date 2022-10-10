@@ -1,0 +1,52 @@
+﻿.searchMenuContainerSelect2 {
+    margin: 1em;
+}
+
+.searchMenuContainerSelect2 .select2-selection__rendered {
+    min-height: 35px;
+}
+
+.searchMenuContainerSelect2 .select2-container {
+    width: 100% !important;
+}
+
+body.dark-mode {
+    .searchMenuContainerSelect2 {
+        .select2-selection {
+            background: #1e1e2d !important;
+            border-color: #8a8a91 !important;
+        }
+    }
+}
+
+
+/*** top menu search ***/
+
+@media (max-width: 991px) {
+    .searchMenuTop {
+        display: block !important;
+    }
+
+    .searchMenuBottom {
+        display: none !important;
+    }
+
+    .searchMenuContainerSelect2 {
+        width: calc(100% - 40px) !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .searchMenuTop {
+        display: none !important;
+    }
+
+    .searchMenuBottom {
+        display: block !important;
+    }
+}
+
+.searchMenuTop {
+    margin-bottom: 1em !important;
+    margin-left: 25px !important;
+}

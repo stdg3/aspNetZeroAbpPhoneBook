@@ -1,0 +1,11 @@
+﻿@using Abp.Configuration
+@using CCPDemo.Configuration
+@model CCPDemo.Web.Areas.App.Models.Layout.QuickThemeSelectionViewModel
+@if (SettingManager.GetSettingValue<bool>(AppSettings.UserManagement.IsQuickThemeSelectEnabled))
+{
+    <div id="kt_demo_panel_toggle" class="d-flex align-items-center" >
+        <div class="@Model.CssClass">
+            <i class="@Model.IconClass"></i>
+        </div>
+    </div>
+}

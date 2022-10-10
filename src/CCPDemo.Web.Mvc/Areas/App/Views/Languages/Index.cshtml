@@ -1,0 +1,54 @@
+﻿@using Abp.MultiTenancy
+@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Startup
+@model CCPDemo.Web.Areas.App.Models.Languages.LanguagesIndexViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.Languages;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/language-list.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Languages")" description="@L("LanguagesHeaderInfo")">
+        @if (IsGranted(AppPermissions.Pages_Administration_Languages_Create) && AbpSession.MultiTenancySide == MultiTenancySides.Host)
+        {
+            <button id="CreateNewLanguageButton" class="btn btn-primary">
+                <i class="fa fa-plus btn-md-icon"></i> 
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewLanguage")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="align-items-center">
+                    <table id="LanguagesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>@L("Actions")</th>
+                            <th>@L("Name")</th>
+                            <th>@L("Code")</th>
+                            <th>@L("Default")</th>
+                            <th>@L("IsEnabled")</th>
+                            <th>@L("CreationTime")</th>
+                        </tr>
+                        </thead>
+                    </table>
+                    @if (Model.IsTenantView)
+                    {
+                        <p class="margin-top-20">
+                            @("* " + L("CanNotEditOrDeleteDefaultLanguages"))
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

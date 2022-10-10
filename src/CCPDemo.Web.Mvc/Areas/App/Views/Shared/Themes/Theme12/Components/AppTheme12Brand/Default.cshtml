@@ -1,0 +1,11 @@
+﻿@using Abp.Runtime.Session
+@using CCPDemo.Web.Areas.App.Models.Layout
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppLogo
+@model HeaderViewModel
+@{
+    Layout = null;
+    var skin = @Model.LoginInformations.Theme.BaseSettings.Layout.DarkMode ? "dark" : "light";
+}
+<a href="@Url.Action("Index", "Home", new {area = string.Empty})" target="_blank" class="brand-logo">
+    @await Component.InvokeAsync(typeof(AppLogoViewComponent), new {logoSkin = skin})
+</a>

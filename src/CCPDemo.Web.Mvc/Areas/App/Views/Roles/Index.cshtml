@@ -1,0 +1,59 @@
+﻿@using Abp.Application.Services.Dto
+@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Models.Roles
+@using CCPDemo.Web.Areas.App.Startup
+@model RoleListViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.Roles;
+}
+
+@section Scripts
+{
+<script abp-src="/view-resources/Areas/App/Views/_Bundles/role-list.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Roles")" description="@L("RolesHeaderInfo")">
+        @if (IsGranted(AppPermissions.Pages_Administration_Roles_Create))
+        {
+            <button id="CreateNewRoleButton" class="btn btn-primary">
+                <i class="la la-plus btn-md-icon"></i>
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewRole")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row mb-4">
+                        <div class="col-12 text-end">
+                            <button class="btn btn-secondary" id="FilterByPermissionsButton">@L("SelectPermissions") (<span id="NumberOfFilteredPermission">0</span>)</button>
+                            <button id="RefreshRolesButton" class="btn btn-primary">
+                                <i class="la la-refresh btn-md-icon"></i> 
+                                <span class="d-none d-md-inline-block">
+                                    @L("Refresh")
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <table id="RolesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@L("Actions")</th>
+                                <th>@L("RoleName")</th>
+                                <th>@L("CreationTime")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

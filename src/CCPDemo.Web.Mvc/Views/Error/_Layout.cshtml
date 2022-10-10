@@ -1,0 +1,60 @@
+﻿@using Abp.Timing
+@using CCPDemo.UiCustomization.Dto
+@using CultureHelper = CCPDemo.Localization.CultureHelper
+@{
+    Layout = null;
+    UiCustomizationSettingsDto theme = await GetTheme();
+}
+<!DOCTYPE html>
+<html lang="en" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<head>
+    <meta charset="utf-8" />
+
+    <title>CCPDemo</title>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+
+    @* Fill these meta tags upon your project specification *@
+    <meta content="CCPDemo" name="description" />
+    <meta content="CCPDemo" name="keywords" />
+    <meta content="CCPDemo" name="author" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/vendors.bundle.css" asp-append-version="true" />
+    <link rel="stylesheet" href="@(ApplicationPath)metronic/themes/default/css/style.bundle@(CultureHelper.IsRtl ? ".rtl":"").css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/common-styles.css" asp-append-version="true" />
+    <link rel="stylesheet" abp-href="@(ApplicationPath)metronic/common/css/error-5@(CultureHelper.IsRtl ? ".rtl":"").css" asp-append-version="true" />
+
+    @if (CultureHelper.IsRtl)
+    {
+    <link rel="stylesheet" href="/Common/Styles/abp-zero-template-rtl.css" asp-append-version="true" />
+    }
+
+    <script type="text/javascript">
+        @* This is used to get the application's root path from javascript.
+        It's useful if you're running application in a virtual directory under IIS. *@
+        var abp = abp || {}; abp.appPath = '@ApplicationPath';
+    </script>
+
+</head>
+<body class="header-fixed header-mobile-fixed subheader-enabled subheader-fixed aside-enabled aside-fixed aside-minimize-hoverable">
+    <div class="d-flex flex-column flex-root">
+        <div class="error error-5 d-flex flex-row-fluid bgi-size-cover bgi-position-center" style="background-image: url(@(ApplicationPath)metronic/common/images/bg/bg5.jpg);">
+            @RenderBody()
+        </div>
+    </div>
+
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/account-layout-libs.js" asp-append-version="true"></script>
+
+    <script type="text/javascript">
+        abp.localization.defaultSourceName = '@LocalizationSourceName';
+    </script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="@(ApplicationPath)AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+</body>
+
+</html>

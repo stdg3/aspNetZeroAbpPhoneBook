@@ -1,0 +1,162 @@
+﻿@using Abp.UI.Inputs
+@using CCPDemo
+@using CCPDemo.Editions
+@using CCPDemo.MultiTenancy.Payments
+@model CCPDemo.Web.Models.TenantRegistration.EditionsSelectViewModel
+@{
+    ViewBag.DisableTenantChange = true;
+    Layout = "_Layout";
+    var editionIcons = new string[] {"flaticon-open-box", "flaticon-rocket", "flaticon-gift", "flaticon-confetti", "flaticon-cogwheel-2", "flaticon-app", "flaticon-coins", "flaticon-piggy-bank", "flaticon-bag", "flaticon-lifebuoy", "flaticon-technology-1", "flaticon-cogwheel-1", "flaticon-infinity", "flaticon-interface-5", "flaticon-squares-3", "flaticon-interface-6", "flaticon-mark", "flaticon-business", "flaticon-interface-7", "flaticon-list-2", "flaticon-bell", "flaticon-technology", "flaticon-squares-2", "flaticon-notes", "flaticon-profile", "flaticon-layers", "flaticon-interface-4", "flaticon-signs", "flaticon-menu-1", "flaticon-symbol"};
+}
+
+@section Styles
+{
+    <link href="~/view-resources/Views/TenantRegistration/SelectEdition.css" rel="stylesheet" asp-append-version="true"/>
+}
+
+<div class="@(await GetContainerClass())">
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <div class="row justify-content-center mt-10 mb-0 pricing-items">
+
+                @if (!Model.EditionsWithFeatures.Any())
+                {
+                    <div class="alert alert-custom alert-warning fade show" role="alert">
+                        <div class="alert-icon">
+                            <i class="flaticon-warning"></i>
+                        </div>
+                        <div class="alert-text">@L("ThereIsNoEditionToUpgrade")</div>
+                    </div>
+                }
+                @{ var i = 0; }
+                @foreach (var editionWithFeatures in Model.EditionsWithFeatures)
+                {
+                    var edition = editionWithFeatures.Edition;
+
+                    <div class="col-xl-4 mb-10">
+                        <div class="d-flex h-100 align-items-center">
+                            <!--begin::Option-->
+                            <div class="w-100 d-flex flex-column flex-center rounded-3 bg-light bg-opacity-75 py-15">
+                                <div class="pt-30 pt-md-25 @(i == 0 ? "px-10" : "px-15") mb-15 text-left @(i > 0 ? "border-left-md" : "")" style="min-width:200px">
+                                    <!--begin::Icon-->
+                                    <div class="d-flex flex-center position-relative mb-25">
+                                        <span class="svg-icon opacity-4 position-absolute">
+                                            <svg width="175" height="200">
+                                                <polyline points="87,0 174,50 174,150 87,200 0,150 0,50 87,0"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="pricing-item-icon mt-15">
+                                            <i class="fa @editionIcons[i] text-primary"></i>
+                                        </span>
+                                    </div>
+                                    <!--end::Icon-->
+
+                                    <!--begin::Content-->
+                                    <span class="font-size-h1 d-block d-block font-weight-boldest py-2 pricing-title">@edition.DisplayName</span>
+                                    <h4 class="font-size-h6 d-block d-block font-weight-bold mb-7 pricing-subtitle">
+                                        @if (!edition.DailyPrice.HasValue && !edition.WeeklyPrice.HasValue && !edition.MonthlyPrice.HasValue && !edition.AnnualPrice.HasValue)
+                                        {
+                                            <text>@L("Free")</text>
+                                        }
+                                        else
+                                        {
+                                            if (edition.DailyPrice.HasValue && edition.DailyPrice.Value > 0)
+                                            {
+                                                <text><span>@CCPDemoConsts.CurrencySign</span> @edition.DailyPrice?.ToString("N2") / @L("Daily") </text>
+                                                <br/>
+                                            }
+
+                                            if (edition.WeeklyPrice.HasValue && edition.WeeklyPrice.Value > 0)
+                                            {
+                                                <text><span>@CCPDemoConsts.CurrencySign</span> @edition.WeeklyPrice?.ToString("N2") / @L("Weekly") </text>
+                                                <br/>
+                                            }
+
+                                            if (edition.MonthlyPrice.HasValue && edition.MonthlyPrice.Value > 0)
+                                            {
+                                                <text><span>@CCPDemoConsts.CurrencySign</span> @edition.MonthlyPrice?.ToString("N2") / @L("Monthly") </text>
+                                                <br/>
+                                            }
+
+                                            if (edition.AnnualPrice.HasValue && edition.AnnualPrice.Value > 0)
+                                            {
+                                                <text><span>@CCPDemoConsts.CurrencySign</span> @edition.AnnualPrice?.ToString("N2") / @L("Annual")</text>
+                                            }
+                                        }
+                                    </h4>
+
+                                    <p class="mb-4 d-flex flex-column">
+
+                                        @foreach (var feature in Model.AllFeatures.OrderBy(f =>
+                                        {
+                                            var featureValue = editionWithFeatures.FeatureValues.FirstOrDefault(f => f.Name == f.Name);
+                                            return (f.Description + featureValue.Value).Length;
+                                        }))
+                                        {
+                                            var featureValue = editionWithFeatures.FeatureValues.FirstOrDefault(f => f.Name == feature.Name);
+                                            if (feature.InputType.GetType() == typeof(CheckboxInputType))
+                                            {
+                                                @if (featureValue.Value == "true")
+                                                {
+                                                    <span class="text-success text-left">
+                                                        <i class="far fa-check-circle text-success"></i>
+                                                        @feature.DisplayName
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted  text-left">
+                                                        <i class="far fa-times-circle text-muted"></i>
+                                                        @feature.DisplayName
+                                                    </span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success text-left">
+                                                    <i class="far fa-check-circle text-success"></i>
+                                                    @feature.DisplayName : @Html.Raw(featureValue.Value)
+                                                </span>
+                                            }
+                                            <br/>
+                                        }
+                                    </p>
+                                    @if (AbpSession.UserId.HasValue)
+                                    {
+                                        <a class="btn btn-warning btn-block btn-lg" href="@Url.Action("Upgrade", "Payment", new {upgradeEditionId = edition.Id, editionPaymentType = EditionPaymentType.Upgrade})">
+                                            @L("Upgrade")
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        if (edition.IsFree)
+                                        {
+                                            <a class="btn btn-success btn-block btn-lg" href="@Url.Action("Register", "TenantRegistration", new {editionId = edition.Id, subscriptionStartType = SubscriptionStartType.Free})">
+                                                @L("Free")
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            if (edition.TrialDayCount.HasValue)
+                                            {
+                                                <a class="btn btn-warning btn-block btn-lg" href="@Url.Action("Register", "TenantRegistration", new {editionId = edition.Id, subscriptionStartType = SubscriptionStartType.Trial})">
+                                                    @L("FreeTrial")
+                                                </a>
+                                            }
+
+                                            <a class="btn btn-primary btn-block btn-lg" href="@Url.Action("Register", "TenantRegistration", new {editionId = edition.Id, subscriptionStartType = SubscriptionStartType.Paid})">
+                                                @L("BuyNow")
+                                            </a>
+                                        }
+                                    }
+                                    <!--end::Content-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    i++;
+                }
+            </div>
+        </div>
+    </div>
+</div>

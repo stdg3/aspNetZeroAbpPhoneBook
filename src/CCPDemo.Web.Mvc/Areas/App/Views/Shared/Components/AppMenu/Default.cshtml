@@ -1,0 +1,43 @@
+﻿@using CCPDemo.Configuration
+@using CCPDemo.Web.Areas.App.Models.Layout
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppMenu
+@using CCPDemo.Web.Navigation
+@using Abp.Configuration
+@using Abp.Extensions
+@model MenuViewModel
+@{
+    var theme = await GetTheme();
+    var orderedMenuItems = Model.Menu.Items.OrderByCustom().ToList();
+}
+
+<div id="kt_aside_menu_wrapper" class="hover-scroll-overlay-y my-5 my-lg-5" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-height="@Model.Height" data-kt-scroll-dependencies="#kt_aside_logo, #kt_aside_footer" data-kt-scroll-wrappers="#kt_aside_menu" data-kt-scroll-offset="0">
+    <div id="#kt_aside_menu" class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500" data-kt-menu="true">
+        @if (theme.BaseSettings.Menu.SearchActive)
+        {
+            <div class="menu-item menu-item-submenu menuSearchItem" aria-haspopup="true"
+                data-ktmenu-submenu-toggle="hover">
+                <div class="mb-5 searchMenuContainerSelect2 aside-menu-@Html.Raw(theme.BaseSettings.Menu.AsideSkin)">
+                    <select class="form-select searchMenuSelect2 " aria-describedby="basic-addon2">
+                        <option value="">@L("QuickNav")</option>
+                    </select>
+                </div>
+            </div>
+        }
+        @for (var i = 0; i < Model.Menu.Items.Count; i++)
+        {
+            var menuItem = orderedMenuItems[i];
+            if (!menuItem.IsVisible)
+            {
+                continue;
+            }
+            @await Html.PartialAsync("Components/AppMenu/_UserMenuItem", new UserMenuItemViewModel
+            {
+                MenuItem = menuItem,
+                MenuItemIndex = i,
+                RootLevel = true,
+                CurrentPageName = Model.CurrentPageName,
+                IconMenu = Model.IconMenu
+            })
+        }
+    </div>
+</div>

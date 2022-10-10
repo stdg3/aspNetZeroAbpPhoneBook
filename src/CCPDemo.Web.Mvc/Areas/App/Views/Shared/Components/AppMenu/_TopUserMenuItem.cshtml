@@ -1,0 +1,109 @@
+﻿@using Abp.Collections.Extensions
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppMenu
+@using CCPDemo.Web.Navigation
+@model UserMenuItemViewModel
+@{
+    Layout = null;
+    var theme = await GetTheme();
+    var orderedChildMenuItems = Model.MenuItem.Items.OrderByCustom().ToList();
+}
+
+@if (Model.MenuItem.Items.IsNullOrEmpty())
+{
+    <div class="menu-item me-lg-1 @GetActiveLinkClass(Model)" aria-haspopup="true">
+        <a href="@Model.MenuItem.CalculateUrl(ApplicationPath)" class="menu-link py-3">
+            @if (!Model.RootLevel)
+            {
+                <span class="menu-icon">
+                    <i class="@Model.MenuItem.Icon"></i>
+                </span>
+            }
+            <span class="menu-title">@Model.MenuItem.DisplayName</span>
+        </a>
+    </div>
+}
+else
+{
+    <div data-kt-menu-trigger="click" data-kt-menu-placement="@(Model.RootLevel ? "bottom-start": "right-start")" class="menu-item menu-lg-down-accordion me-lg-1 @GetMenuItemClass(Model) @GetActiveMenuClass(Model)">
+        <a class="menu-link py-3">
+            @if (!Model.RootLevel)
+            {
+                <span class="menu-icon">
+                    <i class="@Model.MenuItem.Icon"></i>
+                </span>
+            }
+            <span class="menu-title">@Model.MenuItem.DisplayName</span>
+            <span class="menu-arrow d-lg-none"></span>
+            <span class="menu-arrow @(Model.RootLevel ? "text-white": "" )"></span>
+        </a>
+        <div class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown menu-rounded-0 py-lg-4 w-lg-225px @GetSubMenuClass(Model)">
+            @for (var i = 0; i < Model.MenuItem.Items.Count; i++)
+            {
+                var childMenuItem = orderedChildMenuItems[i];
+                if (!childMenuItem.IsVisible)
+                {
+                    continue;
+                }
+                @await Html.PartialAsync("Components/AppMenu/_TopUserMenuItem", new UserMenuItemViewModel
+                {
+                    MenuItem = childMenuItem,
+                    MenuItemIndex = i,
+                    CurrentPageName = Model.CurrentPageName,
+                    RootLevel = false
+                })
+            }
+        </div>
+    </div>
+}
+
+@functions
+{
+    public static string GetActiveLinkClass(UserMenuItemViewModel model)
+    {
+        var activeClass = " ";
+        if (!model.MenuItem.IsMenuActive(model.CurrentPageName))
+        {
+            return activeClass;
+        }
+
+        activeClass += "here ";
+
+        return activeClass;
+    }
+
+    public static string GetActiveMenuClass(UserMenuItemViewModel model)
+    {
+        if (!model.MenuItem.IsMenuActive(model.CurrentPageName))
+        {
+            return "";
+        }
+
+        return "menu-item-here menu-item-active ";
+    }
+
+    public static string GetMenuItemClass(UserMenuItemViewModel model)
+    {
+        var menuItemClass = " ";
+        if (model.RootLevel)
+        {
+            menuItemClass += "menu-item-rel ";
+        }
+
+        return menuItemClass;
+    }
+
+    public static string GetSubMenuClass(UserMenuItemViewModel model)
+    {
+        var menuItemClass = " ";
+        if (model.RootLevel)
+        {
+            menuItemClass += "menu-submenu-left ";
+        }
+        else
+        {
+            menuItemClass += "menu-submenu-right ";
+        }
+
+        return menuItemClass;
+    }
+}

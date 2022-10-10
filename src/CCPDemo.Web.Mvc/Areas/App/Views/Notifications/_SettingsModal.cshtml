@@ -1,0 +1,40 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@model CCPDemo.Notifications.Dto.GetNotificationSettingsOutput
+<div>
+    @await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("NotificationSettings")))
+    <div class="modal-body">
+        <form name="NotificationSettingsForm" role="form" novalidate class="form">
+            <h5>@L("ReceiveNotifications")</h5>
+            <div class="mb-5">
+                <span class="form-check form-switch form-check-custom form-check-solid mb-5">
+                    <input class="form-check-input" type="checkbox" id = "NotificationSettigs_ReceiveNotifications"
+                           @Html.Raw(!Model.ReceiveNotifications ? "" : "checked=\"checked\"") />
+                </span>
+                <span class="form-text text-muted">@L("ReceiveNotifications_Definition")</span>
+            </div>
+
+            <h5 class="@($"{(Model.Notifications.Count > 0 ? "" : "hidden")}") notification-types-header margin-top-20">@L("NotificationTypes")</h5>
+            <p class="@($"{(Model.Notifications.Count > 0 && !Model.ReceiveNotifications ? "" : "d-none")}") text-danger disable-info"><small>@L("ReceiveNotifications_DisableInfo")</small></p>
+
+            @foreach (var notification in Model.Notifications)
+            {
+                <div class="checkbox-list">
+                    <div class="notification">
+                        <label for="@($"Notification_{notification.Name}")" class="form-check form-check-custom form-check-solid mb-2">
+                            <input id="@($"Notification_{notification.Name}")" type="checkbox" class="form-check-input" value="true" @(notification.IsSubscribed ? "checked=\"checked\"" : "") @(!Model.ReceiveNotifications ? "disabled" : "") />
+                            <span class="form-check-label">
+                                @notification.DisplayName
+                            </span>
+                        </label>
+                        @if (!string.IsNullOrEmpty(notification.Description))
+                        {
+                            <span class="form-text text-muted">@notification.Description</span>
+                        }
+                    </div>
+                </div>
+            }
+        </form>
+
+    </div>
+    @await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")
+</div>

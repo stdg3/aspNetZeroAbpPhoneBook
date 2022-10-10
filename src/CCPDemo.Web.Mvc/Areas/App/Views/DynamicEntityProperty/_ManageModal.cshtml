@@ -1,0 +1,29 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Authorization
+@model CCPDemo.Web.Areas.App.Models.DynamicEntityProperty.CreateEntityDynamicPropertyViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(""))
+
+<div class="modal-body">
+    @if (IsGranted(AppPermissions.Pages_Administration_DynamicEntityProperties_Create))
+    {
+        <button id="CreateNewDynamicEntityProperty" class="btn btn-primary pull-right">
+            <i class="fa fa-plus btn-md-icon"></i> 
+            <span class="d-none d-md-inline-block">
+                @L("AddNewDynamicEntityProperty")
+            </span>
+        </button>
+    }
+    <div class="align-items-center">
+        <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer ManageDynamicEntityPropertiesTable">
+            <thead>
+            <tr>
+                <th class="w-100">@L("DynamicProperty")</th>
+                <th class="w-10px"></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")

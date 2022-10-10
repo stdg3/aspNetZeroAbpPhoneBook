@@ -1,0 +1,65 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Startup
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.WebhookSubscriptions;
+}
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/WebhookSubscriptions/Index.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Common/_KeyValueListManager.css" asp-append-version="true"/>
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/webhook-subscription-list.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/Common/_KeyValueListManager.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("WebhookSubscriptions")" description="@L("WebhookSubscriptionsInfo")">
+        @if (IsGranted(AppPermissions.Pages_Administration_WebhookSubscription_Create))
+        {
+            <button id="CreateNewWebhookSubscription" class="btn btn-primary">
+                <i class="fa fa-plus btn-md-icon"></i> 
+                <span class="d-none d-md-inline-block">
+                    @L("AddNewWebhookSubscription")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="align-items-center">
+                    <div class="col-md-12">
+                        <div class="alert bg-light-primary d-flex align-items-center p-5 mb-10">
+                            <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
+                                <svg class="flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:">
+                                    <use xlink:href="#warning-icon"/>
+                                </svg>
+                            </span>
+                            <div class="d-flex flex-column">
+                                <span>@L("WebhookPageInfo")</span>
+                            </div>
+                            <button type="button" class="btn-close position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            </button>
+                        </div>
+                    </div>
+                    <table id="SubscriptionTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th style="width:100px;"></th>
+                            <th>@L("WebhookEndpoint")</th>
+                            <th>@L("WebhookEvents")</th>
+                            <th>@L("IsActive")</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

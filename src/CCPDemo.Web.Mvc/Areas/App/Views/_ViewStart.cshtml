@@ -1,0 +1,5 @@
+﻿@using CCPDemo.UiCustomization.Dto
+@{
+    UiCustomizationSettingsDto theme = await GetTheme();
+    Layout = "~/Areas/App/Views/Layout/" + theme.BaseSettings.Theme + "/_Layout.cshtml";
+}

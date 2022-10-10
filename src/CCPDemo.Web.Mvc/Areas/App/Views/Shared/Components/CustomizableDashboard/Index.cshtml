@@ -1,0 +1,285 @@
+@using CCPDemo.Localization
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Startup
+@using CCPDemo.Web.Areas.App.Models.CustomizableDashboard
+@using CCPDemo.Web.DashboardCustomization
+@using CCPDemo.Web.Resources
+@inject IWebResourceManager WebResourceManager
+@inject DashboardViewConfiguration DashboardViewConfiguration
+@model CustomizableDashboardViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Host.Dashboard;
+    var allModelWidgetFilterOutputs = Model.DashboardOutput.Widgets.SelectMany(widgets => widgets.Filters).GroupBy(filter => filter.Id).Select(filters => filters.First()).ToList();
+}
+
+@section Styles {
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/customizable-dashboard-libs.css" asp-append-version="true"/>
+
+    @foreach (var widget in Model.DashboardOutput.Widgets)
+    {
+        var widgetViewDefinition = DashboardViewConfiguration.WidgetViewDefinitions[widget.Id];
+        if (!string.IsNullOrEmpty(widgetViewDefinition.CssFile) && Model.UserDashboard.Pages != null && Model.UserDashboard.Pages.Any(p => p.Widgets != null && p.Widgets.Any(w => widgetViewDefinition.Id == w.WidgetId)))
+        {
+            <link rel="stylesheet" abp-href="/view-resources@(widgetViewDefinition.CssFile)" asp-append-version="true"/>
+        }
+    }
+
+    @if (allModelWidgetFilterOutputs.Any())
+    {
+        foreach (var widgetFilter in allModelWidgetFilterOutputs)
+        {
+            var widgetFilterViewDefinition = DashboardViewConfiguration.WidgetFilterViewDefinitions[widgetFilter.Id];
+            if (!string.IsNullOrEmpty(widgetFilterViewDefinition.CssFile))
+            {
+                <link rel="stylesheet" abp-href="/view-resources@(widgetFilterViewDefinition.CssFile)" asp-append-version="true"/>
+            }
+        }
+    }
+}
+
+@section Scripts {
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/customizable-dashboard-libs.js" asp-append-version="true"></script>
+    @WebResourceManager.RenderScripts()
+
+    @foreach (var widgetFilter in allModelWidgetFilterOutputs)
+    {
+        var widgetFilterViewDefinition = DashboardViewConfiguration.WidgetFilterViewDefinitions[widgetFilter.Id];
+        if (!string.IsNullOrEmpty(widgetFilterViewDefinition.JavascriptFile))
+        {
+            <script src="/view-resources@(widgetFilterViewDefinition.JavascriptFile)"></script>
+        }
+    }
+
+    @for (int i = 0; i < Model.UserDashboard.Pages.Count; i++)
+    {
+        var pageDto = Model.UserDashboard.Pages[i];
+        var widgetsOrderedById = pageDto.Widgets.OrderBy(w => w.WidgetId).ToList();
+        
+        @for (int j = 0; j < widgetsOrderedById.Count; j++)
+        {
+            var userWidget = widgetsOrderedById[j];
+            var widgetViewDefinition = DashboardViewConfiguration.WidgetViewDefinitions[userWidget.WidgetId];
+            if (!string.IsNullOrEmpty(widgetViewDefinition.JavascriptFile))
+            {
+                <script>
+                       new app.WidgetManager({
+                            containerId: '@(pageDto.Id)_@(j)_@(userWidget.WidgetId)',
+                            viewUrl: abp.appPath + '@widgetViewDefinition.ViewFile',
+                            scriptUrl: '/view-resources@(widgetViewDefinition.JavascriptFile)',
+                            widgetClass: '@widgetViewDefinition.JavascriptClassName'
+                       });
+                </script>
+            }
+            else
+            {
+                <script>
+                       new app.WidgetManager({
+                            containerId: '@(pageDto.Id)_@(j)_@(userWidget.WidgetId)',
+                            viewUrl: abp.appPath + '@widgetViewDefinition.ViewFile'
+                       });
+                </script>
+            }
+        }
+    }
+
+}
+
+<input hidden id="DashboardName" value="@Model.DashboardOutput.Name"/>
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Dashboard")" description="@L("DashboardHeaderInfo")">
+        @if (allModelWidgetFilterOutputs.Any())
+        {
+            <button type="button" class="btn btn-light-primary" id="btn-modal-filter-open" data-bs-toggle="modal" data-bs-target="#filterModal">
+                <i class="fa fa-filter"></i>
+                <span>
+                    @L("Filter")
+                </span>
+            </button>
+        }
+        <span class="form-check form-switch form-check-custom">
+            <label>
+                <input type="checkbox" id="EditableCheckbox" class="form-check-input">
+                <span class="form-check-label">
+                    @L("EditMode")
+                </span>
+            </label>
+        </span>
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        @if (Model.UserDashboard.Pages.Count == 0)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning" role="alert">
+                        @L("Dashboard_NoPageDefined_Warning")
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="row">
+            <div class="col-md-12">
+                <div class="div-dashboard-customization d-none d-flex">
+                    @if (Model.UserDashboard.Pages.Count > 0)
+                    {
+                        <div class="me-1 border-right">
+
+                            <button type="button" id="AddWidgetButton" class="btn btn-sm btn-warning btn-elevate-hover btn-pill">
+                                <i class="fa fa-plus"></i>@L("AddWidget")
+                            </button>
+
+                            &nbsp;
+                        </div>
+                    }
+                    <div class="ms-1 me-1 border-right">
+                        <div class="btn-group">
+                            <button class="btn btn-sm btn-primary dropdown-toggle btn-elevate-hover btn-pill" type="button" id="AddPageButtonDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-plus"></i>@L("AddPage")
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="AddPageDropdownMenuButton" style="width: 220px;">
+                                <div class="px-4 py-3">
+                                    <div class="mb-5">
+                                        <label for="PageNameInput" class="form-label">@L("NewPageName")</label>
+                                        <input type="text" class="form-control" id="PageNameInput">
+                                    </div>
+                                    <button id="AddPageSaveButton" class="btn btn-block btn-sm btn-primary">@L("Save")</button>
+                                </div>
+                            </div>
+                        </div>
+                        @if (Model.UserDashboard.Pages.Count > 0)
+                        {
+                            <div class="btn-group">
+                                <button class="btn btn-sm btn-info dropdown-toggle btn-elevate-hover btn-pill" type="button" id="RenamePageDropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-edit"></i>@L("RenamePage")
+                                </button>
+
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="RenamePageDropdownMenuButton" style="width: 220px;">
+                                    <div class="px-4 py-3">
+                                        <div class="mb-5">
+                                            <label for="PageNameInput" class="form-label">@L("PageNewName")</label>
+                                            <input type="text" class="form-control" id="RenamePageNameInput" placeholder="">
+                                        </div>
+                                        <button id="RenamePageSaveButton" class="btn btn-sm btn-block btn-info">@L("Save")</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <input type="hidden" id="dashboardPageCount" value="@Model.UserDashboard.Pages.Count"/>
+                        <button id="DeletePageButton" class="btn btn-sm btn-danger btn-elevate-hover btn-pill">
+                            <i class="fa fa-trash"></i>
+                            @if (Model.UserDashboard.Pages.Count > 1)
+                            {
+                                <span>@L("DeletePage")</span>
+                            }
+                            else
+                            {
+                                <span>@L("BackToDefaultPage")</span>
+                            }
+                        </button>
+                        &nbsp;
+                    </div>
+
+                    <div class="ms-1">
+                        <button type="button" class="btn btn-sm btn-success btn-elevate-hover btn-pill" id="savePageButton">
+                            <i class="fas fa-save"></i>@L("Save")
+                        </button>
+                    </div>
+                </div>
+
+                @if (Model.UserDashboard.Pages.Count > 1)
+                {
+                    <div class="card card-custom">
+                        <div class="card-header card-header-tabs-line">
+                            <div class="card-toolbar">
+                                <ul class="nav nav-tabs nav-bold nav-tabs-line" role="tablist">
+                                    @for (int i = 0; i < Model.UserDashboard.Pages.Count; i++)
+                                    {
+                                        var pageDto = Model.UserDashboard.Pages[i];
+                                        <li class="nav-item">
+                                            <a class="nav-link @Html.Raw(i == 0 ? " active" : "")" data-bs-toggle="tab" href="#@pageDto.Id" role="tab" aria-selected="false">
+                                                @pageDto.Name
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="pt-4 px-2 pb-4 row tab-content" id="PagesDiv">
+                    @for (int i = 0; i < Model.UserDashboard.Pages.Count; i++)
+                    {
+                        var pageDto = Model.UserDashboard.Pages[i];
+                        var widgetsOrderedById = pageDto.Widgets.OrderBy(w => w.WidgetId).ToList();
+                        
+                        <div id="@pageDto.Id" class="tab-pane fade @Html.Raw(i == 0 ? " show active" : "") page" role="tabpanel" style="width: 100%"
+                             aria-labelledby="@(pageDto.Id + " -tab")">
+                            <div class="grid-stack">
+                                @for (int j = 0; j < widgetsOrderedById.Count; j++)
+                                {
+                                    var userWidget = widgetsOrderedById[j];
+                                    var widgetDefinition = Model.DashboardOutput.Widgets.FirstOrDefault(x => x.Id == userWidget.WidgetId);
+
+                                    if (widgetDefinition != null)
+                                    {
+                                        <div class="grid-stack-item" data-type="widget"
+                                             data-widget-id="@userWidget.WidgetId" data-widget-name="@widgetDefinition.Name"
+                                             gs-x="@userWidget.PositionX" gs-y="@userWidget.PositionY"
+                                             gs-w="@userWidget.Width" gs-h="@userWidget.Height">
+                                            <div class="grid-stack-item-content ">
+                                                <div class="float-end text-center">
+                                                    <button class="btn btn-sm text-danger bg-white deleteWidgetButton d-none" data-widget-id="@userWidget.WidgetId">
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div id="@(pageDto.Id)_@(j)_@(userWidget.WidgetId)" class="h-100"></div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <input hidden name="PageIndex" value="@i"/>
+                            <input hidden name="PageName" value="@pageDto.Name"/>
+                            <input hidden name="PageId" value="@pageDto.Id"/>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (allModelWidgetFilterOutputs.Any())
+{
+    <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                @await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("DashboardFilters")))
+                <div class="modal-body">
+                    @for (int i = 0; i < allModelWidgetFilterOutputs.Count; i++)
+                    {
+                        <div class="row">
+                            @{
+                                var widgetFilterOutput = allModelWidgetFilterOutputs[i];
+
+                                var filterViewDefinition = DashboardViewConfiguration.WidgetFilterViewDefinitions[widgetFilterOutput.Id];
+
+                                <h6 style="margin-left: 10px;">@L(widgetFilterOutput.Name)</h6>
+
+                                <div class="col-md-12">
+                                    @await Html.PartialAsync(filterViewDefinition.ViewFile)
+                                </div>
+                            }
+                        </div>
+
+                        @if (i != allModelWidgetFilterOutputs.Count - 1)
+                        {
+                            <hr/>
+                        }
+                    }
+                </div>
+                @await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+            </div>
+        </div>
+    </div>
+}

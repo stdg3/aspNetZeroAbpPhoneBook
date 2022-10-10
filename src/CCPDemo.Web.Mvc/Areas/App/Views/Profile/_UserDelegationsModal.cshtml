@@ -1,0 +1,26 @@
+﻿<div class="modal-header">
+    <h4 class="modal-title">
+        <span>@L("UserDelegations")</span>
+    </h4>
+    <button id="DelegateNewUserButton" class="btn btn-primary pull-right">
+        <i class="la la-plus btn-md-icon"></i>
+        <span class="d-none d-md-inline-block">
+            @L("DelegateNewUser")
+        </span>
+        </button>
+</div>
+<div class="modal-body">
+    <table id="DelegatedUsersTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+        <thead>
+            <tr>
+                <th>@L("UserName")</th>
+                <th>@L("StartTime")</th>
+                <th>@L("EndTime")</th>
+                <th></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Close")</button>
+</div>

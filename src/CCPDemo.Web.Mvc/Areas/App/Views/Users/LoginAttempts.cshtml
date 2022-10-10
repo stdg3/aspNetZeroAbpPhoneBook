@@ -1,0 +1,72 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Users
+@using Abp.Application.Services.Dto
+@model UserLoginAttemptsViewModel
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/Users/LoginAttempts.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("LoginAttempts")" description="@L("LoginAttemptsHeaderInfo")">
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-12">
+                            <div class="mb-5">
+                                <label for="LoginAttemptsFilter" class="form-label">@L("Filter")</label>
+                                <div class="input-group">
+                                    <input type="text" id="LoginAttemptsFilter" class="form-control" placeholder="@L("SearchWithThreeDot")" value="">
+                                   <button id="GetLoginAttemptsButton" class="btn btn-primary" type="submit">
+                                       <i class="flaticon-search-1" aria-label="@L("Search")"></i>
+                                   </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="StartEndRange" class="form-label">@L("DateRange")</label>
+                                <input id="StartEndRange" type="text" class="form-control date-range-picker"/>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-5">
+                                <label for="LoginResultFilter" class="form-label">@L("Result")</label>
+                                @Html.DropDownList("LoginResultFilter", Model.LoginAttemptResults.Select(e => e.ToSelectListItem()), new {@class = "form-select", id = "LoginResultFilter"})
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3 mt-5">
+                    <div class="col-sm-12 text-end">
+                        <button id="RefreshLoginAttempts" class="btn btn-primary">
+                            <i class="la la-refresh btn-md-icon"></i> 
+                            <span class="d-none d-md-inline-block">
+                                @L("Refresh")
+                            </span>
+                        </button>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <table id="LoginAttemptsTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                        <tr>
+                            <th>@L("IpAddress")</th>
+                            <th>@L("Client")</th>
+                            <th>@L("Browser")</th>
+                            <th>@L("Time")</th>
+                            <th>@L("Result")</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

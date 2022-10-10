@@ -1,0 +1,38 @@
+﻿@import "../mobile-header.less";
+@import "../cookie-consent.less";
+@import "../quick-nav.less";
+
+.unread-chat-message-count {
+    position: absolute;
+    top: 0px;
+}
+
+.unread-notification-count {
+    position: absolute;
+    top: 0px;
+    left: 22px;
+}
+
+@media (max-width: 991px) {
+    .searchMenuTop {
+        display: block !important;
+    }
+
+    .searchMenuBottom {
+        display: none !important;
+    }
+}
+
+@media (min-width: 992px) {
+    .searchMenuTop {    
+        display: none !important;
+    }
+
+    .searchMenuBottom {
+        display: block !important;
+    }
+}
+
+#kt_chat_contacts_header {
+    padding: 0 1rem;
+}

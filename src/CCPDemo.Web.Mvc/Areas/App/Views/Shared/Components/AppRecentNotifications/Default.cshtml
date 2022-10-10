@@ -1,0 +1,88 @@
+﻿@model CCPDemo.Web.Areas.App.Models.Layout.RecentNotificationsViewModel
+@{
+    var theme = await GetTheme();
+}
+<style>
+    .set-notification-as-read:before{
+        content: "\2022";
+        padding-right: 0.5rem;
+        color:#B5B5C3 !important
+     }
+</style>
+<div class="d-flex align-items-center">
+    <div class="dropdown" id="header_notification_bar">
+    </div>
+</div>
+<script id="headerNotificationBarTemplate" type="x-tmpl-mustache">
+    <div class="topbar-item" data-bs-toggle="dropdown" data-offset="30px,0px" aria-expanded="true">
+        <button class="@Model.CssClass">
+            {{#unreadCount}}
+            <i class="@Model.IconClass"></i>
+            <span class="position-absolute top-0 start-100 translate-middle  badge badge-circle badge-warning unread-notification-count">
+                {{unreadCount}}
+            </span>
+            {{/unreadCount}}
+            {{^unreadCount}}
+            <i class="flaticon-alarm"></i>
+            {{/unreadCount}}
+        </button>
+    </div>
+    <div class="dropdown-menu p-0 m-0 dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-lg">
+        <div class="d-flex flex-column pt-5 bgi-size-cover bgi-no-repeat rounded-top bg-primary" style="min-height: 70px;">
+            <h4 class="d-flex" style="align-items:center;justify-content: space-between;">
+                <div class="ms-5">               
+                    <span class="text-white">@L("Notifications")</span>
+                    <span class="btn btn-text btn-white btn-sm font-weight-bold btn-font-md ml-2">{{unreadCount}} @L("New")</span>
+                 </div>
+                <a href="javascript:;" id="openNotificationSettingsModalLink" class="btn btn-md btn-icon btn-secondary me-5">
+                    <i class="flaticon2-gear"></i>
+                </a>      
+            </h4>
+           
+        </div>
+        <div class="px-4">       
+            <div class="scroll pt-5" data-scroll="true" data-height="300" data-mobile-height="200" style="height: 300px; overflow: hidden;">
+                {{#notifications}}
+                <div class="d-flex align-items-sm-center mb-7 {{#url}}user-notification-item-clickable{{/url}} {{#isUnread}}user-notification-item-unread{{/isUnread}}" data-url="{{url}}">
+                    <div class="symbol symbol-50px me-5">
+                        <span class="symbol-label">
+                            <i class="{{icon}} {{iconFontClass}} icon-lg"></i>
+                        </span>
+                    </div>
+                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                        <div class="flex-grow-1 me-2">
+                            <a class="text-gray-800 text-hover-primary fs-6 fw-bolder">
+                                {{text}}
+                            </a>
+                        </div>
+                        {{#isUnread}}
+                            <span class="text-muted fw-bold d-block fs-7">
+                                {{timeAgo}}
+                            </span>
+                            <span data-notification-id="{{userNotificationId}}" class="btn btn-link-success text-success set-notification-as-read fs-7 py-0 my-0 set-notification-as-read">
+                                @L("SetAsRead")
+                            </span>
+                        {{/isUnread}}
+                    </div>
+                </div>
+                {{/notifications}}
+                {{^notifications.length}}
+                <div class="notification-empty-text text-center p-5">
+                    @L("ThereAreNoNotifications")
+                </div>
+                {{/notifications.length}}
+            </div>
+            {{#notifications.length}}
+            <div class="m-1 mb-4 d-flex" style="align-items:center;justify-content: space-between;">
+                {{#unreadCount}}
+                    <a class="btn btn-secondary col col-xs-12" href="" id="setAllNotificationsAsReadLink">@L("SetAllAsRead")</a>
+                    <a class="btn btn-primary col col-xs-12" href="@Url.Action("Index", "Notifications", new {area = "App"})">@L("SeeAllNotifications")</a>        
+                {{/unreadCount}}
+             {{^unreadCount}}
+                    <a class="btn btn-primary col" href="@Url.Action("Index", "Notifications", new {area = "App"})">@L("SeeAllNotifications")</a>       
+             {{/unreadCount}}
+            </div>
+            {{/notifications.length}}
+        </div>
+    </div>
+</script>

@@ -1,0 +1,66 @@
+﻿@using CCPDemo.Web.Areas.App.Models.AuditLogs
+@model EntityChangeDetailModalViewModel
+
+<div class="modal-header">
+    <h4 class="modal-title">
+        <span>@L("Detail") - @L(Model.EntityTypeFullName)</span> <br/>
+        <small>@Html.Raw(L("CreatedAtByUser", Model.ChangeTime, Model.UserName))</small>
+    </h4>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+</div>
+<div class="modal-body">
+    @foreach (var propertyChange in Model.EntityPropertyChanges)
+    {
+        <div class="card">
+            <!--begin::Header-->
+            <div class="card-header py-5">
+                <h3 class="card-title">
+                    <span class="card-label">@propertyChange.PropertyName</span>
+                </h3>
+            </div>
+            <!--end::Header-->
+            <!--begin::Body-->
+            <div class="card-body py-0">
+                <!--begin::Table-->
+                <div class="row m-0">
+                    <div class="col px-8 py-6 me-8">
+                        <div class="font-size-sm text-muted font-weight-bold">@L("OriginalValue")</div>
+                        @if (Type.GetType(propertyChange.PropertyTypeFullName) == typeof(DateTime))
+                        {
+                            <div class="font-weight-bolder">
+                                @(string.IsNullOrEmpty(propertyChange.OriginalValue) ? "" : DateTimeOffset.Parse(propertyChange.OriginalValue.Replace("\"", "")).ToString("g"))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="font-weight-bolder">
+                                @(propertyChange.OriginalValue == "null" ? "" : propertyChange.OriginalValue)
+                            </div>
+                        }
+                    </div>
+                    <div class="col px-8 py-6">
+                        <div class="font-size-sm text-muted font-weight-bold">@L("NewValue")</div>
+                        @if (Type.GetType(propertyChange.PropertyTypeFullName) == typeof(DateTime))
+                        {
+                            <div class="font-weight-bolder">
+                                @(string.IsNullOrEmpty(propertyChange.NewValue) ? "" : DateTimeOffset.Parse(propertyChange.NewValue.Replace("\"", "")).ToString("g"))
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="font-weight-bolder">
+                                @(propertyChange.NewValue == "null" ? "" : propertyChange.NewValue)
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!--end::Table-->
+            </div>
+            <!--end::Body-->
+        </div>
+    }
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Close")</button>
+</div>

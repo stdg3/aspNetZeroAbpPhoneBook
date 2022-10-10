@@ -1,0 +1,166 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.TagHelpers
+@model Abp.Webhooks.WebhookSubscription
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/WebhookSubscriptions/Detail.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Common/_KeyValueListManager.css" asp-append-version="true"/>
+
+}
+
+@section Scripts
+{
+    <script>
+        var subscriptionData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model, Newtonsoft.Json.Formatting.Indented));
+    </script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/webhook-subscription-detail.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/Common/_KeyValueListManager.js" asp-append-version="true"></script>
+
+}
+
+@{
+    var breadcrumbs = new List<BreadcrumbItem>()
+    {
+        new BreadcrumbItem(Url.Action("Index", "WebhookSubscription", new {Area = "App"}), @L("WebhookSubscriptions")),
+        new BreadcrumbItem(L("WebhookSubscriptionDetail")),
+    };
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("WebhookSubscriptionDetail")" breadcrumbs="breadcrumbs">
+        @if (Model.IsActive)
+        {
+            <span class="badge badge-success">@L("Active")</span>
+        }
+        else
+        {
+            <span class="badge badge-dark">@L("Disabled")</span>
+        }
+
+        @if (IsGranted(AppPermissions.Pages_Administration_WebhookSubscription_Edit) ||
+             IsGranted(AppPermissions.Pages_Administration_WebhookSubscription_ChangeActivity))
+        {
+            <div class="dropdown dropdown-inline ml-2">
+                <a href="#" class="btn btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="flaticon-more-1"></i>
+                </a>
+                    <!--begin::Naviigation-->
+                    <ul class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right" x-placement="bottom-end" style="position: absolute; transform: translate3d(-211px, 39px, 0px); top: 0px; left: 0px; will-change: transform;">
+                        @if (IsGranted(AppPermissions.Pages_Administration_WebhookSubscription_Edit))
+                        {
+                            <li>
+                                <a href="javascript:;" id="subscription-edit-btn" class="dropdown-item">
+                                   @L("EditWebhookSubscription")
+                                </a>
+                            </li>
+                        }
+
+                        @if (IsGranted(AppPermissions.Pages_Administration_WebhookSubscription_ChangeActivity))
+                        {
+                            <li>
+                                <a href="javascript:;" id="activity-toggle-btn" class="dropdown-item">
+
+                                    @if (Model.IsActive)
+                                    {
+                                        @L("Disable")
+                                    }
+                                    else
+                                    {
+                                        @L("Enable")
+                                    }
+                                </a>
+                            </li>
+                        }
+                    </ul>
+            </div>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card mb-5" id="portlet-detail">
+                       <div class="card-body">
+                           <div class="mb-5 row">
+                               <label class="col-2 form-label">@L("WebhookEndpoint")</label>
+                               <div class="col-10 text-break">
+                                   @Model.WebhookUri
+                               </div>
+                           </div>
+                           <div class="mb-5 row">
+                               <label class="col-2 form-label">@L("WebhookEvents")</label>
+                               <div class="col-10 text-break">
+                                   @if (Model.Webhooks != null)
+                                   {
+                                       @foreach (var webhookEvent in Model.Webhooks)
+                                       {
+                                           @webhookEvent
+                                           <br/>
+                                       }
+                                   }
+                               </div>
+                           </div>
+       
+                           <div class="mb-5 row">
+                               <label class="col-2 form-label">@L("AdditionalWebhookHeaders")</label>
+                               <div class="col-10 text-break">
+                                   @if (Model.Headers != null)
+                                   {
+                                       @foreach (var webhookHeader in Model.Headers)
+                                       {
+                                           @webhookHeader
+                                           <br/>
+                                       }
+                                   }
+                               </div>
+                           </div>
+       
+                           <div class="mb-5 row mb-0">
+                               <label class="col-2 form-label">@L("WebhookSecret")</label>
+                               <div class="col-10 position-relative">
+                                   <span class="blur" id="secretSpan">@Model.Secret</span>
+                                   <div class="btn btn-sm btn-dark btn-elevate btn-elevate-air" id="secret-view-btn">@L("ViewWebhookSecret")</div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="card">
+                       <div class="card-header align-items-center border-0 mt-4">
+                           <h3>
+                               @L("WebhookSendAttempts")
+                           </h3>
+                           <div class="card-toolbar">
+                               <button id="refresh-send-attempts-btn" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                                   <i class="flaticon2-refresh"></i>
+                               </button>
+                           </div>
+                       </div>
+       
+                       <div class="card-body">
+                           <div class="align-items-center">
+                               <table id="WebHookSendAttemptTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                   <thead>
+                                   <tr>
+                                       <th></th>
+                                       <th style="text-align: center;width: 60px">@L("Actions")</th>
+                                       <th>@L("WebhookEvent")</th>
+                                       <th>@L("WebhookEventId")</th>
+                                       <th>@L("CreationTime")</th>
+                                       <th>@L("HttpStatusCode")</th>
+                                       <th>@L("Response")</th>
+                                       <th>@L("Data")</th>
+                                   </tr>
+                                   </thead>
+                               </table>
+                           </div>
+                       </div>
+                   </div>
+    </div>
+</div>
+<div class="modal fade" id="SendAttemptDetailModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,142 @@
+﻿@using Abp.Application.Services.Dto
+@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Models.Users
+@using CCPDemo.Web.Areas.App.Startup
+
+@model UsersViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.Users;
+}
+
+@section Styles
+{
+<link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Users/Index.css" asp-append-version="true" />
+}
+
+@section Scripts
+{
+<script abp-src="/view-resources/Areas/App/Views/Common/_DynamicEntityPropertyManager.js" asp-append-version="true"></script>
+<script abp-src="/view-resources/Areas/App/Views/_Bundles/user-list.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Users")" description="@L("UsersHeaderInfo")">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline btn-outline-success btn-active-light-success dropdown-toggle me-1" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-file-excel btn-md-icon"></i>
+                <span class="d-none d-md-inline-block mb-md-0">
+                    @L("ExcelOperations")
+                </span>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" id="ExportUsersToExcelButton" href="#"> @L("ExportToExcel")</a>
+                <a class="dropdown-item" href="#">
+                    <span class="fileinput-button">
+                        <span>@L("ImportFromExcel")</span>
+                        <input id="ImportUsersFromExcelButton" type="file" name="files" accept=".xlsx, .xls, .csv">
+                    </span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <span class="dropdown-item-text text-muted pl-3" href="#">
+                    <small class="pl-2"> @Html.Raw(L("ImportToExcelSampleFileDownloadInfo", "<a href='" + (ApplicationPath) + "assets/SampleFiles/ImportUsersSampleFile.xlsx" + "'>" + L("ClickHere") + "</a>"))</small>
+                </span>
+            </div>
+        </div>
+
+        @if (IsGranted(AppPermissions.Pages_Administration_Users_Create))
+        {
+            <button id="CreateNewUserButton" class="btn btn-primary">
+                <i class="fa fa-plus btn-md-icon"></i>
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewUser")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <div class="form">
+                    <div class="row align-items-center mb-4">
+                        <div class="col-xl-12">
+                            <div class="mb-5 align-items-center">
+                                <div class="input-group">
+                                    <input type="text" id="UsersTableFilter" class="form-control" placeholder="@L("SearchWithThreeDot")" value="@Model.FilterText">
+                                    <button id="GetUsersButton" class="btn btn-primary" type="submit">
+                                        <i class="flaticon-search-1" aria-label="@L("Search")"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AdvacedAuditFiltersArea" style="display: none" class="row mb-4">
+                        <div class="@(IsGranted(AppPermissions.Pages_Administration_Roles) ? "col-xl-6" : "col-xl-12")">
+                            <div class="mb-5">
+                                <button class="btn btn-secondary w-100" id="FilterByPermissionsButton">@L("SelectPermissions") (<span id="NumberOfFilteredPermission">0</span>)</button>
+                            </div>
+                        </div>
+                        @if (IsGranted(AppPermissions.Pages_Administration_Roles))
+                        {
+                            <div class="col-xl-6">
+                                <div class="mb-5">
+                                    @Html.DropDownList("RoleSelectionCombobox", Model.Roles.Select(i => i.ToSelectListItem()), new {@class = "form-control", id = "RoleSelectionCombo"})
+                                </div>
+                            </div>
+                        }
+                        <div class="col-xl-6">
+                            <div>
+                                <label class="form-check form-check-custom form-check-solid">
+                                    <input type="checkbox"
+                                           id="UsersTable_OnlyLockedUsers"
+                                           name="OnlyLockedUsersCheckbox"
+                                           class="form-check-input"
+                                           value="true">
+                                    <span class="form-check-label">
+                                        @L("OnlyLockedUsers")
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-xl-12 text-end">
+                            <button id="RefreshUserListButton" class="btn btn-primary float-end">
+                                <i class="fa fa-sync btn-md-icon"></i> 
+                                <span class="d-none d-md-inline-block">
+                                    @L("Refresh")
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-xl-12">
+                            <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item">
+                                <i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")
+                            </span>
+                            <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none">
+                                <i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="align-items-center">
+                    <table id="UsersTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@L("Actions")</th>
+                                <th>@L("UserName")</th>
+                                <th>@L("FirstName")</th>
+                                <th>@L("Surname")</th>
+                                <th>@L("Roles")</th>
+                                <th>@L("EmailAddress")</th>
+                                <th>@L("EmailConfirm")</th>
+                                <th>@L("Active")</th>
+                                <th>@L("CreationTime")</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

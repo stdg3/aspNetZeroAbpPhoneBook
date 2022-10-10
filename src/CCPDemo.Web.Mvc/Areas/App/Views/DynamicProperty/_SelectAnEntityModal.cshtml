@@ -1,0 +1,12 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@model List<string>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("AddNewDynamicEntityProperty")))
+
+<div class="modal-body">
+    <div class="mb-5">
+        @Html.DropDownList("entityFullName", new SelectList(Model), L("SelectAnEntity"), new {@class = "form-select"})
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

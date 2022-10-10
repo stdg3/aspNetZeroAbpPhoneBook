@@ -1,0 +1,279 @@
+﻿@using CCPDemo.Authorization.Delegation
+@using Abp.Timing
+@model CCPDemo.Web.Areas.App.Models.Layout.UserMenuViewModel
+@inject IUserDelegationConfiguration UserDelegationConfiguration
+
+<div class="d-flex align-items-center">
+@if (Model.RenderOnlyIcon)
+{
+    <div href="#" class="@Model.AnchorCssClass" id="kt_quick_user_toggle" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+        <span class="symbol symbol-30px">
+            <span class="svg-icon svg-icon-xl">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <polygon points="0 0 24 0 24 24 0 24"></polygon>
+                        <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"></path>
+                        <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z" fill="#000000" fill-rule="nonzero"></path>
+                    </g>
+                </svg>
+            </span>
+        </span>
+    </div>
+}
+else
+{
+    <div class="@Model.TogglerCssClass" id="kt_quick_user_toggle" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+        @if (Model.IsImpersonatedLogin)
+        {
+            <i class="fa fa-reply text-danger pe-2"></i>
+        }
+        <span class="@Model.TextCssClass">@Html.Raw(Model.GetShownLoginName())</span>
+        <span class="@Model.SymbolCssClass">
+            <span class="@Model.SymbolTextCssClass">@Html.Raw(Model.LoginInformations.User.UserName.Substring(0, 1).ToUpper())</span>
+        </span>
+    </div>
+}
+
+<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-primary fw-bold py-4 fs-6 w-400px" data-kt-menu="true">
+<div class="menu-item px-3">
+    <div class="menu-content d-flex align-items-center px-3">
+        <div class="symbol symbol-50px me-5">
+            <img alt="Logo" class="header-profile-picture" src="@Url.Action("GetProfilePicture", "Profile", new {area = string.Empty})?t=@Clock.Now.Ticks.ToString()">
+        </div>
+        <div class="d-flex flex-column">
+            <div class="fw-bolder d-flex align-items-center fs-5">
+                @Html.Raw(Model.GetShownLoginName())
+            </div>
+            <a href="#" class="fw-bold text-muted text-hover-primary fs-7">
+                @Model.LoginInformations.User.EmailAddress
+            </a>
+        </div>
+    </div>
+</div>
+<div class="separator my-2"></div>
+@if (Model.IsImpersonatedLogin)
+{
+    <div class="menu-item px-5" id="UserProfileBackToMyAccountButton">
+        <a href="#" class="menu-link px-5">
+            <div class="symbol symbol-30px bg-light me-3">
+                <div class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-danger">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"/>
+                                <path d="M21.4451171,17.7910156 C21.4451171,16.9707031 21.6208984,13.7333984 19.0671874,11.1650391 C17.3484374,9.43652344 14.7761718,9.13671875 11.6999999,9 L11.6999999,4.69307548 C11.6999999,4.27886191 11.3642135,3.94307548 10.9499999,3.94307548 C10.7636897,3.94307548 10.584049,4.01242035 10.4460626,4.13760526 L3.30599678,10.6152626 C2.99921905,10.8935795 2.976147,11.3678924 3.2544639,11.6746702 C3.26907199,11.6907721 3.28437331,11.7062312 3.30032452,11.7210037 L10.4403903,18.333467 C10.7442966,18.6149166 11.2188212,18.596712 11.5002708,18.2928057 C11.628669,18.1541628 11.6999999,17.9721616 11.6999999,17.7831961 L11.6999999,13.5 C13.6531249,13.5537109 15.0443703,13.6779456 16.3083984,14.0800781 C18.1284272,14.6590944 19.5349747,16.3018455 20.5280411,19.0083314 L20.5280247,19.0083374 C20.6363903,19.3036749 20.9175496,19.5 21.2321404,19.5 L21.4499999,19.5 C21.4499999,19.0068359 21.4451171,18.2255859 21.4451171,17.7910156 Z" fill="#000000" fill-rule="nonzero"/>
+                            </g>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            @L("BackToMyAccount")
+        </a>
+    </div>
+}
+<div class="menu-item px-5" data-kt-menu-trigger="hover" data-kt-menu-placement="left-start">
+    <a href="#" class="menu-link px-5">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon points="0 0 24 0 24 24 0 24"/>
+                            <path d="M18,8 L16,8 C15.4477153,8 15,7.55228475 15,7 C15,6.44771525 15.4477153,6 16,6 L18,6 L18,4 C18,3.44771525 18.4477153,3 19,3 C19.5522847,3 20,3.44771525 20,4 L20,6 L22,6 C22.5522847,6 23,6.44771525 23,7 C23,7.55228475 22.5522847,8 22,8 L20,8 L20,10 C20,10.5522847 19.5522847,11 19,11 C18.4477153,11 18,10.5522847 18,10 L18,8 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                            <path d="M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" fill="#000000" fill-rule="nonzero"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <span class="menu-title">
+            @L("ManageLinkedAccounts")
+        </span>
+        <span class="menu-arrow"></span>
+    </a>
+    <div class="menu-sub menu-sub-dropdown w-255px py-4" style="">
+        <div class="menu-item px-5" id="ManageLinkedAccountsLink">
+            <a href="#" class="menu-link px-5">
+                @L("ManageLinkedAccounts")
+            </a>
+        </div>
+        <div id="RecentlyUsedLinkedUsers" class="linked-accounts"
+             aria-label="@L("LinkedAccounts")"
+             role="menu">
+
+        </div>
+    </div>
+</div>
+@if (UserDelegationConfiguration.IsEnabled && !Model.IsImpersonatedLogin)
+{
+    <div class="menu-item px-5">
+        <a href="#" class="menu-link px-5" id="ManageUserDelegations">
+            <div class="symbol symbol-30px bg-light me-3">
+                <div class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"/>
+                                <path d="M4,4 L11.6314229,2.5691082 C11.8750185,2.52343403 12.1249815,2.52343403 12.3685771,2.5691082 L20,4 L20,13.2830094 C20,16.2173861 18.4883464,18.9447835 16,20.5 L12.5299989,22.6687507 C12.2057287,22.8714196 11.7942713,22.8714196 11.4700011,22.6687507 L8,20.5 C5.51165358,18.9447835 4,16.2173861 4,13.2830094 L4,4 Z" fill="#000000" opacity="0.3"/>
+                                <path d="M12,11 C10.8954305,11 10,10.1045695 10,9 C10,7.8954305 10.8954305,7 12,7 C13.1045695,7 14,7.8954305 14,9 C14,10.1045695 13.1045695,11 12,11 Z" fill="#000000" opacity="0.3"/>
+                                <path d="M7.00036205,16.4995035 C7.21569918,13.5165724 9.36772908,12 11.9907452,12 C14.6506758,12 16.8360465,13.4332455 16.9988413,16.5 C17.0053266,16.6221713 16.9988413,17 16.5815,17 C14.5228466,17 11.463736,17 7.4041679,17 C7.26484009,17 6.98863236,16.6619875 7.00036205,16.4995035 Z" fill="#000000" opacity="0.3"/>
+                            </g>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            @L("ManageUserDelegations")
+        </a>
+    </div>
+}
+<div class="menu-item px-5">
+    <a href="#" class="menu-link px-5" id="UserProfileChangePasswordLink">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-success">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <circle fill="#000000" cx="5" cy="12" r="2"/>
+                            <circle fill="#000000" cx="12" cy="12" r="2"/>
+                            <circle fill="#000000" cx="19" cy="12" r="2"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("ChangePassword")
+    </a>
+</div>
+<div class="menu-item px-5">
+    <a href="@Url.Action("LoginAttempts", "Users")" class="menu-link px-5" id="ShowLoginAttemptsLink">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-danger">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <path d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z" fill="#000000"/>
+                            <rect fill="#000000" opacity="0.3" x="10" y="9" width="7" height="2" rx="1"/>
+                            <rect fill="#000000" opacity="0.3" x="7" y="9" width="2" height="2" rx="1"/>
+                            <rect fill="#000000" opacity="0.3" x="7" y="13" width="2" height="2" rx="1"/>
+                            <rect fill="#000000" opacity="0.3" x="10" y="13" width="7" height="2" rx="1"/>
+                            <rect fill="#000000" opacity="0.3" x="7" y="17" width="2" height="2" rx="1"/>
+                            <rect fill="#000000" opacity="0.3" x="10" y="17" width="7" height="2" rx="1"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("LoginAttempts")
+    </a>
+</div>
+<div class="menu-item px-5 d-flex">
+    <a href="#" class="menu-link px-5" id="UserProfileChangePictureLink">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <polygon points="0 0 24 0 24 24 0 24"/>
+                            <rect fill="#000000" opacity="0.3" x="2" y="4" width="20" height="16" rx="2"/>
+                            <polygon fill="#000000" opacity="0.3" points="4 20 10.5 11 17 20"/>
+                            <polygon fill="#000000" points="11 20 15.5 14 20 20"/>
+                            <circle fill="#000000" opacity="0.3" cx="18.5" cy="8.5" r="1.5"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("ChangeProfilePicture")
+    </a>
+</div>
+<div class="menu-item px-5 d-flex">
+    <a href="#" class="menu-link px-5" id="UserProfileMySettingsLink">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-dark">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <path d="M7,3 L17,3 C19.209139,3 21,4.790861 21,7 C21,9.209139 19.209139,11 17,11 L7,11 C4.790861,11 3,9.209139 3,7 C3,4.790861 4.790861,3 7,3 Z M7,9 C8.1045695,9 9,8.1045695 9,7 C9,5.8954305 8.1045695,5 7,5 C5.8954305,5 5,5.8954305 5,7 C5,8.1045695 5.8954305,9 7,9 Z" fill="#000000"/>
+                            <path d="M7,13 L17,13 C19.209139,13 21,14.790861 21,17 C21,19.209139 19.209139,21 17,21 L7,21 C4.790861,21 3,19.209139 3,17 C3,14.790861 4.790861,13 7,13 Z M17,19 C18.1045695,19 19,18.1045695 19,17 C19,15.8954305 18.1045695,15 17,15 C15.8954305,15 15,15.8954305 15,17 C15,18.1045695 15.8954305,19 17,19 Z" fill="#000000" opacity="0.3"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("MySettings")
+    </a>
+</div>
+@if (!Model.HasUiCustomizationPagePermission)
+{
+    <div class="menu-item px-5 d-flex">
+        <a href="@Url.Action("Index", "UiCustomization")" class="menu-link px-5" id="UserProfileVisualSettingsLink">
+            <div class="symbol symbol-30px bg-light me-3">
+                <div class="symbol-label">
+                    <span class="svg-icon svg-icon-primary svg-icon-2x svg-icon-info">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24"/>
+                                <path d="M10.232233,10.232233 L13.767767,13.767767 L8.46446609,19.0710678 C7.48815536,20.0473785 5.90524292,20.0473785 4.92893219,19.0710678 C3.95262146,18.0947571 3.95262146,16.5118446 4.92893219,15.5355339 L10.232233,10.232233 Z" fill="#000000"/>
+                                <path d="M13.767767,6.69669914 L15.5355339,4.92893219 C16.5118446,3.95262146 18.0947571,3.95262146 19.0710678,4.92893219 C20.0473785,5.90524292 20.0473785,7.48815536 19.0710678,8.46446609 L17.3033009,10.232233 L18.363961,11.2928932 C18.9497475,11.8786797 18.9497475,12.8284271 18.363961,13.4142136 C17.7781746,14 16.8284271,14 16.2426407,13.4142136 L10.5857864,7.75735931 C10,7.17157288 10,6.22182541 10.5857864,5.63603897 C11.1715729,5.05025253 12.1213203,5.05025253 12.7071068,5.63603897 L13.767767,6.69669914 Z" fill="#000000" opacity="0.3"/>
+                            </g>
+                        </svg>
+                    </span>
+                </div>
+            </div>
+            @L("VisualSettings")
+        </a>
+    </div>
+}
+<div class="menu-item px-5 d-flex">
+    <a href="#" class="menu-link px-5" id="UserDownloadCollectedDataLink">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-primary svg-icon-2x">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <rect x="0" y="0" width="24" height="24"/>
+                            <path d="M3.5,21 L20.5,21 C21.3284271,21 22,20.3284271 22,19.5 L22,8.5 C22,7.67157288 21.3284271,7 20.5,7 L10,7 L7.43933983,4.43933983 C7.15803526,4.15803526 6.77650439,4 6.37867966,4 L3.5,4 C2.67157288,4 2,4.67157288 2,5.5 L2,19.5 C2,20.3284271 2.67157288,21 3.5,21 Z" fill="#000000" opacity="0.3"/>
+                            <path d="M14.8875071,12.8306874 L12.9310336,12.8306874 L12.9310336,10.8230161 C12.9310336,10.5468737 12.707176,10.3230161 12.4310336,10.3230161 L11.4077349,10.3230161 C11.1315925,10.3230161 10.9077349,10.5468737 10.9077349,10.8230161 L10.9077349,12.8306874 L8.9512614,12.8306874 C8.67511903,12.8306874 8.4512614,13.054545 8.4512614,13.3306874 C8.4512614,13.448999 8.49321518,13.5634776 8.56966458,13.6537723 L11.5377874,17.1594334 C11.7162223,17.3701835 12.0317191,17.3963802 12.2424692,17.2179453 C12.2635563,17.2000915 12.2831273,17.1805206 12.3009811,17.1594334 L15.2691039,13.6537723 C15.4475388,13.4430222 15.4213421,13.1275254 15.210592,12.9490905 C15.1202973,12.8726411 15.0058187,12.8306874 14.8875071,12.8306874 Z" fill="#000000"/>
+                        </g>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("DownloadCollectedData")
+    </a>
+</div>
+<div class="separator my-2"></div>
+<div class="menu-item px-5 d-flex">
+    <a href="@Url.Action("Logout", "Account", new {area = string.Empty})" class="menu-link px-5">
+        <div class="symbol symbol-30px bg-light me-3">
+            <div class="symbol-label">
+                <span class="svg-icon svg-icon-muted svg-icon-2hx">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <rect opacity="0.3" x="4" y="11" width="12" height="2" rx="1" fill="black"/>
+                        <path d="M5.86875 11.6927L7.62435 10.2297C8.09457 9.83785 8.12683 9.12683 7.69401 8.69401C7.3043 8.3043 6.67836 8.28591 6.26643 8.65206L3.34084 11.2526C2.89332 11.6504 2.89332 12.3496 3.34084 12.7474L6.26643 15.3479C6.67836 15.7141 7.3043 15.6957 7.69401 15.306C8.12683 14.8732 8.09458 14.1621 7.62435 13.7703L5.86875 12.3073C5.67684 12.1474 5.67684 11.8526 5.86875 11.6927Z" fill="black"/>
+                        <path d="M8 5V6C8 6.55228 8.44772 7 9 7C9.55228 7 10 6.55228 10 6C10 5.44772 10.4477 5 11 5H18C18.5523 5 19 5.44772 19 6V18C19 18.5523 18.5523 19 18 19H11C10.4477 19 10 18.5523 10 18C10 17.4477 9.55228 17 9 17C8.44772 17 8 17.4477 8 18V19C8 20.1046 8.89543 21 10 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3H10C8.89543 3 8 3.89543 8 5Z" fill="#C4C4C4"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        @L("Logout")
+    </a>
+</div>
+</div>
+
+</div>
+<script id="linkedAccountsSubMenuTemplate" type="x-tmpl-mustache">
+    <div class="separator my-2"></div>
+    {{#items}}
+    <div class="menu-item px-5">
+        <a href="javascript;" data-user-id="{{id}}" data-tenant-id="{{tenantId}}" class="menu-link px-5 recently-linked-user">
+            {{shownUserName}}
+        </a>
+    </div>
+    {{/items}}
+
+</script>

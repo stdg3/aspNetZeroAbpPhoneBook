@@ -1,0 +1,110 @@
+﻿@import "../mobile-header.less";
+@import "../cookie-consent.less";
+@import "../quick-nav.less";
+
+body {
+  background-image: url(/metronic/themes/theme2/images/bg/header-bg.jpg);
+  
+  &.dark-mode{
+    background-image: url(/metronic/themes/theme2/images/bg/header-bg-dark.png);  
+  }
+}
+
+.unread-chat-message-count {
+  position: absolute;
+  top: 18px;
+}
+
+.searchMenuContainerSelect2 {
+  width: 200px
+}
+
+.searchMenuContainerSelect2 span.select2-selection.select2-selection--single:before {
+  content: "\f2eb";
+  position: absolute;
+  left: 20px;
+  top: 15px;
+  display: inline-block;
+  font: normal normal normal 16px/1 "LineAwesome";
+  font-size: inherit;
+  text-decoration: inherit;
+  text-rendering: optimizeLegibility;
+  text-transform: none;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__placeholder{
+    color: #fff;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #fff transparent transparent transparent;
+}
+
+@media (max-width: 991px) {
+  .searchMenuTop {
+    display: block !important;
+  }
+
+  .searchMenuBottom {
+    display: none !important;
+  }
+
+  .searchMenuContainerSelect2 {
+    width: calc(100% - 40px) !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .searchMenuTop {
+    display: none !important;
+  }
+
+  .searchMenuBottom {
+    display: block !important;
+  }
+
+  .searchMenuContainerSelect2 .select2-selection {
+    background-color: transparent !important;
+    border: 1px solid white !important;
+    color: white !important;
+  }
+
+  .searchMenuSelect2 {
+    background-color: transparent !important;
+    border: 1px solid white !important;
+    color: white !important;
+  }
+}
+
+.searchMenuContainerSelect2 {
+  margin: 0px;
+  min-width: 200px;
+}
+
+.searchMenuSelect2 {
+  min-width: 200px;
+}
+
+.searchMenuTop {
+  margin-bottom: 1em !important;
+  margin-left: 25px !important;
+}
+
+
+//** METRONİC 8 **//
+span.menu-arrow.text-white:after {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 9' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' clip-rule='evenodd' d='M5.93537 4.57889C6.03839 4.77912 6.0191 5.0363 5.87137 5.21403L2.87153 8.82282C2.68598 9.04603 2.36951 9.06026 2.16468 8.8546C1.95985 8.64893 1.94422 8.30126 2.12977 8.07804L4.80594 4.85863L2.15586 1.93583C1.96104 1.72096 1.96165 1.37314 2.15722 1.15895C2.35279 0.944757 2.66927 0.945311 2.86409 1.16018L5.85194 4.45551C5.8859 4.49296 5.91371 4.53459 5.93537 4.57889Z'/%3e%3c/svg%3e") !important;
+}
+
+div.dataTables_wrapper div.dataTables_info{
+  padding-top: 0;
+  padding-left: 10px;
+}
+
+#kt_toolbar_container span.text-muted{
+  color: #fff !important;
+}
+
+#ActiveUserDelegationsCombobox {
+    max-width: 120px;
+}

@@ -1,0 +1,22 @@
+﻿@using CCPDemo.Localization
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+    <link href="~/view-resources/Views/Payment/GetPaymentResult.css" rel="stylesheet"/>
+}
+
+<div class="login-form align-middle m-0" style="height: 350px">
+    <div class="d-flex align-items-center justify-content-center flex-column h-100 w-100">
+        <div class="mb-5">&emsp;<i class="fas fa-check fa-5x text-success"></i></div>
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("ThankYou")</h3>
+        <p class="text-muted font-weight-bold font-size-h4">
+            @L("YourPaymentHasBeenCompleted")
+        </p>
+
+        <a class="btn btn-info mt-5" href="@Url.Action("Index", "SubscriptionManagement", new {Area = "App"})"> @L("GoToSubscriptionManagement")</a>
+    </div>
+</div>

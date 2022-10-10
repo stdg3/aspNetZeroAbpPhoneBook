@@ -1,0 +1,73 @@
+﻿@using CCPDemo.Localization
+@using CCPDemo.Web.Security.Recaptcha
+@addTagHelper *, Owl.reCAPTCHA
+@{
+    ViewBag.DisableTenantChange = true;
+}
+@section Scripts
+{
+    @if (ViewBag.UseCaptcha)
+    {
+        <recaptcha-script-v3/>
+        <recaptcha-script-v3-js action="login" execute="false" />
+    }
+    <script abp-src="/view-resources/Views/Account/SessionLockScreen.js" asp-append-version="true"></script>
+}
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl":"").css" rel="stylesheet" />
+}
+
+<div class="card card-bordered gutter-b card-stretch">
+    <!--begin::Body-->
+    <div class="card-body text-center pt-4">
+        <div class="alert bg-light-primary" role="alert">
+            <div class="alert-text" style="font-weight: bold;">@L("YourSessionIsLocked")<i class="fa fa-lock float-end mt-1 me-5"></i></div>
+        </div>
+        <!--begin::User-->
+        <div class="mt-7 pb-2">
+            <div class="symbol symbol-circle symbol-lg-75">
+                <img id="profilePicture" src="" alt="image">
+            </div>
+        </div>
+        <!--end::User-->
+        <!--begin::Name-->
+        <div class="my-2">
+            <a href="#" class="text-dark font-weight-bold text-hover-primary font-size-h4" id="userName"></a>
+        </div>
+        <!--end::Name-->
+        <!--begin::Name-->
+        <div class="my-2">
+            <span class="text-dark font-weight-normal font-size-h4">Tenant: <span class="text-dark font-weight-bold" id="tenantName"></span></span>
+        </div>
+        <form id="session-lock-screen-login-form" asp-action="Login" method="post">
+            <div class="my-2">
+                @if (ViewBag.UseCaptcha)
+                {
+                    <input type="hidden" name="@RecaptchaValidator.RecaptchaResponseKey" id="recaptchaResponse"/>
+                }
+                <div class="mb-5">
+                    <input type="hidden" name="usernameOrEmailAddress">
+                </div>
+                <div class="mb-5">
+                    <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" placeholder="@L("Password")*" name="password" autocomplete="new-password">
+                </div>
+            </div>
+
+            <!--end::Name-->
+            <!--begin::Buttons-->
+            <div class="mt-9 mb-6">
+                <div class="col-5 mt-2 float-start">
+                    <label class="form-check form-check-custom form-check-solid">
+                        <input type="checkbox" name="rememberMe" class="form-check-input" value="true">
+                        <span class="form-check-label">
+                            @L("RememberMe")
+                        </span>
+                    </label>
+                </div>
+                <button type="button" id="session-lock-screen-submit-button" class="btn btn-primary font-weight-bolder font-size-h6 col-5 float-end">@L("LogIn")</button>
+            </div>
+            <!--end::Buttons-->
+        </form>
+    </div>
+    <!--end::Body-->
+</div>

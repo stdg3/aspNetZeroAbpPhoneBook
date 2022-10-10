@@ -1,0 +1,15 @@
+﻿@using CCPDemo
+@using CCPDemo.Web.Areas.App.Models.Layout
+@model FooterViewModel
+@{
+    Layout = null;
+}
+<div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+    <div class="container-xxl d-flex flex-column flex-md-row flex-stack">
+        <div class="text-dark order-2 order-md-1">
+            <span class="text-gray-400 fw-bold me-1">@Model.GetProductNameWithEdition() | v@(AppVersionHelper.Version) [@AppVersionHelper.ReleaseDate.ToString("yyyyMMdd")]</span>
+        </div>
+        <ul class="menu menu-gray-600 menu-hover-primary fw-bold order-1">
+        </ul>
+    </div>
+</div>

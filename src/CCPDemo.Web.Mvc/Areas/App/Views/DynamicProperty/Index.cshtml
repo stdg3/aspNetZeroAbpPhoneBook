@@ -1,0 +1,97 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Startup
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.DynamicProperties;
+}
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/DynamicProperties/Index.css" asp-append-version="true"/>
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/IInputTypes.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/dynamic-properties-index.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/DynamicProperties/DynamicEntityPropertiesList.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("DynamicPropertyManagement")"></abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a href="#dynamicProperties" class="nav-link active" data-bs-toggle="tab" role="tab">
+                            @L("DynamicProperties")
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#dynamicEntityProperties" id="btnDynamicEntityPropertyTab" class="nav-link" data-bs-toggle="tab" role="tab">
+                            @L("DynamicEntityProperties")
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content p-5">
+                    <div id="dynamicProperties" class="tab-pane active">
+                        <div class="row text-end">
+                            <div class="col">
+                                @if (IsGranted(AppPermissions.Pages_Administration_DynamicProperties_Create))
+                                {
+                                    <button id="CreateNewDynamicProperty" class="btn btn-primary">
+                                        <i class="fa fa-plus btn-md-icon"></i> 
+                                        <span class="d-none d-md-inline-block">
+                                            @L("AddNewDynamicProperty")
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        <div class="align-items-center">
+                            <table id="DynamicPropertiesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th style="width:50px"></th>
+                                    <th>@L("PropertyName")</th>
+                                    <th>@L("DisplayName")</th>
+                                    <th>@L("InputType")</th>
+                                    <th>@L("Permission")</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div id="dynamicEntityProperties" class="tab-pane">
+                        <div class="row text-end">
+                            <div class="col">
+                                @if (IsGranted(AppPermissions.Pages_Administration_DynamicEntityProperties_Create))
+                                {
+                                    <button id="CreateNewDynamicEntityProperty" class="btn btn-primary">
+                                        <i class="fa fa-plus btn-md-icon"></i> 
+                                        <span class="d-none d-md-inline-block">
+                                            @L("AddNewDynamicEntityProperty")
+                                        </span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                        <div class="align-items-center">
+                            <table id="DynamicEntityPropertiesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th class="w-10px"></th>
+                                    <th>@L("EntityFullName")</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

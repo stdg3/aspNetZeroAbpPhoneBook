@@ -1,0 +1,76 @@
+﻿@using System.Globalization
+@using Abp.Extensions
+@using CCPDemo
+@using CCPDemo.Localization
+@using CCPDemo.MultiTenancy.Payments.Paypal
+@using CCPDemo.Web.Resources
+@model CCPDemo.Web.Models.Paypal.PayPalPurchaseViewModel
+@inject IWebResourceManager WebResourceManager
+@inject PayPalPaymentGatewayConfiguration PayPalPaymentGatewayConfiguration
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Scripts
+{
+    <script src="https://www.paypal.com/sdk/js?client-id=@Model.Configuration.ClientId&currency=@CCPDemoConsts.Currency@Model.GetDisabledFundingsQueryString()" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Views/PayPal/_Purchase.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("Purchase")</h3>
+    </div>
+    <hr class="border-green"/>
+    <div class="form-actions">
+        <div class="mb-5 row">
+            <label class="col-sm-4 form-label">@L("Item")</label>
+            <div class="col-sm-8 text-end">
+                <p class="form-control-static text-bold">
+                    @Model.Description
+                </p>
+            </div>
+        </div>
+        <div class="mb-5 row">
+            <label class="col-sm-4 form-label">@L("Total")</label>
+            <div class="col-sm-8 text-end">
+                <p class="form-control-static text-bold" id="totalPrice">
+                    @CCPDemoConsts.CurrencySign@(Model.Amount.ToString("N2"))
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <form id="payPalCheckoutForm" method="post" asp-action="ConfirmPayment" asp-controller="PayPal" class="register-form">
+        <input type="hidden" name="PaymentId" value="@Model.PaymentId"/>
+        <input type="hidden" name="PayPalOrderId" value=""/>
+        <input type="hidden" name="Amount" value="@Model.Amount.ToString("F", new CultureInfo("en-US", false))"/>
+        <input type="hidden" name="clientId" value="@Model.Configuration.ClientId"/>
+        <input type="hidden" name="currency" value="@CCPDemoConsts.Currency"/>
+
+        @if (!Model.Configuration.DemoUsername.IsNullOrEmpty() && !Model.Configuration.DemoPassword.IsNullOrEmpty())
+        {
+            <div class="alert bg-light-primary d-flex align-items-center p-5 mb-10">
+                <span class="svg-icon svg-icon-2hx svg-icon-primary me-4">
+                    <i class="fas fa-info-circle fs-1" aria-label="@L("Payment")"></i>
+                </span>
+                <div class="d-flex flex-column">
+                    <h4 class="mb-1 text-primary"> @L("DemoPayPalAccount")</h4>
+                    <span>
+                        <p>
+                            <span>@L("UserName"): <strong>@Model.Configuration.DemoUsername</strong></span><br/>
+                            <span>@L("Password"): <strong>@Model.Configuration.DemoPassword</strong></span>
+                        </p>
+                    </span>
+                </div>
+            </div>
+        }
+
+        <div id="paypal-button"></div>
+    </form>
+</div>

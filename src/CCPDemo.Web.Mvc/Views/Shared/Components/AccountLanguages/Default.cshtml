@@ -1,0 +1,19 @@
+﻿@using CCPDemo.Web.Views.Shared.Components.AccountLanguages
+@model LanguageSelectionViewModel
+@if (Model.Languages.Count > 1)
+{
+    <div class="language-switch-area ml-1 mx-auto">
+        @foreach (var languageInfo in Model.Languages)
+        {
+            <a href="@Url.Action("ChangeCulture", "AbpLocalization", new {
+                        area = "",      
+                        cultureName = languageInfo.Name,
+                        returnUrl = Context.Request.Path + Context.Request.QueryString
+                    })">
+                <span class="language-icon @(languageInfo.Name == Model.CurrentLanguage.Name ? "language-icon-current" : "")" title="@languageInfo.DisplayName">
+                    <i class="@languageInfo.Icon" aria-label="@languageInfo.Icon"></i>
+                </span>
+            </a>
+        }
+    </div>
+}

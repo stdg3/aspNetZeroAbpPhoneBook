@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:extensions="clr-namespace:CCPDemo.Extensions.MarkupExtensions;assembly=CCPDemo.Mobile.Shared"
+             xmlns:base="clr-namespace:CCPDemo.ViewModels.Base;assembly=CCPDemo.Mobile.Shared"
+             x:Class="CCPDemo.Views.InitialView"
+             base:ViewManager.AutoWireViewModel="true"
+             Title="{extensions:Translate WelcomePage_Title}">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10,10,10,10" 
+                     IsVisible="{Binding NoAuthorizedMenuItem}">
+            <Label Text="{extensions:Translate WelcomePage_Info}"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage.Content>
+
+    <ContentPage.Behaviors>
+        <xct:EventToCommandBehavior
+        EventName="Appearing"
+        Command="{Binding PageAppearingCommand}" />
+    </ContentPage.Behaviors>
+</ContentPage>

@@ -1,0 +1,45 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Layout
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppMenu
+@using CCPDemo.Web.Navigation
+@model MenuViewModel
+@{
+    Layout = null;
+    var theme = await GetTheme();
+    var orderedMenuItems = Model.Menu.Items.OrderByCustom().ToList();
+}
+
+<div class="menu menu-lg-rounded menu-column menu-lg-row menu-state-bg menu-title-gray-700 menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-400 fw-bold my-5 my-lg-0 align-items-stretch" id="#kt_header_menu" data-kt-menu="true">
+    @if (theme.BaseSettings.Menu.SearchActive)
+    {
+        <div class="menu-item menuSearchItem searchMenuTop searchMenuContainerSelect2" aria-haspopup="true">
+            <select class="form-select searchMenuSelect2" aria-describedby="basic-addon2">
+                <option value="">@L("SearchMenuItems")</option>
+            </select>
+        </div>
+    }
+    @for (var i = 0; i < Model.Menu.Items.Count; i++)
+    {
+        var menuItem = orderedMenuItems[i];
+        if (!menuItem.IsVisible)
+        {
+            continue;
+        }
+        @await Html.PartialAsync("Components/AppMenu/_TopUserMenuItem", new UserMenuItemViewModel
+    {
+    MenuItem = menuItem,
+    MenuItemIndex = i,
+    ItemDepth = 0,
+    RootLevel = true,
+    CurrentPageName = Model.CurrentPageName,
+    IsTabMenuUsed = theme.IsTabMenuUsed
+    })
+    }
+    @if (theme.BaseSettings.Menu.SearchActive)
+    {
+        <li class="menu-item  menu-item-open menu-item-here menu-item-submenu menuSearchItem searchMenuBottom searchMenuContainerSelect2" aria-haspopup="true">
+            <select class="form-select searchMenuSelect2" aria-describedby="basic-addon2">
+                <option value="">@L("SearchMenuItems")</option>
+            </select>
+        </li>
+    }
+</div>

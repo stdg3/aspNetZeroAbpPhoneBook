@@ -1,0 +1,16 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("VerifyYourCode")))
+
+<div class="modal-body">    
+    <form name="SmsVerificationModalForm">
+        <div class="mb-5">
+            <div  id="inputDiv" class="mb-5">
+                <label for="YourCode" class="form-label">@L("YourCode")</label>
+                <input id="YourCode" class="form-control edited" type="text" name="Code" required maxlength="6" minlength="6">
+                <input type="hidden" name="PhoneNumber"/>
+            </div>
+        </div>
+        <button id="verifyButton" class="btn btn-primary">@L("Verify")</button>
+    </form>
+</div>

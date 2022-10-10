@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "CCPDemo.Migrator": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "environmentVariables": {
+        "ASPNETCORE_Docker_Enabled": "true",
+        "ConnectionStrings__Default": "Server=mssqlDb;Database=CCPDemoDb;User=sa;Password=Super_Encrypted_Passw0rd!"
+      }
+    }
+  }
+}

@@ -1,0 +1,53 @@
+﻿@import "../mobile-header.less";
+@import "../cookie-consent.less";
+@import "../quick-nav.less";
+
+.unread-chat-message-count {
+  position: absolute;
+  top: 18px;
+}
+
+.unread-notification-count {
+  position: absolute;
+  top: 19px;
+  right: 5px;
+}
+
+@media (max-width: 991px) {
+  .searchMenuTop {
+    display: block !important;
+  }
+
+  .searchMenuBottom {
+    display: none !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .searchMenuTop {
+    display: none !important;
+  }
+
+  .searchMenuBottom {
+    display: block !important;
+  }
+}
+
+.searchMenuContainerSelect2 {
+    margin: 0px !important;
+}
+
+.searchMenuBottom{
+    margin:5px 0 0 0 !important;
+    
+    .select2-container{
+        max-width:225px !important;
+        float:right;
+    }
+}
+
+.subscription-warning {
+  span{
+    color: white;
+  }
+}

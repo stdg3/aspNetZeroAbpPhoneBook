@@ -1,0 +1,28 @@
+﻿@using Abp.MultiTenancy
+@using CCPDemo.Features
+@model CCPDemo.Web.Areas.App.Models.Layout.ChatTogglerViewModel
+@{
+    var isChatEnabled = (AbpSession.MultiTenancySide == MultiTenancySides.Host || IsFeatureEnabled(AppFeatures.ChatFeature));
+}
+@if (isChatEnabled)
+{
+    <div id="chat_is_connecting_icon" class="d-flex align-items-center">
+        <button class="@Model.CssClass">
+            <img src="@(ApplicationPath)Common/Images/loading.gif" style="width: 23px;" tooltip="@L("ChatIsConnecting")" placement="left"/>
+        </button>
+    </div>
+    <div id="kt_drawer_chat_toggle" class="d-flex align-items-center d-none">
+        <button class="@Model.CssClass">
+            <div id="chatIconUnRead" class="d-none d-flex">
+                <i class="@Model.IconClass unread-notification"></i>
+                <span class="position-absolute top-0 start-100 translate-middle  badge badge-circle badge-warning unread-chat-message-count">
+                    {{unreadChatMessageCount}}
+                </span>
+            </div>
+            <div id="chatIcon">
+                <i class="@Model.IconClass"></i>
+            </div>
+        </button>
+    </div>
+}
+

@@ -1,0 +1,26 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@model LookupModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Title ?? L("SelectAnItem")))
+
+<div class="modal-body">
+    <form>
+        <div class="input-group margin-bottom-10">
+            <input class="form-control lookup-filter-text" placeholder="@L("SearchWithThreeDot")" type="text">
+            <button class="btn btn-primary lookup-filter-button" type="submit"><i class="flaticon-search-1" aria-label="@L("Search")"></i></button>
+        </div>
+    </form>
+    
+    <table class="lookup-modal-table table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+        <thead>
+        <tr>
+            <th>@L("Select")</th>
+            <th>@L("Name")</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+</div>

@@ -1,0 +1,8 @@
+﻿table.dataTable thead tr{
+    font-size: 14px;
+    font-weight: 500;
+}
+
+table.dataTable tbody tr td {
+    vertical-align: middle !important;
+}

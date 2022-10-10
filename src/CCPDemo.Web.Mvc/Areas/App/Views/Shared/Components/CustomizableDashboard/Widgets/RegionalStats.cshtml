@@ -1,0 +1,30 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom RegionalStatsContainer h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="font-weight-bolder text-dark">Regional Stats</span>
+        </h3>
+    </div>
+    <div class="card-body">
+        <div id="region_statistics_content">
+            <div class="table-responsive">
+                <table class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer dtr-inline dt-responsive nowrap">
+                    <thead>
+                    <tr>
+                        <td class="kt-widget11__label">#</td>
+                        <td class="kt-widget11__app">Country</td>
+                        <td class="kt-widget11__sales">Sales</td>
+                        <td class="kt-widget11__change">Change</td>
+                        <td class="kt-widget11__price">Avg Price</td>
+                        <td class="kt-widget11__total">Total</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Rows will be generated dynamically, see initRegionalStats in RegionalStats.js -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

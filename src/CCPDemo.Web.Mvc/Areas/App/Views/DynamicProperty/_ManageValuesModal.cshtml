@@ -1,0 +1,45 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.TagHelpers
+@model CCPDemo.DynamicEntityProperties.Dto.DynamicPropertyDto
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Id == default ? @L("Add") + " " + @L("DynamicPropertyValue") : @L("Edit") + " " + @L("DynamicPropertyValue")))
+<div class="col-12">
+    <div id="portlet-dynamic-property-values">
+
+        <div class="pt-5 px-5" id="edit-values-area" style="display:none">
+            <input type="hidden" name="id"/>
+            <input type="hidden" name="inputType" value="@Model.InputType"/>
+            <input type="hidden" name="dynamicPropertyId" value="@Model.Id"/>
+            <div class="mb-0 pb-0">
+                <label for="propertyName" class="form-label">@L("Value")</label>
+                <div class="input-group">
+                    <input type="text" name="dynamicPropertyValue" class="form-control">
+                    <button id="save-value" class="btn btn-primary" type="button">@L("Save")</button>
+                </div>
+            </div>
+        </div>
+        <div class="align-items-center px-5">
+            <table id="DynamicPropertyValuesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                <thead>
+                <tr>
+                    <th class="w-100">@L("Values")</th>
+                    <th class="w-10px"></th>
+                    <th class="w-10px">
+                        <button id="refresh-dynamic-property-values-btn" class="btn btn-outline-brand btn-sm btn-icon btn-icon-md">
+                            <i class="flaticon2-refresh"></i>
+                        </button>
+                        @if (IsGranted(AppPermissions.Pages_Administration_DynamicPropertyValue_Create))
+                        {
+                            <button id="add-new-dynamic-property-value" class="btn btn-outline-brand btn-sm btn-icon btn-icon-md">
+                                <i class="flaticon2-plus"></i>
+                            </button>
+                        }
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")

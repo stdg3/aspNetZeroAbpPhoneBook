@@ -1,0 +1,41 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@model CCPDemo.Web.Areas.App.Models.DynamicProperty.CreateOrEditDynamicPropertyViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.DynamicPropertyDto.Id == default ? @L("AddNewDynamicProperty") : (@L("EditDynamicProperty") + " - " + Model.DynamicPropertyDto.PropertyName)))
+
+<div class="modal-body">
+    @if (Model.DynamicPropertyDto.Id != default)
+    {
+        <input type="hidden" name="Id" value="@Model.DynamicPropertyDto.Id"/>
+    }
+
+    <div class="mb-5">
+        <label for="propertyName" class="form-label">@L("PropertyName")</label>
+        <input id="propertyName" type="text" name="propertyName" class="form-control" value="@Model.DynamicPropertyDto.PropertyName">
+    </div>
+
+    <div class="mb-5">
+        <label for="displayName" class="form-label">@L("DisplayName")</label>
+        <input id="displayName" type="text" name="displayName" class="form-control" value="@Model.DynamicPropertyDto.DisplayName">
+    </div>
+
+
+    <div class="mb-5">
+        <label for="inputType" class="form-label">@L("InputType")</label>
+        @Html.DropDownList("inputType", new SelectList(Model.AllowedInputTypes, Model.DynamicPropertyDto.InputType), new {@class = "form-select"})
+    </div>
+
+    <div class="mb-5">
+        <label for="permission" class="form-label">@L("Permission")</label>
+        <div class="mb-2">
+            <div class="input-group">
+                <input type="text" class="form-control" name="permission" disabled="disabled" placeholder="@L("SelectAPermission")" value="@Model.DynamicPropertyDto.Permission">
+                <button class="btn btn-primary" type="button" id="FilterByPermissionsButton">
+                    <i class="fa fa-hand-pointer" style="color: white"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

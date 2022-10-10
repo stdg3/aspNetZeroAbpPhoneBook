@@ -1,0 +1,10 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Layout
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppLogo
+@model HeaderViewModel
+@{
+    Layout = null;
+    var theme = await GetTheme();
+}
+<a href="@Url.Action("Index", "Home", new {area = string.Empty})">
+    @await Component.InvokeAsync(typeof(AppLogoViewComponent), new {logoSkin = theme.BaseSettings.Layout.DarkMode ? "dark": "light", logoClass = "h-20px logo"})
+</a>

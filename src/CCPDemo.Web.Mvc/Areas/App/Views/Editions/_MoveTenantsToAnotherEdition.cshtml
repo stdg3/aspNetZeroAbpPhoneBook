@@ -1,0 +1,29 @@
+﻿@using Abp.Application.Services.Dto
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Editions
+@model MoveTenantsToAnotherEditionViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("MoveTenantsOfEdition")))
+
+<div class="modal-body">
+
+    <form name="MoveTenantsToAnotherEditionForm" role="form" novalidate class="form-validation">
+
+        <input type="hidden" name="SourceEditionId" value="@Model.EditionId" />
+
+        <div class="mb-5">
+            <a href="@(ApplicationPath + "App/Tenants?editionId="+ Model.EditionId)" target="_blank">
+                @L("MoveTenantsOfEditionDescription", Model.TenantCount)
+            </a>
+        </div>
+
+        <div class="mb-5">
+            <label for="TargetEditionId" class="form-label">@L("Edition")</label>
+            @Html.DropDownList("TargetEditionId", Model.EditionItems.Select(i => i.ToSelectListItem()), new { @class = "form-select", @required = "required" })
+        </div>
+
+    </form>
+
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

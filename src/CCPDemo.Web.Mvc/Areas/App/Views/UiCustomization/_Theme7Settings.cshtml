@@ -1,0 +1,41 @@
+﻿@model CCPDemo.Configuration.Dto.ThemeSettingsDto
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a href="#Theme7Layout" class="nav-link active" data-bs-toggle="tab" role="tab">
+            @L("UiCustomization_Layout")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#Theme7Menu" class="nav-link" data-bs-toggle="tab" role="tab">
+            @L("UiCustomization_Menu")
+        </a>
+    </li>
+</ul>
+<div class="tab-content m-5">
+    <div id="Theme7Layout" class="tab-pane active">
+        <input type="hidden" name="Theme" value="theme7" />
+        <form class="LayoutSettingsForm">
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="DarkMode" class="form-check-input" value="true" @(Model.Layout.DarkMode ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("UiCustomization_DarkMode")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+    <div id="Theme7Menu" class="tab-pane">
+        <form class="MenuSettingsForm">
+            <div class="mb-5">
+                <label class="form-check form-check-custom form-check-solid col-lg-12">
+                    <input type="checkbox" name="SearchActive" class="form-check-input" value="true" @(Model.Menu.SearchActive ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("ShowMenuSearchInput")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+</div>

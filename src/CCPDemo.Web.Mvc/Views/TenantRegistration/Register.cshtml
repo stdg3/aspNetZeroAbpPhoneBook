@@ -1,0 +1,109 @@
+﻿@using Abp.Json
+@using CCPDemo.Localization
+@using CCPDemo.MultiTenancy
+@using CCPDemo.Web.Models.TenantRegistration
+@using CCPDemo.Web.Security.Recaptcha
+@addTagHelper *, Owl.reCAPTCHA
+@{
+    ViewBag.DisableTenantChange = true;
+}
+@model TenantRegisterViewModel
+
+@section Scripts
+{
+    <script>
+        window.passwordComplexitySetting = @Html.Raw(Model.PasswordComplexitySetting.ToJsonString(indented: true));
+    </script>
+    @if (ViewBag.UseCaptcha)
+    {
+        <recaptcha-script-v3/>
+        <recaptcha-script-v3-js action="register" execute="false"/>
+    }
+
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/tenant-register.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-5 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">
+            @L("TenantSignUp")
+        </h3>
+    </div>
+    <div class="row">
+        @if (Model.EditionId.HasValue)
+        {
+            <div class="col-sm-12 col-md-8">
+                <span class="d-block text-muted pt-2 font-size-sm">@L("Edition")</span>
+                <h3 class="pb-10">
+                    @Model.Edition.DisplayName
+                </h3>
+            </div>
+            <div class="col-sm-12 col-md-4 text-end">
+                <a asp-action="SelectEdition" asp-controller="TenantRegistration" id="register-back-btn" class="btn btn-light-primary btn-elevate font-weight-bolder">
+                    @L("Back")
+                </a>
+            </div>
+        }
+    </div>
+    <form class="form register-form" asp-action="Register" method="post" id="formTenantRegister">
+        <input type="hidden" Name="EditionId" value="@Model.EditionId"/>
+        @if (Model.EditionId.HasValue)
+        {
+            <input type="hidden" Name="SubscriptionStartType" value="@Model.SubscriptionStartType"/>
+            <input type="hidden" name="EditionPaymentType" value="@Model.EditionPaymentType"/>
+        }
+
+        @if (@ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <h5>
+            @L("TenantInformations")
+        </h5>
+        <div class="mb-5">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="@L("TenancyName")" name="TenancyName" required maxlength="@Tenant.MaxTenancyNameLength"/>
+        </div>
+        <div class="mb-5">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="text" placeholder="@L("Name")" name="Name" required maxlength="@CCPDemo.Authorization.Users.User.MaxNameLength"/>
+        </div>
+
+        <h5 class="mt-2">
+            @L("AccountSettings")
+        </h5>
+                
+        <div class="mb-5">
+            <input id="AdminName" placeholder="@L("AdminName")" type="text" name="AdminName" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" required maxlength="@CCPDemo.Authorization.Users.User.MaxNameLength">
+        </div>
+        
+        <div class="mb-5">
+            <input id="AdminSurname" placeholder="@L("AdminSurname")" type="text" name="AdminSurname" class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" required maxlength="@CCPDemo.Authorization.Users.User.MaxSurnameLength">
+        </div>
+        
+        <div class="mb-5">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" placeholder="@L("AdminEmailAddress")" name="AdminEmailAddress" required maxlength="@CCPDemo.Authorization.Users.User.MaxEmailAddressLength"/>
+        </div>
+        <div class="mb-5 pwstrength-div">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" autocomplete="new-password" id="AdminPassword" placeholder="@L("AdminPassword")" name="AdminPassword" required/>
+        </div>
+        <div class="mb-5">
+            <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="password" autocomplete="new-password" placeholder="@L("AdminPasswordRepeat")" name="AdminPasswordRepeat" required/>
+        </div>
+
+        @if (ViewBag.UseCaptcha)
+        {
+            <input type="hidden" name="@RecaptchaValidator.RecaptchaResponseKey" id="recaptchaResponse"/>
+        }
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <button type="submit" id="register-submit-btn" class="btn btn-block btn-primary font-weight-bolder font-size-h6 px-8 py-4">@L("Submit")</button>
+            </div>
+        </div>
+    </form>
+</div>

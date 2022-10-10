@@ -1,0 +1,91 @@
+﻿@using CCPDemo
+@using CCPDemo.Localization
+@using CCPDemo.Web.Areas.App.Models.Accounting
+@model InvoiceViewModel
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <div id="kt_content_container" class="container-xxl">
+            <div class="card">
+                <div class="card-body p-lg-20">
+                    <div class="d-flex flex-column flex-xl-row">
+                        <div class="flex-lg-row-fluid me-xl-18 mb-10 mb-xl-0">
+                            <div class="mt-n1">
+                                <div class="d-flex flex-stack pb-10">
+                                    <a href="#">
+                                        <img alt="Logo" src="@(ApplicationPath)Common/Images/app-logo-on-light.svg" class="w-150px">
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-success" onclick="window.print();">@L("Print")</a>
+                                </div>
+                                <div class="m-0">
+                                    <div class="fw-bolder fs-3 text-gray-800 mb-8">@L("Invoice") #@Model.Invoice.InvoiceNo</div>
+                                    <div class="row g-5 mb-11">
+                                        <div class="col-sm-6">
+                                            <div class="fw-bold fs-7 text-gray-600 mb-1">@L("Date"):</div>
+                                            <div class="fw-bolder fs-6 text-gray-800">@Model.Invoice.InvoiceDate.ToString("yyyy-MM-dd")</div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-5 mb-12">
+                                        <div class="col-sm-6">
+                                            <div class="fw-bold fs-7 text-gray-600 mb-1">Issue For:</div>
+                                            <div class="fw-bolder fs-6 text-gray-800">@Model.Invoice.TenantLegalName</div>
+                                            <div class="fw-bold fs-7 text-gray-600">
+                                                @foreach (var line in Model.Invoice.TenantAddress)
+                                                {
+                                                    <span>@line</span>
+                                                    <br>
+                                                }
+                                                @L("Tax/VatNo"): @Model.Invoice.TenantTaxNo
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="fw-bold fs-7 text-gray-600 mb-1">Issued By:</div>
+                                            <div class="fw-bolder fs-6 text-gray-800">@Model.Invoice.HostLegalName</div>
+                                            <div class="fw-bold fs-7 text-gray-600">
+                                                @foreach (var line in Model.Invoice.HostAddress)
+                                                {
+                                                    <span>@line</span>
+                                                    <br>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="table-responsive border-bottom mb-9">
+                                            <table class="table mb-3">
+                                                <thead>
+                                                <tr class="border-bottom fs-6 fw-bolder text-muted">
+                                                    <th class="min-w-175px pb-2">#</th>
+                                                    <th class="min-w-70px text-end pb-2">@L("Edition")</th>
+                                                    <th class="min-w-80px text-end pb-2">@L("Amount")</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr class="fw-bolder text-gray-700 fs-5 text-end">
+                                                    <td class="d-flex align-items-center pt-6">
+                                                        1
+                                                    </td>
+                                                    <td class="pt-6">@Model.Invoice.EditionDisplayName</td>
+                                                    <td class="pt-6">@CCPDemoConsts.CurrencySign@Model.Invoice.Amount</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="d-flex justify-content-end">
+                                            <div class="mw-300px">
+                                                <div class="d-flex flex-stack">
+                                                    <div class="fw-bold pe-10 text-gray-600 fs-7">@L("Total")</div>
+                                                    <div class="text-end fw-bolder fs-6 text-gray-800">@CCPDemoConsts.CurrencySign@Model.Invoice.Amount.ToString("N2")</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

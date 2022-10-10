@@ -1,0 +1,116 @@
+﻿@using Abp.Application.Services.Dto
+@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Models.Tenants
+@using CCPDemo.Web.Areas.App.Startup
+@model TenantIndexViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Host.Tenants;
+}
+
+@section Styles
+{
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/tenant-list.css" asp-append-version="true"/>
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/tenant-index-libs.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("Tenants")" description="@L("TenantsHeaderInfo")">
+        @if (IsGranted(AppPermissions.Pages_Tenants_Create))
+        {
+            <button id="CreateNewTenantButton" class="btn btn-primary">
+                <i class="fa fa-plus btn-md-icon"></i>
+                <span class="d-none d-md-inline-block">
+                    @L("CreateNewTenant")
+                </span>
+            </button>
+        }
+    </abp-page-subheader>
+    
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+                        <div class="card-body">
+                            <div class="form">
+                                <div id="TenantsFormFilter">
+                                    <div class="row mb-4">
+                                        <div class="col-xl-6">
+                                            <label for="TenantsTableFilter" class="form-label">@L("TenantNameOrTenancyCode")</label>
+                                            <div class="input-group">
+                                                <input id="TenantsTableFilter" class="form-control" type="text" value="@ViewBag.FilterText" placeholder="@L("SearchWithThreeDot")" aria-describedby="basic-addon2">
+                                                <button id="GetTenantsButton" class="btn btn-primary" type="submit">
+                                                    <i class="flaticon-search-1" aria-label="@L("Search")"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <label for="EditionDropdown" class="form-label">@L("Edition")</label>
+                                            @Html.DropDownList("EditionDropdown", Model.EditionItems.Select(i => i.ToSelectListItem()), new {@class = "form-select edited"})
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-xl-6">
+                                            <div class="mb-3">
+                                                <label class="form-check form-check-custom form-check-solid">
+                                                    <input type="checkbox"
+                                                           id="TenantsTable_SubscriptionEndDateRangeActive"
+                                                           name="SubscriptionEndDateRangeActive"
+                                                           class="form-check-input"
+                                                           value="true">
+                                                    <span class="form-check-label">
+                                                        @L("SubscriptionEndDate")
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <input type="text" name="SubscriptionEndDateRange" class="form-control date-range-picker">
+                                        </div>
+                                        <div class="col-xl-6">
+                                            <div class="mb-3">
+                                                <label class="form-check form-check-custom form-check-solid">
+                                                    <input type="checkbox"
+                                                           id="TenantsTable_CreationDateRangeActive"
+                                                           name="CreationDateRangeActive"
+                                                           class="form-check-input"
+                                                           value="true">
+                                                    <span class="form-check-label">
+                                                        @L("CreationTime")
+                                                    </span>
+                                                </label>
+                                            </div>
+                                            <input type="text" name="CreationDateRange" class="form-control date-range-picker">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-xl-12 text-end">
+                                            <button name="RefreshButton" class="btn btn-primary float-end">
+                                                <i class="fa fa-sync btn-md-icon"></i>
+                                                <span class="d-none d-md-inline-block">
+                                                    @L("Refresh")
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="align-items-center">
+                                <table id="TenantsTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>@L("Actions")</th>
+                                        <th>@L("TenancyCodeName")</th>
+                                        <th>@L("Name")</th>
+                                        <th>@L("Edition")</th>
+                                        <th>@L("SubscriptionEndDateUtc")</th>
+                                        <th>@L("Active")</th>
+                                        <th>@L("CreationTime")</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+    </div>
+</div>

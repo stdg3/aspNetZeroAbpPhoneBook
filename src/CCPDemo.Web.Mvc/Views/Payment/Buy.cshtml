@@ -1,0 +1,118 @@
+@using System.Globalization
+@using CCPDemo
+@using CCPDemo.Localization
+@using CCPDemo.MultiTenancy.Payments;
+@model CCPDemo.Web.Models.Payment.BuyEditionViewModel
+
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Views/Payment/Buy.js" asp-append-version="true"></script>
+}
+
+@section Styles
+{
+    <link abp-href="/view-resources/Views/Payment/Payment.css" rel="stylesheet" type="text/css" asp-append-version="true"/>
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-5 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg pb-10">@L("PaymentInfo")</h3>
+        <span class="d-block text-muted pt-2 font-size-sm">@L("Edition")</span>
+        <h3 class="pb-5">
+            @Model.Edition.DisplayName
+        </h3>
+    </div>
+    <div>
+        <input type="hidden" name="EditionId" value="@Model.Edition.Id"/>
+        <input type="hidden" name="EditionPaymentType" value="@Model.EditionPaymentType"/>
+        <input type="hidden" name="SubscriptionStartType" value="@Model.SubscriptionStartType"/>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <div class="radio-inline">
+            @if (Model.Edition.DailyPrice.HasValue && Model.Edition.DailyPrice.Value > 0)
+            {
+                <label class="form-check form-check-custom form-check-solid mb-5">
+                    <input class="form-check-input" type="radio" name="PaymentPeriodType"
+                           data-day-count="@((int) PaymentPeriodType.Daily)"
+                           data-payment-period-type-amount="@(Model.Edition.DailyPrice.Value.ToString("0.00", CultureInfo.InvariantCulture))"
+                           value="@PaymentPeriodType.Daily"/>
+                   <span class="form-check-label">
+                        @L("DailyPrice"): @CCPDemoConsts.CurrencySign@Model.Edition.DailyPrice.Value.ToString("N2")
+                    </span>
+                </label>
+            }
+            @if (Model.Edition.WeeklyPrice.HasValue && Model.Edition.WeeklyPrice.Value > 0)
+            {
+                <label class="form-check form-check-custom form-check-solid mb-5">
+                    <input class="form-check-input" type="radio" name="PaymentPeriodType"
+                           data-day-count="@((int) PaymentPeriodType.Weekly)"
+                           data-payment-period-type-amount="@(Model.Edition.WeeklyPrice.Value.ToString("0.00", CultureInfo.InvariantCulture))"
+                           value="@PaymentPeriodType.Weekly"/>
+                    <span class="form-check-label">
+                        @L("WeeklyPrice"): @CCPDemoConsts.CurrencySign@Model.Edition.WeeklyPrice.Value.ToString("N2")
+                    </span>
+                </label>
+            }
+            @if (Model.Edition.MonthlyPrice.HasValue && Model.Edition.MonthlyPrice.Value > 0)
+            {
+                <label class="form-check form-check-custom form-check-solid mb-5">
+                    <input class="form-check-input" type="radio" name="PaymentPeriodType"
+                           data-day-count="@((int) PaymentPeriodType.Monthly)"
+                           data-payment-period-type-amount="@(Model.Edition.MonthlyPrice.Value.ToString("0.00", CultureInfo.InvariantCulture))"
+                           value="@PaymentPeriodType.Monthly"/>
+                    <span class="form-check-label">
+                        @L("MonthlyPrice"): @CCPDemoConsts.CurrencySign@Model.Edition.MonthlyPrice.Value.ToString("N2")
+                    </span>
+                </label>
+            }
+
+            @if (Model.Edition.AnnualPrice.HasValue && Model.Edition.AnnualPrice.Value > 0)
+            {
+                <label class="form-check form-check-custom form-check-solid mb-5">
+                    <input class="form-check-input" type="radio" name="PaymentPeriodType"
+                           data-day-count="@((int) PaymentPeriodType.Annual)"
+                           data-payment-period-type-amount="@(Model.Edition.AnnualPrice.Value.ToString("0.00", CultureInfo.InvariantCulture))"
+                           value="@PaymentPeriodType.Annual"/>
+                    <span class="form-check-label">
+                        @L("AnnualPrice"): @CCPDemoConsts.CurrencySign@Model.Edition.AnnualPrice.Value.ToString("N2")
+                    </span>
+                </label>
+            }
+        </div>
+
+    </div>
+
+    <hr/>
+
+    @if (Model.PaymentGateways.Any(gateway => gateway.SupportsRecurringPayments))
+    {
+        <div class="mb-5">
+            <label class="form-check form-check-custom form-check-solid">
+                <input type="checkbox" name="RecurringPaymentEnabled" class="form-check-input" value="true"/> 
+                <span class="form-check-label">
+                    @L("AutomaticallyBillMyAccount")
+                </span>
+            </label>
+        </div>
+    }
+
+    @foreach (var paymentGateway in Model.PaymentGateways)
+    {
+        <div class="mb-5">
+            <button data-gateway="@paymentGateway.GatewayType" data-supports-subscription="@paymentGateway.SupportsRecurringPayments.ToString().ToLower()" class="btn btn-success w-100 checkout">@L("CheckoutWith" + paymentGateway.GatewayType)</button>
+        </div>
+    }
+
+</div>

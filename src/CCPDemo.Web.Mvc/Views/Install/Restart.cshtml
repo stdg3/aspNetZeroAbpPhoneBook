@@ -1,0 +1,47 @@
+﻿@using Abp.AspNetZeroCore.Timing
+@using Abp.Web.Security.AntiForgery
+@using CCPDemo.UiCustomization.Dto
+@using CultureHelper = CCPDemo.Localization.CultureHelper
+@model CCPDemo.Web.Models.Install.InstallViewModel
+@inject AppTimes AppTimes
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@{
+    Layout = null;
+    AbpAntiForgeryManager.SetCookie(Context);
+    UiCustomizationSettingsDto theme = await GetTheme();
+}
+<!DOCTYPE html>
+<html lang="en" dir=@(CultureHelper.IsRtl ? "rtl" : "")>
+<head>
+    <title>CCPDemo Installation</title>
+
+    <link rel="shortcut icon" href="~/favicon.ico"/>
+
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/vendors.bundle.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="/metronic/themes/default/css/style.bundle.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/app-layout-libs.css" asp-append-version="true"/>
+    <link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/_Bundles/common-styles.css" asp-append-version="true"/>
+
+    @if (CultureHelper.IsRtl)
+    {
+        <link rel="stylesheet" href="/Common/Styles/abp-zero-template-rtl.css" asp-append-version="true"/>
+    }
+
+    <link rel="stylesheet" abp-href="/view-resources/Views/Install/Index.css" asp-append-version="true"/>
+</head>
+<body class="page-fixed header-static">
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+            <div class="card-body">
+                Restarting application...
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+        document.location = '/';
+    </script>
+</body>
+</html>

@@ -1,0 +1,637 @@
+﻿@using Abp.Application.Services.Dto
+@using Abp.Extensions
+@using Abp.Timing;
+@using CCPDemo.Web.Areas.App.Startup
+@model CCPDemo.Web.Areas.App.Models.HostSettings.HostSettingsViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Host.Settings;
+}
+<link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/Common/_KeyValueListManager.css" asp-append-version="true"/>
+
+@section Scripts
+{
+    <script>
+    var isOpenIdEnabled = @(Model.EnabledSocialLoginSettings.Contains("OpenId") ? "true" : "false");
+    var openIdConnectClaimsMappings = @Html.Raw(Model.Settings.ExternalLoginProviderSettings.OpenIdConnectClaimsMapping == null || Model.Settings.ExternalLoginProviderSettings.OpenIdConnectClaimsMapping.Count == 0 ? "[]" : Newtonsoft.Json.JsonConvert.SerializeObject(Model.Settings.ExternalLoginProviderSettings.OpenIdConnectClaimsMapping));
+    
+    var isWsFederationEnabled = @(Model.EnabledSocialLoginSettings.Contains("WsFederation") ? "true" : "false");
+    var wsFederationClaimsMappings = @Html.Raw(Model.Settings.ExternalLoginProviderSettings.WsFederationClaimsMapping == null || Model.Settings.ExternalLoginProviderSettings.WsFederationClaimsMapping.Count == 0 ? "[]" : Newtonsoft.Json.JsonConvert.SerializeObject(Model.Settings.ExternalLoginProviderSettings.WsFederationClaimsMapping));
+
+    </script>
+    <script abp-src="/view-resources/Areas/App/Views/Common/_KeyValueListManager.js" asp-append-version="true"></script>
+    <script abp-src="/view-resources/Areas/App/Views/HostSettings/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+<abp-page-subheader title="@L("Settings")" description="@L("SettingsHeaderInfo")">
+    <button id="SaveAllSettingsButton" class="btn btn-primary">
+        <i class="fa fa-save btn-md-icon"></i> 
+        <span class="d-none d-md-inline-block">
+            @L("SaveAll")
+        </span>
+    </button>
+</abp-page-subheader>
+
+<div class="@(await GetContainerClass())">
+<div class="card">
+<div class="card-body">
+<div id="SettingsTabPanel">
+<ul class="nav nav-tabs" role="tablist">
+    @if (Clock.SupportsMultipleTimezone)
+    {
+        <li class="nav-item">
+            <a href="#SettingsGeneralTab" class="nav-link active" data-bs-toggle="tab" role="tab">
+                @L("General")
+            </a>
+        </li>
+    }
+    <li class="nav-item">
+        <a href="#SettingsTenantManagementTab" class="nav-link @((!Clock.SupportsMultipleTimezone) ? "active" : "")" data-bs-toggle="tab" role="tab">
+            @L("TenantManagement")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#SettingsUserManagementTab" data-bs-toggle="tab" role="tab" class="nav-link">
+            @L("UserManagement")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#SecurityManagementTab" data-bs-toggle="tab" role="tab" class="nav-link">
+            @L("Security")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#SettingsEmailSmtpTab" data-bs-toggle="tab" role="tab" class="nav-link">
+            @L("EmailSmtp")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#BillingTab" data-bs-toggle="tab" role="tab" class="nav-link">
+            @L("Invoice")
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="#OtherSettingsTab" data-bs-toggle="tab" role="tab" class="nav-link">
+            @L("OtherSettings")
+        </a>
+    </li>
+    @if (Model.EnabledSocialLoginSettings.Any())
+    {
+        <li class="nav-item">
+            <a href="#ExternalLoginSettingsTab" aria-expanded="true" class="nav-link" data-bs-toggle="tab" role="tab">
+                @L("ExternalLoginSettings")
+            </a>
+        </li>
+    }
+</ul>
+
+<div class="tab-content m-5">
+@if (Clock.SupportsMultipleTimezone)
+{
+    <div class="tab-pane active" id="SettingsGeneralTab">
+        <form id="GeneralSettingsForm">
+            <div class="mb-5 ">
+                <label for="Timezone" class="form-label">@L("Timezone")</label>
+                @Html.DropDownList("Timezone", Model.TimezoneItems.Select(i => i.ToSelectListItem()), new {@class = "form-select", id = "Timezone"})
+            </div>
+            <div>
+                @Html.Hidden("TimezoneForComparison", Model.Settings.General.TimezoneForComparison)
+            </div>
+        </form>
+    </div>
+}
+
+<div class="tab-pane  @((!Clock.SupportsMultipleTimezone) ? "active" : "")" id="SettingsTenantManagementTab">
+
+    <form id="TenantManagementSettingsForm">
+        <h5>@L("FormBasedRegistration")</h5>
+        <div class="mb-5">
+            <label for="Setting_AllowSelfRegistration" class="form-check form-check-custom form-check-solid col-lg-12">
+                <input id="Setting_AllowSelfRegistration" type="checkbox" name="AllowSelfRegistration" class="form-check-input" value="true" @(Model.Settings.TenantManagement.AllowSelfRegistration ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("AllowTenantsToRegisterThemselves")
+                </span>
+            </label>
+            <span class="form-text text-muted">
+                @L("AllowTenantsToRegisterThemselves_Hint")
+            </span>
+        </div>
+        <div class="mb-5">
+            <label for="Setting_IsNewRegisteredTenantActiveByDefault" class="form-check form-check-custom form-check-solid col-lg-12">
+                <input id="Setting_IsNewRegisteredTenantActiveByDefault" type="checkbox" name="IsNewRegisteredTenantActiveByDefault" class="form-check-input" value="true" @(Model.Settings.TenantManagement.IsNewRegisteredTenantActiveByDefault ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("NewRegisteredTenantsIsActiveByDefault")
+                </span>
+            </label>
+            <span class="form-text text-muted">
+                @L("NewRegisteredTenantsIsActiveByDefault_Hint")
+            </span>
+        </div>
+        <div class="mb-5">
+            <label for="Setting_UseCaptchaOnRegistration" class="form-check form-check-custom form-check-solid col-lg-12">
+                <input id="Setting_UseCaptchaOnRegistration" type="checkbox" name="UseCaptchaOnRegistration" class="form-check-input" value="true" @(Model.Settings.TenantManagement.UseCaptchaOnRegistration ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("UseCaptchaOnRegistration")
+                </span>
+            </label>
+        </div>
+        <div class="mb-5">
+            <label for="DefaultEditionId" class="form-label">@L("Edition")</label>
+            @Html.DropDownList("DefaultEditionId", Model.EditionItems.Select(i => i.ToSelectListItem()), new {@class = "form-select", id = "DefaultEditionId"})
+        </div>
+    </form>
+</div>
+
+<div class="tab-pane" id="SettingsUserManagementTab">
+    <form id="UserManagementSettingsForm">
+        <div class="checkbox-list">
+            <label for="Settings_IsEmailConfirmationRequiredForLogin" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Settings_IsEmailConfirmationRequiredForLogin" type="checkbox" name="IsEmailConfirmationRequiredForLogin" class="form-check-input" value="true" @(Model.Settings.UserManagement.IsEmailConfirmationRequiredForLogin ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("EmailConfirmationRequiredForLogin")
+                </span>
+            </label>
+            <label for="Settings_SmsVerificationEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Settings_SmsVerificationEnabled" type="checkbox" name="SmsVerificationEnabled" class="form-check-input" value="true" @(Model.Settings.UserManagement.SmsVerificationEnabled ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("SmsVerificationEnabled")
+                </span>
+            </label>
+            <label for="Setting_UseCaptchaOnLogin" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_UseCaptchaOnLogin" type="checkbox" name="UseCaptchaOnLogin" class="form-check-input" value="true" @(Model.Settings.UserManagement.UseCaptchaOnLogin ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("UseCaptchaOnLogin")
+                </span>
+            </label>
+            <h5>@L("CookieConsent")</h5>
+            <label for="Setting_IsCookieConsentEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_IsCookieConsentEnabled" type="checkbox" name="IsCookieConsentEnabled" class="form-check-input" value="true" @(Model.Settings.UserManagement.IsCookieConsentEnabled ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("IsCookieConsentEnabled")
+                </span>
+            </label>
+            <h5>@L("SessionTimeOut")</h5>
+            <label for="Setting_IsSessionTimeOutEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_IsSessionTimeOutEnabled" type="checkbox" name="IsEnabled" class="form-check-input" value="true" @(Model.Settings.UserManagement.SessionTimeOutSettings.IsEnabled ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("IsSessionTimeOutEnabled")
+                </span>
+            </label>
+            <div class="divSessionTimeOut">
+                <label for="Setting_ShowLockScreenWhenTimedOut" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_ShowLockScreenWhenTimedOut" type="checkbox" name="ShowLockScreenWhenTimedOut" class="form-check-input" value="true" @(Model.Settings.UserManagement.SessionTimeOutSettings.ShowLockScreenWhenTimedOut ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("ShowLockScreenWhenTimedOut")
+                    </span>
+                </label>
+                <div class="mb-5">
+                    <label for="Setting_SessionTimeOutSecond" class="form-label">@L("SessionTimeOutSecond")</label>
+                    <input id="Setting_SessionTimeOutSecond" type="number" name="TimeOutSecond" class="form-control" min="10" value="@Model.Settings.UserManagement.SessionTimeOutSettings.TimeOutSecond">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_ShowTimeOutNotificationSecond" class="form-label">@L("ShowTimeOutNotificationSecond")</label>
+                    <input id="Setting_ShowTimeOutNotificationSecond" type="number" name="ShowTimeOutNotificationSecond" class="form-control" min="10" value="@Model.Settings.UserManagement.SessionTimeOutSettings.ShowTimeOutNotificationSecond">
+                </div>
+            </div>
+            <h5>@L("Profile")</h5>
+            <label for="Setting_AllowUsingGravatarProfilePicture" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_AllowUsingGravatarProfilePicture" type="checkbox" name="AllowUsingGravatarProfilePicture" class="form-check-input" value="true" @(Model.Settings.UserManagement.AllowUsingGravatarProfilePicture ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("AllowUsingGravatarProfilePicture")
+                </span>
+            </label>
+            <h5>@L("Password")</h5>
+            <label for="Setting_EnableCheckingLastXPasswordWhenPasswordChange" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_EnableCheckingLastXPasswordWhenPasswordChange" type="checkbox" name="EnableCheckingLastXPasswordWhenPasswordChange" class="form-check-input" value="true" @(Model.Settings.UserManagement.UserPasswordSettings.EnableCheckingLastXPasswordWhenPasswordChange ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("EnableCheckingLastXPasswordWhenPasswordChangeSettingLabel")
+                </span>
+            </label>
+            <div class="mb-5" id="divCheckingLastXPasswordCount">
+                <label for="Setting_CheckingLastXPasswordCount" class="form-label">@L("CheckingLastXPasswordCountSettingLabel")</label>
+                <input id="Setting_CheckingLastXPasswordCount" type="number" name="CheckingLastXPasswordCount" class="form-control" value="@Model.Settings.UserManagement.UserPasswordSettings.CheckingLastXPasswordCount">
+            </div>
+            <label for="Setting_EnablePasswordExpiration" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_EnablePasswordExpiration" type="checkbox" name="EnablePasswordExpiration" class="form-check-input" value="true" @(Model.Settings.UserManagement.UserPasswordSettings.EnablePasswordExpiration ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("EnablePasswordExpirationSettingLabel")
+                </span>
+            </label>
+            <div class="mb-5" id="divPasswordExpirationDayCount">
+                <label for="Setting_PasswordExpirationDayCount" class="form-label">@L("PasswordExpirationDayCountSettingLabel")</label>
+                <input id="Setting_PasswordExpirationDayCount" type="number" name="PasswordExpirationDayCount" class="form-control" value="@Model.Settings.UserManagement.UserPasswordSettings.PasswordExpirationDayCount">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="SecurityManagementTab" class="tab-pane">
+    <div>
+        <h5>@L("PasswordComplexity")</h5>
+        <label for="Setting_PasswordComplexity_UseDefaultSettings" class="form-check form-check-custom form-check-solid mb-2">
+            <input id="Setting_PasswordComplexity_UseDefaultSettings" type="checkbox" name="UseDefaultSettings" class="form-check-input" value="true" @(Model.Settings.Security.UseDefaultPasswordComplexitySettings ? "checked=\"checked\"" : "")>
+            <span class="form-check-label">
+                @L("UseDefaultSettings")
+            </span>
+        </label>
+        <form class="p-5" id="PasswordComplexitySettingsForm" style="@(Model.Settings.Security.UseDefaultPasswordComplexitySettings ? "display:none;" : "")">
+            <div class="checkbox-list">
+                <label for="Setting_PasswordComplexity_RequireDigit" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_PasswordComplexity_RequireDigit" type="checkbox" name="RequireDigit" class="form-check-input" value="true" @(Model.Settings.Security.PasswordComplexity.RequireDigit ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireDigit")
+                    </span>
+                </label>
+                <label for="Setting_PasswordComplexity_RequireLowercase" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_PasswordComplexity_RequireLowercase" type="checkbox" name="RequireLowercase" class="form-check-input" value="true" @(Model.Settings.Security.PasswordComplexity.RequireLowercase ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireLowercase")
+                    </span>
+                </label>
+                <label for="Setting_PasswordComplexity_RequireNonAlphanumeric" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_PasswordComplexity_RequireNonAlphanumeric" type="checkbox" name="RequireNonAlphanumeric" class="form-check-input" value="true" @(Model.Settings.Security.PasswordComplexity.RequireNonAlphanumeric ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireNonAlphanumeric")
+                    </span>
+                </label>
+                <label for="Setting_PasswordComplexity_RequireUppercase" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_PasswordComplexity_RequireUppercase" type="checkbox" name="RequireUppercase" class="form-check-input" value="true" @(Model.Settings.Security.PasswordComplexity.RequireUppercase ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireUppercase")
+                    </span>
+                </label>
+            </div>
+            <div class="mb-5 mt-3">
+                <label class="form-label">@L("PasswordComplexity_RequiredLength")</label>
+                <input type="number" name="RequiredLength" class="form-control" value="@Model.Settings.Security.PasswordComplexity.RequiredLength">
+            </div>
+        </form>
+        <form class="p-5" id="DefaultPasswordComplexitySettingsForm" style="@(!Model.Settings.Security.UseDefaultPasswordComplexitySettings ? "display:none;" : "")">
+            <div class="checkbox-list">
+                <label for="Setting_DefaultPasswordComplexity_RequireDigit" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_DefaultPasswordComplexity_RequireDigit" type="checkbox" name="RequireDigit" class="form-check-input" value="true" @(Model.Settings.Security.DefaultPasswordComplexity.RequireDigit ? "checked=\"checked\"" : "") disabled>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireDigit")
+                    </span>
+                </label>
+                <label for="Setting_DefaultPasswordComplexity_RequireLowercase" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_DefaultPasswordComplexity_RequireLowercase" type="checkbox" name="RequireLowercase" class="form-check-input" value="true" @(Model.Settings.Security.DefaultPasswordComplexity.RequireLowercase ? "checked=\"checked\"" : "") disabled>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireLowercase")
+                    </span>
+                </label>
+                <label for="Setting_DefaultPasswordComplexity_RequireNonAlphanumeric" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_DefaultPasswordComplexity_RequireNonAlphanumeric" type="checkbox" name="RequireNonAlphanumeric" class="form-check-input" value="true" @(Model.Settings.Security.DefaultPasswordComplexity.RequireNonAlphanumeric ? "checked=\"checked\"" : "") disabled>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireNonAlphanumeric")
+                    </span>
+                </label>
+                <label for="Setting_DefaultPasswordComplexity_RequireUppercase" class="form-check form-check-custom form-check-solid mb-2">
+                    <input id="Setting_DefaultPasswordComplexity_RequireUppercase" type="checkbox" name="RequireUppercase" class="form-check-input" value="true" @(Model.Settings.Security.DefaultPasswordComplexity.RequireUppercase ? "checked=\"checked\"" : "") disabled>
+                    <span class="form-check-label">
+                        @L("PasswordComplexity_RequireUppercase")
+                    </span>
+                </label>
+            </div>
+            <div class="mb-5 mt-3">
+                <label for="RequiredLength" class="form-label">@L("PasswordComplexity_RequiredLength")</label>
+                <input id="RequiredLength" type="number" name="RequiredLength" class="form-control" value="@Model.Settings.Security.DefaultPasswordComplexity.RequiredLength" disabled>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <h5>@L("UserLockOut")</h5>
+        <form id="UserLockOutSettingsForm">
+            <label for="Setting_UserLockOut_IsEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_UserLockOut_IsEnabled" type="checkbox" name="IsEnabled" class="form-check-input" value="true" @(Model.Settings.Security.UserLockOut.IsEnabled ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("EnableUserAccountLockingOnFailedLoginAttempts")
+                </span>
+            </label>
+            <div class="mb-5">
+                <label for="MaxFailedAccessAttemptsBeforeLockout" class="form-label">@L("MaxFailedAccessAttemptsBeforeLockout")</label>
+                <input id="MaxFailedAccessAttemptsBeforeLockout" type="number" name="MaxFailedAccessAttemptsBeforeLockout" class="form-control" value="@Model.Settings.Security.UserLockOut.MaxFailedAccessAttemptsBeforeLockout">
+            </div>
+            <div class="mb-5">
+                <label for="DefaultAccountLockoutSeconds" class="form-label">@L("DefaultAccountLockoutDurationAsSeconds")</label>
+                <input id="DefaultAccountLockoutSeconds" type="number" name="DefaultAccountLockoutSeconds" class="form-control" value="@Model.Settings.Security.UserLockOut.DefaultAccountLockoutSeconds">
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <h5>@L("TwoFactorLogin")</h5>
+        <form id="TwoFactorLoginSettingsForm">
+            <div class="checkbox-list">
+                <label for="Setting_TwoFactorLogin_IsEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_TwoFactorLogin_IsEnabled" type="checkbox" name="IsEnabled" class="form-check-input" value="true" @(Model.Settings.Security.TwoFactorLogin.IsEnabled ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("EnableTwoFactorLogin")
+                    </span>
+                </label>
+                <label for="Setting_TwoFactorLogin_IsEmailProviderEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_TwoFactorLogin_IsEmailProviderEnabled" type="checkbox" name="IsEmailProviderEnabled" class="form-check-input" value="true" @(Model.Settings.Security.TwoFactorLogin.IsEmailProviderEnabled ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("IsEmailVerificationEnabled")
+                    </span>
+                </label>
+                <label for="Setting_TwoFactorLogin_IsSmsProviderEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_TwoFactorLogin_IsSmsProviderEnabled" type="checkbox" name="IsSmsProviderEnabled" class="form-check-input" value="true" @(Model.Settings.Security.TwoFactorLogin.IsSmsProviderEnabled ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("IsSmsVerificationEnabled")
+                    </span>
+                </label>
+                <label for="Setting_TwoFactorLogin_IsGoogleAuthenticatorEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_TwoFactorLogin_IsGoogleAuthenticatorEnabled" type="checkbox" name="IsGoogleAuthenticatorEnabled" class="form-check-input" value="true" @(Model.Settings.Security.TwoFactorLogin.IsGoogleAuthenticatorEnabled ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("IsGoogleAuthenticatorEnabled")
+                    </span>
+                </label>
+                <label for="Setting_TwoFactorLogin_IsRememberBrowserEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_TwoFactorLogin_IsRememberBrowserEnabled" type="checkbox" name="IsRememberBrowserEnabled" class="form-check-input" value="true" @(Model.Settings.Security.TwoFactorLogin.IsRememberBrowserEnabled ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("AllowToRememberBrowserForTwoFactorLogin")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+    <div>
+        <h5>@L("OneConcurrentLoginPerUser")</h5>
+        <form id="OneConcurrentLoginPerUser">
+            <div class="checkbox-list">
+                <label for="Setting_AllowOneConcurrentLoginPerUser" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_AllowOneConcurrentLoginPerUser" type="checkbox" name="Setting_AllowOneConcurrentLoginPerUser" class="form-check-input" value="true" @(Model.Settings.Security.AllowOneConcurrentLoginPerUser ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("OneConcurrentLoginPerUserActive")
+                    </span>
+                </label>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="tab-pane" id="SettingsEmailSmtpTab">
+    <form id="EmailSmtpSettingsForm">
+        <div class="mb-5">
+            <label for="DefaultFromAddress" class="form-label">@L("DefaultFromAddress")</label>
+            <input id="DefaultFromAddress" type="email" name="DefaultFromAddress" class="form-control" value="@Model.Settings.Email.DefaultFromAddress" maxlength="@CCPDemo.Authorization.Users.User.MaxEmailAddressLength">
+        </div>
+
+        <div class="mb-5">
+            <label for="DefaultFromDisplayName" class="form-label">@L("DefaultFromDisplayName")</label>
+            <input id="DefaultFromDisplayName" type="text" name="DefaultFromDisplayName" class="form-control" value="@Model.Settings.Email.DefaultFromDisplayName" maxlength="128">
+        </div>
+
+        <div class="mb-5">
+            <label for="SmtpHost" class="form-label">@L("SmtpHost")</label>
+            <input id="SmtpHost" type="text" name="SmtpHost" class="form-control" value="@Model.Settings.Email.SmtpHost" maxlength="64">
+        </div>
+
+        <div class="mb-5">
+            <label for="SmtpPort" class="form-label">@L("SmtpPort")</label>
+            <input id="SmtpPort" type="number" name="SmtpPort" class="form-control" value="@Model.Settings.Email.SmtpPort" maxlength="5">
+        </div>
+
+        <div class="checkbox-list">
+            <label for="Settings_SmtpEnableSsl" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Settings_SmtpEnableSsl" type="checkbox" name="SmtpEnableSsl" class="form-check-input" value="true" @Html.Raw(Model.Settings.Email.SmtpEnableSsl ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("UseSsl")
+                </span>
+            </label>
+            <label for="Settings_SmtpUseDefaultCredentials" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Settings_SmtpUseDefaultCredentials" type="checkbox" name="SmtpUseDefaultCredentials" class="form-check-input" value="true" @Html.Raw(Model.Settings.Email.SmtpUseDefaultCredentials ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("UseDefaultCredentials")
+                </span>
+            </label>
+        </div>
+
+        <div class="mb-5">
+            <label for="SmtpDomain" class="form-label">@L("DomainName")</label>
+            <input id="SmtpDomain" type="text" name="SmtpDomain" class="form-control" value="@Model.Settings.Email.SmtpDomain" maxlength="128">
+        </div>
+
+        <div class="mb-5">
+            <label for="SmtpUserName" class="form-label">@L("UserName")</label>
+            <input id="SmtpUserName" type="text" name="SmtpUserName" class="form-control" value="@Model.Settings.Email.SmtpUserName" maxlength="128">
+        </div>
+
+        <div class="mb-5">
+            <label for="SmtpPassword" class="form-label">@L("Password")</label>
+            <input id="SmtpPassword" type="password" name="SmtpPassword" class="form-control" value="@Model.Settings.Email.SmtpPassword" maxlength="128" autocomplete="new-password">
+        </div>
+
+        <hr/>
+
+        <h4>@L("TestEmailSettingsHeader")</h4>
+    </form>
+    <form id="EmailSmtpSettingsTestForm">
+        <div class="row">
+            <div class="mb-5  col-md-4">
+                <input id="TestEmailAddressInput" type="email" class="form-control input-sm" value="@ViewBag.CurrentUserEmail">
+            </div>
+            <div class="mb-5 col-md-2">
+                <button id="SendTestEmailButton" class="btn btn-primary" type="button">@L("SendTestEmail")</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="tab-pane" id="BillingTab">
+    <form id="BillingSettingsForm" class="form">
+        <div class="mb-5">
+            <label for="LegalName" class="form-label">@L("LegalName")</label>
+            <input id="LegalName" type="text" name="LegalName" class="form-control" value="@Model.Settings.Billing.LegalName" maxlength="64">
+        </div>
+
+        <div class="mb-5">
+            <label for="Address" class="form-label">@L("Address")</label>
+            <textarea id="Address" rows="5" name="Address" class="form-control" maxlength="256">@Model.Settings.Billing.Address</textarea>
+        </div>
+    </form>
+</div>
+
+<div class="tab-pane" id="OtherSettingsTab">
+    <form id="OtherSettingsForm" class="form">
+        <div class="checkbox-list">
+            <h5>@L("QuickThemeSelection")</h5>
+            <label for="Setting_IsQuickThemeSelectEnabled" class="form-check form-check-custom form-check-solid mb-5">
+                <input id="Setting_IsQuickThemeSelectEnabled" type="checkbox" name="IsQuickThemeSelectEnabled" class="form-check-input" value="true" @(Model.Settings.UserManagement.IsQuickThemeSelectEnabled ? "checked=\"checked\"" : "")>
+                <span class="form-check-label">
+                    @L("IsQuickThemeSelectEnabled")
+                </span>
+            </label>
+        </div>
+    </form>
+</div>
+@if (Model.EnabledSocialLoginSettings.Any())
+{
+    <div class="tab-pane" id="ExternalLoginSettingsTab">
+        @if (Model.EnabledSocialLoginSettings.Contains("Facebook"))
+        {
+            <form id="ExternalLoginFacebookSettingsForm" class="form">
+                <h5>Facebook</h5>
+                <div class="mb-5">
+                    <label for="Setting_Facebook_AppId" class="form-label">@L("AppId")*</label>
+                    <input id="Setting_Facebook_AppId" type="text" class="form-control" name="AppId" value="@Model.Settings.ExternalLoginProviderSettings.Facebook.AppId">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_Facebook_AppSecret" class="form-label">@L("AppSecret")*</label>
+                    <div class="input-group">
+                        <input id="Setting_Facebook_AppSecret" type="password" class="form-control" name="AppSecret" value="@Model.Settings.ExternalLoginProviderSettings.Facebook.AppSecret">
+                        <button class="btn btn-primary passwordShowButton" type="button" data-id="Setting_Facebook_AppSecret">
+                            <i class="far fa-eye text-white"></i> <span> @L("Show")</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+
+        @if (Model.EnabledSocialLoginSettings.Contains("Google"))
+        {
+            <form id="ExternalLoginGoogleSettingsForm" class="form">
+                <h5>Google</h5>
+                <div class="mb-5">
+                    <label for="Setting_Google_ClientId" class="form-label">@L("ClientId")*</label>
+                    <input id="Setting_Google_ClientId" type="text" class="form-control" name="ClientId" value="@Model.Settings.ExternalLoginProviderSettings.Google.ClientId">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_Google_ClientSecret" class="form-label">@L("ClientSecret")*</label>
+                    <div class="input-group">
+                        <input id="Setting_Google_ClientSecret" type="password" class="form-control" name="ClientSecret" value="@Model.Settings.ExternalLoginProviderSettings.Google.ClientSecret">
+                        <button class="btn btn-primary passwordShowButton" type="button" data-id="Setting_Google_ClientSecret">
+                            <i class="far fa-eye text-white"></i> <span> @L("Show")</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_Google_UserInfoEndpoint" class="form-label">@L("UserInfoEndpoint")</label>
+                    <input id="Setting_Google_UserInfoEndpoint" type="text" class="form-control" name="UserInfoEndpoint" value="@Model.Settings.ExternalLoginProviderSettings.Google.UserInfoEndpoint">
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+
+        @if (Model.EnabledSocialLoginSettings.Contains("Twitter"))
+        {
+            <form id="ExternalLoginTwitterSettingsForm" class="form">
+                <h5>Twitter</h5>
+                <div class="mb-5">
+                    <label for="Setting_Twitter_ConsumerKey" class="form-label">@L("ConsumerKey")*</label>
+                    <input id="Setting_Twitter_ConsumerKey" type="text" class="form-control" name="ConsumerKey" value="@Model.Settings.ExternalLoginProviderSettings.Twitter.ConsumerKey">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_Twitter_ConsumerSecret" class="form-label">@L("ConsumerSecret")*</label>
+                    <div class="input-group">
+                        <input id="Setting_Twitter_ConsumerSecret" type="password" class="form-control" name="ConsumerSecret" value="@Model.Settings.ExternalLoginProviderSettings.Twitter.ConsumerSecret">
+                        <button class="btn btn-primary passwordShowButton" type="button" data-id="Setting_Twitter_ConsumerSecret">
+                            <i class="far fa-eye text-white"></i> <span> @L("Show")</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+
+        @if (Model.EnabledSocialLoginSettings.Contains("Microsoft"))
+        {
+            <form id="ExternalLoginMicrosoftSettingsForm" class="form">
+                <h5>Microsoft</h5>
+                <div class="mb-5">
+                    <label for="Setting_Microsoft_ClientId" class="form-label">@L("ClientId")*</label>
+                    <input id="Setting_Microsoft_ClientId" type="text" class="form-control" name="ClientId" value="@Model.Settings.ExternalLoginProviderSettings.Microsoft.ClientId">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_Microsoft_ClientSecret" class="form-label">@L("ClientSecret")*</label>
+                    <div class="input-group">
+                        <input id="Setting_Microsoft_ClientSecret" type="password" class="form-control" name="ClientSecret" value="@Model.Settings.ExternalLoginProviderSettings.Microsoft.ClientSecret">
+                        <button class="btn btn-primary passwordShowButton" type="button" data-id="Setting_Microsoft_ClientSecret">
+                            <i class="far fa-eye text-white"></i> <span> @L("Show")</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+        @if (Model.EnabledSocialLoginSettings.Contains("OpenId"))
+        {
+            <form id="ExternalLoginOpenIdConnectSettingsForm" class="form">
+                <h5>OpenID Connect</h5>
+                <div class="mb-5">
+                    <label for="Setting_OpenIdConnect_ClientId" class="form-label">@L("ClientId")*</label>
+                    <input id="Setting_OpenIdConnect_ClientId" type="text" class="form-control" name="ClientId" value="@Model.Settings.ExternalLoginProviderSettings.OpenIdConnect.ClientId">
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_OpenIdConnect_ClientSecret" class="form-label">@L("ClientSecret")</label>
+                    <div class="input-group">
+                        <input id="Setting_OpenIdConnect_ClientSecret" type="password" class="form-control" name="ClientSecret" value="@Model.Settings.ExternalLoginProviderSettings.OpenIdConnect.ClientSecret">
+                        <button class="btn btn-primary passwordShowButton" type="button" data-id="Setting_OpenIdConnect_ClientSecret">
+                            <i class="far fa-eye text-white"></i> <span> @L("Show")</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="Setting_OpenIdConnect_Authority" class="form-label">@L("Authority")*</label>
+                    <input id="Setting_OpenIdConnect_Authority" type="text" class="form-control" name="Authority" value="@Model.Settings.ExternalLoginProviderSettings.OpenIdConnect.Authority">
+                </div>
+                <label for="Setting_OpenIdConnect_ValidateIssuer" class="form-check form-check-custom form-check-solid mb-5">
+                    <input id="Setting_OpenIdConnect_ValidateIssuer" type="checkbox" name="OpenIdConnect_ValidateIssuer" class="form-check-input" value="true"
+                           @(Model.Settings.ExternalLoginProviderSettings.OpenIdConnect.ValidateIssuer ? "checked=\"checked\"" : "")>
+                    <span class="form-check-label">
+                        @L("ValidateIssuer")
+                    </span>
+                </label>
+
+                <div class="mb-5 col-12">
+                    <label class="form-label">@L("ClaimsMapping")</label>
+                    <div id="claimsMappingsContainer"></div>
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+        @if (Model.EnabledSocialLoginSettings.Contains("WsFederation"))
+        {
+            <form id="ExternalLoginWsFederationSettingsForm" class="form">
+                <div class="accordion">
+                    <h5>WsFederation</h5>
+                    <div class="mb-5">
+                        <label for="Setting_WsFederation_ClientId" class="form-label">@L("ClientId")</label>
+                        <input id="Setting_WsFederation_ClientId" type="text" class="form-control" name="ClientId" value="@Model.Settings.ExternalLoginProviderSettings.WsFederation.ClientId">
+                    </div>
+                    <div class="mb-5">
+                        <label for="Setting_WsFederation_Tenant" class="form-label">@L("Tenant")</label>
+                        <input id="Setting_WsFederation_Tenant" type="text" class="form-control" name="Tenant" value="@Model.Settings.ExternalLoginProviderSettings.WsFederation.Tenant">
+                    </div>
+                    <div class="mb-5">
+                        <label for="Setting_WsFederation_MetaDataAddress" class="form-label">@L("MetaDataAddress")</label>
+                        <input id="Setting_WsFederation_MetaDataAddress" type="text" class="form-control" name="MetaDataAddress" value="@Model.Settings.ExternalLoginProviderSettings.WsFederation.MetaDataAddress">
+                    </div>
+                    <div class="mb-5">
+                        <label for="Setting_WsFederation_Wtrealm" class="form-label">@L("Wtrealm")</label>
+                        <input id="Setting_WsFederation_Wtrealm" type="text" class="form-control" name="Wtrealm" value="@Model.Settings.ExternalLoginProviderSettings.WsFederation.Wtrealm">
+                    </div>
+                    <div class="mb-5">
+                        <label for="Setting_WsFederation_Authority" class="form-label">@L("Authority")</label>
+                        <input id="Setting_WsFederation_Authority" type="text" class="form-control" name="Authority" value="@Model.Settings.ExternalLoginProviderSettings.WsFederation.Authority">
+                    </div>
+
+                    <div class="mb-5 col-12">
+                        <label class="form-label">@L("ClaimsMapping")</label>
+                        <div id="Setting_WsFederation_ClaimsMappingsContainer"></div>
+                    </div>
+                </div>
+            </form>
+            <div class="separator my-5"></div>
+        }
+    </div>
+}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,25 @@
+﻿<div class="modal-header">
+    <h4 class="modal-title">
+        <span>@L("LinkedAccounts")</span>
+    </h4>
+    <button id="LinkNewAccountButton" class="btn btn-primary pull-right">
+        <i class="la la-plus btn-md-icon"></i>
+        <span class="d-none d-md-inline-block">
+            @L("LinkNewAccount")
+        </span>
+    </button>
+</div>
+<div class="modal-body">
+    <table id="LinkedAccountsTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+        <thead>
+            <tr>
+                <th>@L("Actions")</th>
+                <th>@L("UserName")</th>
+                <th>@L("Delete")</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Close")</button>
+</div>

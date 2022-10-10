@@ -1,0 +1,21 @@
+﻿@model EntityHistoryModalViewModel
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("ChangeLogs") + " : " + @L(Model.EntityTypeFullName) + "  (" + Model.EntityTypeDescription + ")"))
+
+<div class="modal-body">
+    <div class="row align-items-center">
+        <table class="entity-type-history-table table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@L("Action")</th>
+                    <th>@L("UserName")</th>
+                    <th>@L("Time")</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")
+

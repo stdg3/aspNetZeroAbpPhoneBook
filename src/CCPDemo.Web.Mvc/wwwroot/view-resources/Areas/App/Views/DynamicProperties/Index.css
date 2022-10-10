@@ -1,0 +1,6 @@
+﻿.cursor-pointer {
+    cursor: pointer;
+}
+#portlet-dynamic-parameter-values .dataTables_info{
+    display:none;
+}

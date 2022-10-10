@@ -1,0 +1,97 @@
+﻿@using System.Threading.Tasks
+@using CCPDemo.Web.Areas.App.Models.Languages
+@using CCPDemo.Web.Areas.App.Startup
+@using CCPDemo.Web.Startup
+@model LanguageTextsViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.Languages;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/language-texts.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("LanguageTexts")" description="@L("LanguageTextsHeaderInfo")"></abp-page-subheader>
+    
+    <div class="@(await GetContainerClass())">
+        <div class="card">
+                        <div class="card-body">
+                            <div class="form" id="TextsFilterForm">
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="mb-5">
+                                            <label for="TextBaseLanguageSelectionCombobox" class="form-label">@L("BaseLanguage")</label>
+                                            <select id="TextBaseLanguageSelectionCombobox" name="BaseLanguage"
+                                                    class="form-control select2"
+                                                    >
+                                                @foreach (var language in Model.Languages)
+                                                {
+                                                    <option data-icon="@language.Icon" value="@language.Name" selected="@(language.Name == Model.BaseLanguageName)">
+                                                        <i class="@language.Icon"></i>@language.DisplayName
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="mb-5">
+                                            <label for="TextTargetLanguageSelectionCombobox" class="form-label">@L("TargetLanguage")</label>
+                                            <select id="TextTargetLanguageSelectionCombobox" name="TargetLanguage"
+                                                    class="form-control select2"
+                                                    >
+                                                @foreach (var language in Model.Languages)
+                                                {
+                                                    <option data-icon="@language.Icon" value="@language.Name" selected="@(language.Name == Model.LanguageName)">
+                                                        <i class="@language.Icon"></i>@language.DisplayName
+                                                    </option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="mb-5">
+                                            <label for="TextSourceSelectionCombobox" class="form-label">@L("Source")</label>
+                                            @Html.DropDownList("SourceName", Model.Sources, new {@class = "form-control select2", id = "TextSourceSelectionCombobox"})
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        <div class="mb-5">
+                                            <label for="TargetValueFilterSelectionCombobox" class="form-label">@L("TargetValue")</label>
+                                            <select id="TargetValueFilterSelectionCombobox" class="form-select select2" name="TargetValue" data-control="select2">
+                                                <option value="ALL" selected="@(Model.TargetValueFilter == "ALL")">@L("All")</option>
+                                                <option value="EMPTY" selected="@(Model.TargetValueFilter == "EMPTY")">@L("EmptyOnes")</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row align-items-center mb-4">
+                                    <div class="col-sm-12">
+                                        <div class="input-group">
+                                            <input id="TextFilter" value="@Model.FilterText" class="form-control" placeholder="@L("SearchWithThreeDot")" type="text">
+                                            <button id="RefreshTextsButton" class="btn btn-primary" type="submit">
+                                                <i class="icon-refresh"></i> @L("Refresh")
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row align-items-center">
+                                <table id="TextsTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>@L("Key")</th>
+                                        <th>@L("BaseValue")</th>
+                                        <th>@L("TargetValue")</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+        
+                        </div>
+                    </div>
+    </div>
+</div>

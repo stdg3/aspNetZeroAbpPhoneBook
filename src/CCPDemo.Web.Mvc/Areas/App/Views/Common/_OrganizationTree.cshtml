@@ -1,0 +1,9 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common
+@model IOrganizationUnitsEditViewModel
+
+<div class="mb-5">
+    <input id="OrganizationTreeFilter" type="text" class="form-control" placeholder="@L("SearchWithThreeDot")">
+</div>
+<div class="organization-tree">
+    @await Html.PartialAsync("~/Areas/App/Views/Common/_OrganizationUnitTreeItem.cshtml", new OrganizationUnitTreeItemModel(Model, null))
+</div>

@@ -1,0 +1,29 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@model LookupModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.Title ?? L("SelectUsers")))
+
+<div class="modal-body">
+    <form>
+        <div class="input-group">
+            <input class="form-control add-member-filter-text" placeholder="@L("SearchWithThreeDot")" type="text">
+            <button class="btn btn-primary add-member-filter-button" type="submit"><i class="flaticon-search-1" aria-label="@L("Search")"></i></button>
+        </div>
+    </form>
+    <table id="addMemberModalTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+        <thead>
+        <tr>
+            <th>@L("Select")</th>
+            <th>@L("Name")</th>
+        </tr>
+        </thead>
+    </table>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+    <button type="button" id="btnAddUsersToOrganization" class="btn btn-primary save-button" disabled="disabled">
+        <i class="fa fa-save"></i> 
+        <span>@L("Save")</span>
+    </button>
+</div>

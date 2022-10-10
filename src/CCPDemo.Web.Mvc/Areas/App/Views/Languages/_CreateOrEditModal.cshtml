@@ -1,0 +1,51 @@
+﻿@using Abp.Application.Services.Dto
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Languages
+@model CreateOrEditLanguageModalViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditLanguage") + ": " + Model.Language.Name) : L("CreateNewLanguage")))
+
+<div class="modal-body">
+    <form name="LanguageInformationsForm" role="form" novalidate class="form-validation">
+        @if (Model.IsEditMode)
+        {
+            <input type="hidden" name="Id" value="@Model.Language.Id"/>
+        }
+        
+        <div class="mb-5">
+            <label for="LanguageNameEdit" class="form-label col-lg-12">@L("Language")</label>
+            @Html.DropDownList(
+                "Name",
+                Model.LanguageNames.Select(i => i.ToSelectListItem()),
+                new
+                {
+                    @class = "form-select select2",
+                    data_control = "select2",
+                    id = "LanguageNameEdit"
+                })
+        </div>
+        <div class="mb-5">
+            <label for="LanguageIconEdit" class="form-label">@L("Flag")</label>
+            <select id="LanguageIconEdit" name="Icon" class="form-select select2" data-control="select2">
+                @foreach (var flag in Model.Flags)
+                {
+                    <option data-icon="@flag.Value" value="@flag.Value" selected="@flag.IsSelected">
+                        @flag.DisplayText
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="checkbox-inline">
+            <label for="EditLanguage_IsEnabled" class="form-check form-check-custom form-check-solid">
+                <input id="EditLanguage_IsEnabled" type="checkbox" name="IsEnabled" class="form-check-input" value="true" @(Model.Language.IsEnabled || !Model.IsEditMode ? "checked=\"checked\"" : "")/>
+                <span class="form-check-label">
+                    @L("IsEnabled")
+                </span>
+            </label>
+        </div>
+
+    </form>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

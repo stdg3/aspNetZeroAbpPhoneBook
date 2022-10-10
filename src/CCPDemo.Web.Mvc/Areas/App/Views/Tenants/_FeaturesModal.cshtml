@@ -1,0 +1,17 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Tenants
+@model TenantFeaturesEditViewModel
+
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Features") + " - " + Model.Tenant.Name))
+
+<div class="modal-body">
+    @await Html.PartialAsync("~/Areas/App/Views/Common/_FeaturesTree.cshtml", Model)
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary pull-left reset-features-button" data-toggle="tooltip" title="@L("ResetFeaturesTooltip")" data-placement="left"><span>@L("ResetSpecialFeatures")</span></button>
+    <button type="button" class="btn btn-light-primary font-weight-bold close-button" data-bs-dismiss="modal">@L("Cancel")</button>
+    <button type="button" class="btn btn-primary save-button"><i class="fa fa-save"></i> <span>@L("Save")</span></button>
+</div>
+

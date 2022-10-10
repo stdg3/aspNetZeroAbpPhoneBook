@@ -1,0 +1,87 @@
+﻿@using CCPDemo.Localization
+@model CCPDemo.Web.Models.Consent.ConsentViewModel
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet" />
+}
+
+@if (Model.ClientLogoUrl != null)
+{
+    <div class="client-logo"><img src="@Model.ClientLogoUrl"></div>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="card-title">
+            @L("ClientIsRequestingYourPermission", Model.ClientName)
+        </h3>
+    </div>
+    <!-- begin:: Form -->
+    <form class="login-form form" asp-action="Index">
+        <input type="hidden" asp-for="ReturnUrl" />
+
+        @if (Model.IdentityScopes.Any())
+        {
+            <div class="card card-custom">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fa-user fa"></i>
+                        </span>
+                        <h3 class="card-label">
+                            @L("PersonalInformations")
+                        </h3>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    @foreach (var scope in Model.IdentityScopes)
+                    {
+                        @await Html.PartialAsync("_ScopeListItem", scope)
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (Model.ApiScopes.Any())
+        {
+            <div class="card card-custom mt-5">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-icon">
+                            <i class="fas fa-tasks"></i>
+                        </span>
+                        <h3 class="card-label">
+                            @L("ApplicationAccess")
+                        </h3>
+                    </div>
+                </div>
+                <ul class="list-group">
+                    @foreach (var scope in Model.ApiScopes)
+                    {
+                        @await Html.PartialAsync("_ScopeListItem", scope)
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (Model.AllowRememberConsent)
+        {
+            <div class="consent-remember mt-10 pl-5">
+                <label>
+                    <input class="consent-scopecheck" asp-for="RememberConsent" />
+                    <strong>@L("RememberMyDecision")</strong>
+                </label>
+            </div>
+        }
+
+        <div class="consent-buttons float-end" style="margin-top: 20px">
+            <button name="button" value="yes" class="btn btn-primary" autofocus>@L("Allow")</button>
+            <button name="button" value="no" class="btn btn-danger">@L("DoNotAllow")</button>
+        </div>
+    </form>
+    <!-- end:: Form -->
+</div>

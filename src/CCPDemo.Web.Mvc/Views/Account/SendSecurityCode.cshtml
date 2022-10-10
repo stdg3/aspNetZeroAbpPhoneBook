@@ -1,0 +1,27 @@
+﻿@using CCPDemo.Localization
+@model CCPDemo.Web.Models.Account.SendSecurityCodeViewModel
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("SendSecurityCode")</h3>
+    </div>
+    <form class="form" asp-action="SendSecurityCode" method="post">
+        <p>@L("SendSecurityCode_Information")</p>
+
+        @Html.Hidden("returnUrl", Model.ReturnUrl)
+        @Html.Hidden("rememberMe", @Model.RememberMe)
+
+        <div class="mb-5">
+            @Html.DropDownListFor(model => model.SelectedProvider, Model.Providers, new {@class = "form-control form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6", size = 1})
+        </div>
+
+        <div class="pb-lg-0 pb-5">
+            <span>&nbsp;</span>
+            <input type="submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 me-3" value="@L("Submit")"/>
+        </div>
+    </form>
+</div>

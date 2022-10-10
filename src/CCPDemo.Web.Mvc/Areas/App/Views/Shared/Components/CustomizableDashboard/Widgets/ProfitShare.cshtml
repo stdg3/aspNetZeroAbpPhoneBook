@@ -1,0 +1,80 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom ProfitShareContainer h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="font-weight-bolder text-dark"> Profit Share</span>
+            <small>Profit Share between customers</small>
+        </h3>
+        <div class="card-toolbar">
+            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <i class="ki ki-bold-more-hor "></i>
+                </a>
+                <div class="dropdown-menu p-0 m-0 dropdown-menu-md dropdown-menu-right" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(-217px, 33px, 0px);" x-placement="bottom-end">
+                    <!--begin::Navigation-->
+                    <ul class="navi navi-hover">
+                        <li class="navi-header font-weight-bold py-4">
+                            <span class="font-size-lg">Choose Label:</span>
+                            <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip" data-placement="right" title="" data-original-title="Click to learn more..."></i>
+                        </li>
+                        <li class="navi-separator mb-3 opacity-70"></li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link">
+                                <span class="navi-text">
+                                    <span class="badge badge-light-success">Customer</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="navi-item">
+                            <a href="#" class="navi-link">
+                                <span class="navi-text">
+                                    <span class="badge badge-light-dark">Staff</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="navi-separator mt-3 opacity-70"></li>
+                        <li class="navi-footer py-4">
+                            <a class="btn btn-clean font-weight-bold btn-sm" href="#">
+                                <i class="ki ki-plus icon-sm"></i>
+                                Add new
+                            </a>
+                        </li>
+                    </ul>
+                    <!--end::Navigation-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row align-items-center">
+            <div class="col">
+                <div id="kt_chart_profit_share" class="kt-widget14__chart kt_chart_profit_share" style="height: 160px">
+                    <div class="kt-widget14__stat">
+                        45
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="kt-widget14__legend">
+                    <div class="kt-widget14__legend">
+                        <span class="kt-widget14__legend-bullet"></span>
+                        <span class="kt-widget14__legend-text">
+                        </span>
+                    </div>
+                    <div class="kt-widget14__legend">
+                        <span class="kt-widget14__legend-bullet"></span>
+                        <span class="kt-widget14__legend-text">
+                        </span>
+                    </div>
+                    <div class="kt-widget14__legend">
+                        <span class="kt-widget14__legend-bullet"></span>
+                        <span class="kt-widget14__legend-text">
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

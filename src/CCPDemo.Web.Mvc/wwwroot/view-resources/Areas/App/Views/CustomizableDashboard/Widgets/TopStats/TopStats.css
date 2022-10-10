@@ -1,0 +1,7 @@
+﻿.TopStatsContainer .card.card-custom > .card-body {
+    padding: 1rem 1.25rem !important;
+}
+
+.TopStatsContainer .gutter-b {
+    margin-bottom: 0px !important;
+}

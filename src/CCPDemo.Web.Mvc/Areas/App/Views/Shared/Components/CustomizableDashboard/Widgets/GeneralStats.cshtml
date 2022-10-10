@@ -1,0 +1,59 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom GeneralStatsContainer h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <h3 class="card-title align-items-start flex-column">
+            <span class="font-weight-bolder text-dark">General Stats</span>
+        </h3>
+        <div class="card-toolbar">
+            <button id="refresh-send-attempts-btn" id="generalStatsReload" class="btn btn-outline-brand btn-sm btn-icon btn-icon-md">
+                <i class="flaticon2-refresh"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="easy-pie-chart-loading col-lg-12" style="position: absolute; text-align: center; z-index: 999;">
+            <div class="kt-blockui" style="display:inline-block">
+                <span>Loading...</span>
+                <span>
+                    <div class="kt-loader m-loader--brand"></div>
+                </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="easy-pie-chart">
+                    <div class="number transactions" id="transactionPercent" data-percent="0">
+                        +<span id="transactionPercent">...</span>%
+                    </div>
+                    <a class="title" href="javascript:;">
+                        Transactions
+                        <i class="icon-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="easy-pie-chart">
+                    <div class="number visits" id="newVisitPercent" data-percent="0">
+                        +<span>...</span>%
+                    </div>
+                    <a class="title" href="javascript:;">
+                        New Visits
+                        <i class="icon-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="easy-pie-chart">
+                    <div class="number bounce" id="bouncePercent" data-percent="0">
+                        -<span>...</span>%
+                    </div>
+                    <a class="title" href="javascript:;">
+                        Bounce
+                        <i class="icon-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

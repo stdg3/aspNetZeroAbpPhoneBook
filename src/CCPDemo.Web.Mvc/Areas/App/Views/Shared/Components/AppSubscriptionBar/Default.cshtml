@@ -1,0 +1,57 @@
+@using Abp.MultiTenancy
+@using CCPDemo.Authorization
+@using CCPDemo.Editions
+@using CCPDemo.MultiTenancy.Payments
+@model CCPDemo.Web.Areas.App.Models.Layout.SubscriptionBarViewModel
+@{
+    Layout = null;
+}
+
+@if (AbpSession.MultiTenancySide != MultiTenancySides.Host)
+{
+    if (IsGranted(AppPermissions.Pages_Administration_Tenant_SubscriptionManagement) &&
+        Model.LoginInformations.Tenant.SubscriptionPaymentType != SubscriptionPaymentType.RecurringAutomatic &&
+        (Model.LoginInformations.Tenant.IsInTrialPeriod || Model.LoginInformations.Tenant.SubscriptionIsExpiringSoon(Model.SubscriptionExpireNotifyDayCount)))
+    {
+        if (Model.LoginInformations.Tenant.IsInTrialPeriod && !Model.LoginInformations.Tenant.SubscriptionIsExpiringSoon(Model.SubscriptionExpireNotifyDayCount))
+        {
+            <div class="d-flex align-items-center">
+                <div class="@Model.CssClass" data-kt-menu-trigger="click"
+         data-kt-menu-placement="bottom-end">
+                    <i class="flaticon-alert fs-2 glowing"></i>
+                    <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+                </div>
+                <div class="menu menu-sub menu-sub-dropdown menu-column w-250px w-lg-400px p-5"
+         data-kt-menu="true">
+                    <a href="@Url.Action("Buy", "Payment", new { area = "", editionId = Model.LoginInformations.Tenant.Edition.Id, editionPaymentType = EditionPaymentType.BuyNow })">
+                        <span>
+                            <i class="fa fa-exclamation-triangle"></i>
+                            @Html.Raw(L("TrialSubscriptionNotification", "<strong>" + Model.LoginInformations.Tenant.Edition.DisplayName + "</strong>", L("ClickHere")))
+                        </span>
+                    </a>
+                </div>
+            </div>
+        }
+        if (Model.LoginInformations.Tenant.SubscriptionIsExpiringSoon(Model.SubscriptionExpireNotifyDayCount))
+        {
+            <div class="d-flex align-items-center">
+                <div class="@Model.CssClass" data-kt-menu-trigger="click"
+         data-kt-menu-placement="bottom-end">
+                    <i class="flaticon-alert fs-2 glowing"></i>
+                    <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+                </div>
+                <div class="menu menu-sub menu-sub-dropdown menu-column w-250px w-lg-400px p-5"
+         data-kt-menu="true">
+                    <a href="@Url.Action("Index", "SubscriptionManagement", new {area = "App"})">
+                        <span class="glowing">
+                            <i class="fa fa-exclamation-triangle"></i> @L(Model.LoginInformations.Tenant.IsInTrialPeriod ?
+                "TrialExpireNotification" :
+                "SubscriptionExpireNotification",
+                Model.LoginInformations.Tenant.GetSubscriptionExpiringDayCount())
+                        </span>
+                    </a>
+                </div>
+            </div>
+        }
+    }
+}

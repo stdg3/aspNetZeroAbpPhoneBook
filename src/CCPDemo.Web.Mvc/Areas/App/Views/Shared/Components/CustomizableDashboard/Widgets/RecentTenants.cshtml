@@ -1,0 +1,34 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom RecentTenantsContainer recent-tenants h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="icon-user-follow font-purple-soft"></i>
+            </span>
+            <h3 class="card-label">
+                <span class="font-weight-bolder text-dark">@L("RecentTenants")</span>
+                <small class="sub-title"></small>
+            </h3>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="scroller chart m-scrollable" data-always-visible="1" data-rail-visible="0" data-scrollable="true">
+            <table class="recent-tenants-table table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                <thead>
+                <tr>
+                    <th>@L("TenantName")</th>
+                    <th>@L("CreationTime")</th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="scroller-footer">
+            <div class="btn-arrow-link pull-right">
+                <a href="javascript:;" class="see-all-recent-tenants">@L("SeeAllRecords")</a>
+                <i class="icon-arrow-right"></i>
+            </div>
+        </div>
+    </div>
+</div>

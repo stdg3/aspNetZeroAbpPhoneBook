@@ -1,0 +1,36 @@
+﻿<script abp-src="/view-resources/Areas/App/Views/_Bundles/widget-charts.js" asp-append-version="true"></script>
+
+<div class="card card-custom income-statistics h-100">
+    <div class="card-header align-items-center border-0 mt-4">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="la la-line-chart text-info"></i>
+            </span>
+            <h3 class="card-label">
+                <span class="font-weight-bolder text-dark">@L("IncomeStatistics")</span>
+                <small class="sub-title"></small>
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <div class="btn-group" data-bs-toggle="buttons">
+                <label class="btn m-btn--pill btn-secondary active">
+                    <input type="radio" name="IncomeStatisticsDatePeriod" autocomplete="off" checked="" value="1">
+                    @L("Daily")
+                </label>
+                <label class="btn m-btn--pill btn-secondary">
+                    <input type="radio" name="IncomeStatisticsDatePeriod" autocomplete="off" value="2">
+                    @L("Weekly")
+                </label>
+                <label class="btn m-btn--pill btn-secondary">
+                    <input type="radio" name="IncomeStatisticsDatePeriod" autocomplete="off" value="3">
+                    @L("Monthly")
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="chart income-statistics-chart" style="min-height: 200px;height: auto; width: 100%;">
+        </div>
+    </div>
+</div>

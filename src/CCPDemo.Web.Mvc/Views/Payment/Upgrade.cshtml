@@ -1,0 +1,74 @@
+﻿@using CCPDemo
+@using CCPDemo.Editions
+@using CCPDemo.Localization
+@using CCPDemo.MultiTenancy.Payments
+@model CCPDemo.Web.Models.Payment.UpgradeEditionViewModel
+
+@{
+    Layout = "~/Views/Account/_Layout.cshtml";
+    ViewBag.DisableTenantChange = true;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Views/Payment/Upgrade.js" asp-append-version="true"></script>
+}
+
+@section Styles
+{
+    <link abp-href="/view-resources/Views/Payment/Payment.css" rel="stylesheet" type="text/css" asp-append-version="true"/>
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("PaymentInfo")</h3>
+        <p class="text-muted font-weight-bold font-size-h4">
+            (@L(EditionPaymentType.Upgrade + "_Edition_Description", Model.Edition.DisplayName))
+        </p>
+    </div>
+    <div>
+        <input type="hidden" name="EditionId" value="@Model.Edition.Id"/>
+        <input type="hidden" name="EditionPaymentType" value="@EditionPaymentType.Upgrade"/>
+        <input type="hidden" name="PaymentPeriodType" value="@Model.PaymentPeriodType"/>
+        <input type="hidden" name="SubscriptionStartType" value="@SubscriptionStartType.Paid"/>
+        <input type="hidden" name="RecurringPaymentEnabled" value="@((Model.SubscriptionPaymentType != SubscriptionPaymentType.Manual).ToString())"/>
+
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> @ViewBag.ErrorMessage
+            </div>
+        }
+
+        <hr class="border-green"/>
+        @if (Model.SubscriptionPaymentType != SubscriptionPaymentType.Manual)
+        {
+            <div class="form-actions">
+                <div class="mb-5 row">
+                    <label class="col-sm-12 form-label">@L("RecurringSubscriptionUpgradeNote")</label>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-actions">
+                <div class="mb-5 row">
+                    <label class="col-sm-8 form-label">@L("Total")</label>
+                    <div class="col-sm-4 text-end">
+                        <p class="form-control-static text-bold" id="totalPrice">
+                            @CCPDemoConsts.CurrencySign@Model.AdditionalPrice.Value.ToString("N2")
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @foreach (var paymentGateway in Model.PaymentGateways)
+    {
+        <div class="mb-5">
+            <button data-gateway="@paymentGateway.GatewayType" data-supports-subscription="@paymentGateway.SupportsRecurringPayments.ToString().ToLower()" class="btn btn-success btn-block checkout">@L("CheckoutWith" + paymentGateway.GatewayType)</button>
+        </div>
+    }
+</div>

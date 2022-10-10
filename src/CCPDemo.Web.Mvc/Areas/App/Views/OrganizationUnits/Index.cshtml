@@ -1,0 +1,128 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Startup
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.OrganizationUnits;
+}
+
+@section Styles
+{
+<link rel="stylesheet" abp-href="/view-resources/Areas/App/Views/OrganizationUnits/Index.css" asp-append-version="true" />
+}
+
+@section Scripts
+{
+<script abp-src="/view-resources/Areas/App/Views/OrganizationUnits/Index.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("OrganizationUnits")" description="@L("OrganizationUnitsHeaderInfo")"></abp-page-subheader>
+
+    <div class="@(await GetContainerClass())">
+        <div class="row g-5">
+            <div class="col-sm-12 col-md-6">
+                <div class="card card-stretch" id="ouCard">
+                    <div class="card-header align-items-center">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="font-weight-bolder text-dark">@L("OrganizationTree")</span>
+                        </h3>
+                        <div class="card-toolbar">
+                            @if (IsGranted(AppPermissions.Pages_Administration_OrganizationUnits_ManageOrganizationTree))
+                            {
+                                <button type="button" id="AddRootUnitButton" class="btn btn-primary">
+                                    <i class="la la-plus btn-md-icon"></i>
+                                    <span class="d-none d-md-inline-block">
+                                        @L("AddRootUnit")
+                                    </span>
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-scroll">
+                            <div id="OrganizationUnitEditTree"></div>
+                            <div id="OrganizationUnitTreeEmptyInfo" ng-if="!vm.organizationTree.unitCount" class="text-muted">
+                                @L("NoOrganizationUnitDefinedYet")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6">
+                <div class="card card-stretch" id="ouMembersCard">
+                    <div class="card-header align-items-center">
+                        <h3 class="card-title align-items-start flex-column">
+                            <span class="font-weight-bolder text-dark" id="SelectedOuRightTitle"></span>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-scroll">
+                            <div id="SettingsTabPanel" class="tabbable-line">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item">
+                                        <a href="#MembersTab" aria-expanded="true" class="nav-link active" data-bs-toggle="tab" role="tab">
+                                            @L("Members")
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#RolesTab" aria-expanded="true" class="nav-link" data-bs-toggle="tab" role="tab">
+                                            @L("Roles")
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane pt-5 active" id="MembersTab">
+                                        @if (IsGranted(AppPermissions.Pages_Administration_OrganizationUnits_ManageMembers))
+                                        {
+                                            <button type="button" id="AddUserToOuButton" class="btn btn-primary float-end m-3" style="display: none">
+                                                <i class="la la-plus btn-md-icon"></i>
+                                                <span class="d-none d-md-inline-block">
+                                                    @L("AddMember")
+                                                </span>
+                                            </button>
+                                        }
+                                        <div id="OuMembersTable" style="display: none">
+                                            <table class="organization-members-table table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@L("Delete")</th>
+                                                        <th>@L("UserName")</th>
+                                                        <th>@L("AddedTime")</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div id="OuMembersEmptyInfo" class="text-muted mt-4">
+                                            @L("SelectAnOrganizationUnitToSeeMembers")
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane pt-5" id="RolesTab">
+                                        @if (IsGranted(AppPermissions.Pages_Administration_OrganizationUnits_ManageRoles))
+                                        {
+                                            <button type="button" id="AddRoleToOuButton" class="btn btn-primary float-end m-3" style="display: none">
+                                                <i class="la la-plus"></i> @L("AddRole")
+                                            </button>
+                                        }
+                                        <div id="OuRolesTable" style="display: none">
+                                            <table class="organization-roles-table table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                                                <thead>
+                                                    <tr>
+                                                        <th>@L("Delete")</th>
+                                                        <th>@L("RoleName")</th>
+                                                        <th>@L("AddedTime")</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                        <div id="OuRolesEmptyInfo" class="text-muted mt-4">
+                                            @L("SelectAnOrganizationUnitToSeeRoles")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

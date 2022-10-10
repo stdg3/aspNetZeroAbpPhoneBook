@@ -1,0 +1,81 @@
+﻿@using Abp.Collections.Extensions
+@using CCPDemo.Web.Areas.App.Views.Shared.Components.AppMenu
+@using CCPDemo.Web.Navigation
+@model UserMenuItemViewModel
+@{
+    var orderedChildMenuItems = Model.MenuItem.Items.OrderByCustom().ToList();
+}
+
+<div class="menu-item @(Model.IconMenu && Model.RootLevel && Model.MenuItem.Items.Count > 0 ? "menu-dropdown" : "menu-accordion") 
+    @(Model.MenuItem.IsMenuActive(Model.CurrentPageName) ? "active" : "") 
+    @(Model.MenuItem.IsMenuActive(Model.CurrentPageName) && Model.MenuItem.Items.Count > 0 ? "hover" : "")
+    @(Model.MenuItem.IsMenuActive(Model.CurrentPageName) && Model.MenuItem.Items.Count > 0 && !Model.IconMenu ? "show" : "")"
+     aria-haspopup="true"
+     @(Model.RootLevel ? "" : " role=none")
+     @(!Model.MenuItem.Items.IsNullOrEmpty() ? "data-kt-menu-trigger=click" : "")>
+    @if (Model.MenuItem.Items.IsNullOrEmpty())
+    {
+        if (string.IsNullOrEmpty(Model.MenuItem.Target))
+        {
+            Model.MenuItem.Target = "_self";
+        }
+        <a href="@Model.MenuItem.CalculateUrl(ApplicationPath)" class="menu-link @(Model.MenuItem.IsMenuActive(Model.CurrentPageName) ? "active" : "")" target="@Model.MenuItem.Target"
+           role="menuitem"
+           aria-haspopup="true"
+           aria-expanded="false"
+           data-bs-toggle="tooltip"
+           data-bs-trigger="hover"
+           data-bs-placement="right"
+           @(Model.IconMenu ? "data-bs-original-title=" + @Model.MenuItem.DisplayName + "" : "")
+           tabindex="@(Model.MenuItemIndex == 0 ? "0" : "-1")">
+            <span class="menu-icon">
+                <span class="@Model.MenuItem.Icon"></span>
+            </span>
+            @if (!Model.IconMenu || !Model.RootLevel)
+            {
+                <span class="menu-title">@Model.MenuItem.DisplayName</span>
+            }
+        </a>
+    }
+    else
+    {
+        <span class="menu-link @(Model.MenuItem.IsMenuActive(Model.CurrentPageName) ? "active" : "")"
+              role="menuitem"
+              aria-haspopup="true"
+              aria-expanded="false"
+              data-bs-toggle="tooltip"
+              data-bs-trigger="hover"
+              data-bs-placement="right"
+              @(Model.IconMenu ? "data-bs-original-title=" + @Model.MenuItem.DisplayName + "" : "")
+              tabindex="@(Model.MenuItemIndex == 0 ? "0" : "-1")">
+            <span class="menu-icon">
+                <span class="@Model.MenuItem.Icon"></span>
+            </span>
+            @if (!Model.IconMenu || !Model.RootLevel)
+            {
+                <span class="menu-title">@Model.MenuItem.DisplayName</span>
+            }
+            @if (Model.MenuItem.Items.Count > 0 && (!Model.IconMenu || !Model.RootLevel))
+            {
+                <span class="menu-arrow"></span>
+            }
+        </span>
+        <div class="menu-sub @(Model.IconMenu && Model.RootLevel && Model.MenuItem.Items.Count > 0 ? "menu-sub-dropdown" : "menu-sub-accordion") menu-active-bg" aria-label="@Model.MenuItem.DisplayName">
+            @for (var i = 0; i < Model.MenuItem.Items.Count; i++)
+            {
+                var childMenuItem = orderedChildMenuItems[i];
+                if (!childMenuItem.IsVisible)
+                {
+                    continue;
+                }
+                @await Html.PartialAsync("Components/AppMenu/_UserMenuItem", new UserMenuItemViewModel
+                {
+                    MenuItem = childMenuItem,
+                    MenuItemIndex = i,
+                    CurrentPageName = Model.CurrentPageName,
+                    RootLevel = false
+                })
+            }
+        </div>
+    }
+</div>

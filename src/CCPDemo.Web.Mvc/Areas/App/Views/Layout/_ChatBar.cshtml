@@ -1,0 +1,209 @@
+﻿@using CCPDemo.Chat
+
+<!-- begin::Quick Sidebar -->
+<div id="kt_drawer_chat" class="bg-body drawer drawer-end"
+     data-kt-drawer="true"
+     data-kt-drawer-name="chat"
+     data-kt-drawer-activate="true"
+     data-kt-drawer-overlay="true"
+     data-kt-drawer-width="{default:'300px', 'md': '500px'}"
+     data-kt-drawer-direction="end"
+     data-kt-drawer-toggle="#kt_drawer_chat_toggle"
+     data-kt-drawer-close="#kt_drawer_chat_close">
+    <!-- BEGIN FRIENDS -->
+    <div class="card card-flush w-100" id="kt_drawer_chat_friends">
+        <div class="card-header pt-7" id="kt_chat_contacts_header">
+            <div class="card-title">
+                <form class="w-100 position-relative" autocomplete="off">
+                    <span class="svg-icon svg-icon-2 svg-icon-lg-1 svg-icon-gray-500 position-absolute top-50 ms-5 translate-middle-y">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black"></rect>
+                            <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black"></path>
+                        </svg>
+                    </span>
+                    <input type="text" id="ChatUserSearchUserName" class="form-control form-control-solid px-15" name="search" value="" placeholder="@L("FilterOrAddUser")" data-bs-html="true" data-bs-toggle="popover" data-bs-placement="bottom" data-bs-content="@L("ChatUserSearch_Hint")">
+                </form>
+            </div>
+            <div class="card-toolbar">
+                <a href="javascript:;" id="SearchChatUserButton" class="btn btn-xs btn-icon btn-light btn-hover-primary" data-bs-toggle="tooltip" title="@L("AddFriend")">
+                    <i class="fas fa-user-plus"></i>
+                </a>
+                <a href="javascript:;" class="btn btn-xs btn-icon btn-light btn-hover-primary page-quick-sidebar-pinner">
+                    <i class="fa fa-map-pin" aria-label="@L("Pin")"></i>
+                </a>
+                <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_drawer_chat_close">
+                    <i class="flaticon2-delete"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body pt-5" id="kt_chat_contacts_body">
+            <div class="scroll-y me-n5 pe-5 h-200px h-lg-auto chat-users" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_contacts_header" data-kt-scroll-wrappers="#kt_content, #kt_chat_contacts_body" data-kt-scroll-offset="0px">
+                <div id="friendListFriends"></div>
+                <p id="EmptyFriendListInfo">@L("YouDontHaveAnyFriend")</p>
+            </div>
+            <div class="mt-20">
+                <h5>@L("BlockedUsers")</h5>
+                <div class="scroll-y me-n5 pe-5 h-200px h-lg-auto">
+                    <div id="friendListBlockeds"></div>
+                    <p id="EmptyBlockedFriendListInfo">@L("YouDontHaveAnyBlockedFriend")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END FRIENDS -->
+
+    <!-- BEGIN MESSAGES -->
+    <div class="card w-100 rounded-0 border-0 d-none" id="kt_drawer_chat_messenger">
+        <div class="card-header pe-5" id="kt_drawer_chat_messenger_header">
+            <div class="card-title">
+                <div class="d-flex justify-content-center flex-column me-3">
+                    <a href="#" id="selectedChatUserName" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1"></a>
+                    <div class="mb-0 lh-1" id="selectedChatUserStatus">
+                        <span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
+                        <span class="fs-7 fw-bold text-muted"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-toolbar">
+                <a href="#" id="kt_quick_sidebar_back" class="btn btn-xs btn-icon btn-light btn-hover-primary quick-sidebar-back d-none" data-bs-toggle="tooltip" title="@L("Back")">
+                    <i class="fa fa-arrow-alt-circle-left" aria-label="@L("Back")"></i>
+                </a>
+                <a href="#" id="liBanChatUser" class="btn btn-xs btn-icon btn-light btn-hover-primary quick-sidebar-back" data-bs-toggle="tooltip" title="@L("BlockUser")">
+                    <i class="fa fa-ban" aria-label="@L("BlockUser")"></i>
+                </a>
+                <a href="#" id="liUnbanChatUser" class="btn btn-xs btn-icon btn-light btn-hover-primary quick-sidebar-back" data-bs-toggle="tooltip" title="@L("UnblockUser")">
+                    <i class="fa fa-check" aria-label="@L("UnblockUser")"></i>
+                </a>
+                <a href="#" id="removeFriend" class="btn btn-xs btn-icon btn-light btn-hover-primary" data-bs-toggle="tooltip" title="@L("RemoveFriend")">
+                    <i class="fas fa-minus-circle"></i>
+                </a>
+                <a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_drawer_chat_close">
+                    <i class="flaticon2-delete"></i>
+                </a>
+            </div>
+        </div>
+        <div class="card-body py-0">
+            <div id="kt_drawer_chat_messenger_body" class="scroll-y me-n5 pe-5 pt-5" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="100%" data-kt-scroll-dependencies="#kt_drawer_chat_messenger_header, #kt_drawer_chat_messenger_footer" data-kt-scroll-wrappers="#kt_drawer_chat_messenger_body" data-kt-scroll-offset="0px">
+                <div class="messages" id="UserChatMessages">
+                </div>
+            </div>
+        </div>
+        <div class="card-footer pt-4" id="kt_drawer_chat_messenger_footer">
+                        <form name="chatMessageForm" id="chatMessageForm" role="form">
+                             <div id="files" class="files"></div>
+                            <textarea id="ChatMessage" class="form-control form-control-flush mb-3" rows="2" data-kt-element="input" placeholder="@L("TypeAMessageHere")" required maxlength="@ChatMessage.MaxMessageLength"></textarea>
+                            <div class="d-flex flex-stack">
+                                <div class="d-flex align-items-center me-2">
+                                    <a href="#" class="btn btn-sm btn-icon btn-active-light-primary me-1">
+                                        <span class="fileinput-button">
+                                            <i class="fas fa-paperclip fs-3 icon-lg" data-bs-toggle="tooltip" title="@L("File")"></i>
+                                            <input id="chatFileUpload" type="file" name="files">
+                                        </span>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-icon btn-active-light-primary me-1">
+                                       <span class="fileinput-button">
+                                           <i class="fas fa-camera-retro fs-3" data-toggle="tooltip" title="@L("Image")"></i>
+                                           <input id="chatImageUpload" type="file" name="files">
+                                       </span>
+                                   </a>
+                                   <a href="javascript:;" class="btn btn-sm btn-icon btn-active-light-primary me-1" id="btnLinkShare">
+                                       <span class="fileinput-button">
+                                           <i class="fas fa-link fs-3" data-toggle="tooltip" title="@L("LinkToCurrentPage")"></i>
+                                       </span>
+                                   </a>
+                                </div>
+                                <button class="btn btn-primary" type="button" data-kt-element="send" id="SendChatMessageButton">
+                                    @L("Reply")
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+    </div>
+    
+</div>
+
+
+
+<script id="UserFriendTemplate" type="x-tmpl-mustache">
+    {{#.}}
+    <div class="d-flex py-4">
+        <div class="d-flex align-items-center me-auto chat-user" data-friend-tenant-id="{{friendTenantId}}" data-friend-user-id="{{friendUserId}}">
+    		<div class="symbol symbol-45px symbol-circle">
+    			<img alt="Pic" src="/Profile/GetFriendProfilePicture?userId={{friendUserId}}&tenantId={{friendTenantId}}">
+    			{{#isOnline}}
+                    <div class="symbol-badge bg-success start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2"></div>
+                {{/isOnline}}
+                {{^isOnline}}
+                    <div class="symbol-badge bg-secondary start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2"></div>
+                {{/isOnline}}
+    		</div>
+    		<div class="ms-5">
+    			<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">{{friendUserName}}</a>
+    			<div class="fw-bold text-muted">
+    			    {{friendTenancyName}}
+                    {{^friendTenancyName}}
+                    Host
+                    {{/friendTenancyName}}
+    			</div>
+    		</div>
+    	</div>
+    	<div class="d-flex align-items-center me-5 message-count" data-friend-tenant-id="{{friendTenantId}}" data-friend-user-id="{{friendUserId}}">
+    		{{#unreadMessageCount}}
+            <span class="badge badge-circle badge-warning">
+                {{unreadMessageCount}}
+            </span>
+            {{/unreadMessageCount}}
+            {{^unreadMessageCount}}
+            <span class="badge badge-circle badge-warning d-none">
+                {{unreadMessageCount}}
+            </span>
+            {{/unreadMessageCount}}
+    	</div>
+    </div>
+    {{/.}}
+</script>
+
+<script id="UserChatMessageTemplate" type="x-tmpl-mustache">
+    {{#.}}
+    {{^isIn}}
+     <div class="d-flex justify-content-start mb-5">
+         <div class="d-flex flex-column align-items-start">
+             <div class="d-flex align-items-center mb-2">
+                 <div class="symbol symbol-35px symbol-circle">
+                     <img alt="Pic" src="/Profile/GetProfilePicture">
+                 </div>
+                 <div class="ms-3">
+                     <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">
+                        {{shownUserName}}
+                     </a>
+                     <time class="text-muted fs-7 mb-1 timeago" datetime="{{creationTime}}"></time> {{{readStateCheck}}}
+                 </div>
+             </div>
+             <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">
+                 {{{formattedMessage}}}
+             </div>
+         </div>
+     </div>
+    {{/isIn}}
+    {{#isIn}}
+    <div class="d-flex justify-content-end mb-10">
+        <div class="d-flex flex-column align-items-end">
+            <div class="d-flex align-items-center mb-2">
+                <div class="me-3">
+                    <time class="text-muted fs-7 mb-1 timeago" datetime="{{creationTime}}"></time> {{{readStateCheck}}}
+                    <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">
+                        {{shownUserName}}
+                    </a>
+                </div>
+                <div class="symbol symbol-35px symbol-circle">
+                    <img alt="Pic" src="/Profile/GetFriendProfilePicture?userId={{targetUserId}}&tenantId={{targetTenantId}}">
+                </div>
+            </div>
+            <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text">
+                {{{formattedMessage}}}
+            </div>
+        </div>
+    </div>
+    {{/isIn}}
+    {{/.}}
+</script>

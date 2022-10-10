@@ -1,0 +1,55 @@
+﻿@using CCPDemo.Authorization
+@using CCPDemo.Web.Areas.App.Startup
+@model CCPDemo.Web.Areas.App.Models.DynamicEntityPropertyValues.DynamicEntityPropertyValueManageAllViewModel
+@{
+    ViewBag.CurrentPageName = AppPageNames.Common.DynamicEntityProperties;
+}
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Areas/App/Views/_Bundles/dynamic-entity-property-value-manage-all.js" asp-append-version="true"></script>
+}
+
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <abp-page-subheader title="@L("DynamicEntityPropertyValues")"></abp-page-subheader>
+
+    <div class="@(await GetContainerClass()) d-flex flex-column-fluid">
+        <div class="container">
+            <div class="card">
+                <div class="card-header align-items-center border-0 mt-4">
+                    <span class="text-dark">
+                        <span class="font-weight-bold" style="font-size:1.1em">@L("EntityFullName"):&thinsp;</span> @Model.EntityFullName
+                    </span>
+                    <div class="card-toolbar">
+                        <span class="font-weight-bold" style="font-size:1.1em">@L("EntityRowId"): &thinsp;</span> @Model.EntityId
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    @Html.HiddenFor(x => x.EntityId)
+                    @Html.HiddenFor(x => x.EntityFullName)
+                    <div class="align-items-center">
+                        <table id="DynamicEntityPropertyValuesTable" class="table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer">
+                            <thead>
+                            <tr>
+                                <th>@L("PropertyName")</th>
+                                <th>@L("Values")</th>
+                                @if (IsGranted(AppPermissions.Pages_Administration_DynamicEntityPropertyValue_Delete))
+                                {
+                                    <th style="width: 50px">@L("Actions")</th>
+                                }
+                            </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button type="button" id="saveProperties" class="btn btn-success pull-right">@L("Save")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

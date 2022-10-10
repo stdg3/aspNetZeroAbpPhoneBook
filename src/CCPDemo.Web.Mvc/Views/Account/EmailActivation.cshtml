@@ -1,0 +1,32 @@
+﻿@using Abp.Authorization.Users
+@using CCPDemo.Localization
+
+@section Scripts
+{
+    <script abp-src="/view-resources/Views/Account/EmailActivation.js" asp-append-version="true"></script>
+}
+
+@section Styles{
+    <link href="/metronic/common/css/login-1@(CultureHelper.IsRtl ? ".rtl" : "").css" rel="stylesheet"/>
+}
+
+<div class="login-form">
+    <div class="pb-13 pt-lg-0 pt-5">
+        <h3 class="font-weight-bolder text-dark font-size-h4 font-size-h1-lg">@L("EmailActivation")</h3>
+    </div>
+    <form class="form email-activation-form" asp-action="SendEmailActivationLink" method="post">
+        <p>
+            @L("SendEmailActivationLink_Information")
+        </p>
+        <div class="mb-5">
+            <input class="form-control placeholder-no-fix form-control-solid h-auto py-7 px-6 rounded-lg font-size-h6" type="email" autocomplete="new-password" placeholder="@L("EmailAddress")" name="EmailAddress" required maxlength="@AbpUserBase.MaxEmailAddressLength"/>
+        </div>
+
+        <div class="pb-lg-0 pb-5">
+            <a asp-action="Login">
+                <button type="button" id="back-btn" class="btn btn-light-primary font-weight-bolder font-size-h6 px-8 py-4 my-3">@L("Back")</button>
+            </a>
+            <button type="submit" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 me-3">@L("Submit")</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,7 @@
+﻿@model CCPDemo.Web.Areas.App.Models.Layout.LogoViewModel
+@{
+    Layout = null;
+}
+
+<img alt="Logo" src="@Model.GetLogoUrl(ApplicationPath, await GetLogoSkin())"
+     class="@(string.IsNullOrEmpty(Model.LogoClassOverride) ? "header-brand-logo-default" : Model.LogoClassOverride) h-35px logo"/>

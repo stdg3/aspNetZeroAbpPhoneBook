@@ -1,0 +1,9 @@
+﻿@using CCPDemo.Web.Areas.App.Models.Common
+@model IPermissionsEditViewModel
+
+<div class="mb-5">
+    <input id="PermissionTreeFilter" type="text" class="form-control" placeholder="@L("SearchWithThreeDot")">
+</div>
+<div class="permission-tree scroll h-400px">
+    @await Html.PartialAsync("~/Areas/App/Views/Common/_PermissionTreeItem.cshtml", new PermissionTreeItemModel(Model, null))
+</div>
