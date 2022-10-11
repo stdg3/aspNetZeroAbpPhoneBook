@@ -6,7 +6,7 @@
 			"templates" : [
 					{
 					"type" : "file",
-					"content" : "Task Remove{{Property_Name_Here}}File(EntityDto input);
+					"content" : "Task Remove{{Property_Name_Here}}File(EntityDto{{Primary_Key_Inside_Tag_Here}} input);
 		
 		"
 					}
@@ -67,6 +67,11 @@
 			"content": "
 
         Task<Get{{Entity_Name_Here}}ForViewDto> Get{{Entity_Name_Here}}ForView({{Primary_Key_Here}} id);"
-		}
+		},
+        {
+            "placeholder": "{{Primary_Key_Inside_Tag_Here}}",
+            "condition": "{{Primary_Key_Here}} != 'int'",
+            "content": "<{{Primary_Key_Here}}>"
+        }
 	]
 }

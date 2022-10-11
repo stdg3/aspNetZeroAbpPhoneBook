@@ -32,20 +32,19 @@
 {{NP_Filter_Template_Before_V110000_Here}}
 {{NP_Filter_Template_After_V110000_Here}}
                 </div>
-                <div class="row mb-4">
+                <div class="row my-4">
                     <div class="col-xl-12">
                         <span id="ShowAdvancedFiltersSpan" class="text-muted clickable-item"><i class="fa fa-angle-down"></i> @L("ShowAdvancedFilters")</span>
                         <span id="HideAdvancedFiltersSpan" class="text-muted clickable-item" style="display: none"><i class="fa fa-angle-up"></i> @L("HideAdvancedFilters")</span>
                     </div>
                 </div>
             <div class="row align-items-center">
-                <table id="{{Entity_Name_Plural_Here}}Table" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                <table id="{{Entity_Name_Plural_Here}}Table" class="{{Table_Class_Here}}">
                     <thead>
                         <tr>
                             <th></th>
                             {{NP_OneToMany_Looped_Table_Header_Here}}
-                            <th>@L("Actions")</th>{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}
-                            
+                            <th>@L("Actions")</th>{{Property_Looped_Template_Here}}{{NP_Looped_Template_Here}}                            
                         </tr>
                     </thead>
                 </table>

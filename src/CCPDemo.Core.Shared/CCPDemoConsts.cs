@@ -8,6 +8,8 @@
 
         public const bool MultiTenancyEnabled = false;
 
+        public const int PaymentCacheDurationInMinutes = 30;
+
         public const bool AllowTenantsToChangeEmailSettings = false;
 
         public const string Currency = "USD";

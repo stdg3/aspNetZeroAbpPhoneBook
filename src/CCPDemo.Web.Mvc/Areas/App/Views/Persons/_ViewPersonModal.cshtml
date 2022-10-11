@@ -1,0 +1,30 @@
+﻿
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Persons
+@model PersonViewModel
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(L("Details")))
+
+<div class="modal-body">
+    <div id="PersonInformationsTab">
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <h6>@L("Name") :</h6>
+                @Model.Person.Name
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("Surname") :</h6>
+                @Model.Person.Surname
+            </div>
+            <div class="col-6 mb-3">
+                <h6>@L("EmailAddress") :</h6>
+                @Model.Person.EmailAddress
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithClose.cshtml")

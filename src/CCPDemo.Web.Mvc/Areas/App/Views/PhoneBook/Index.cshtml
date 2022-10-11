@@ -1,0 +1,25 @@
+﻿@using System.Threading.Tasks
+@using CCPDemo.Web.Areas.App.Startup
+
+@{
+    ViewBag.CurrentPageName = AppPageNames.Tenant.PhoneBook;
+}
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="subheader py-2 py-lg-4 subheader-solid toolbar">
+        <div class="container-fluid container-fluid d-flex flex-stack ">
+            <div class="d-flex align-items-center flex-wrap me-1">
+                <h3 class="text-dark font-weight-bold mt-2 mb-2 me-2">
+                    <span>@L("PhoneBook")</span>
+                </h3>
+                <span class="subheader-separator subheader-separator-ver mt-2 mb-2 me-4 bg-gray-200"></span>
+                <span class="text-muted font-weight-bold me-4">
+                    @L("PhoneBookInfo")
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <p>PHONE BOOK CONTENT COMES HERE!</p>
+    </div>
+</div>

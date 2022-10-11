@@ -1,4 +1,119 @@
 {
+"propertyTemplates":[
+		{
+			"placeholder" : "{{File_Uploading_Init_Here}}",
+			"condition" : "",
+			"templates" : [
+					{
+					"type" : "file",
+					"preventDuplicate":true,
+					"content" : "        var _fileUploading = [];"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{File_Property_Init_Here}}",
+			"condition" : "",
+			"templates" : [
+					{
+					"type" : "file",
+					"content" : "        var _{{property_Name_Here}}Token;"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{Check_If_Uploading_Before_Save_Here}}",
+			"condition" : "",
+			"templates" : [
+					{
+					"type" : "file",
+                    "preventDuplicate":true,
+					"content" : "
+                        if (_fileUploading != null && _fileUploading.length > 0) {
+                            abp.notify.info(app.localize('WaitingForFileUpload'));
+                            return;
+                        }
+					"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{Set_File_Prop_Token_To_Save_Here}}",
+			"condition" : "",
+			"templates" : [
+					{
+					"type" : "file",
+                    "preventDuplicate":true,
+					"content" : "            {{entity_Name_Here}}.{{property_Name_Here}}Token = _{{property_Name_Here}}Token;
+					"
+					}
+				]
+		},
+		{
+			"placeholder" : "{{File_Prop_Functions_Here}}",
+			"condition" : "",
+			"templates" : [
+					{
+					"type" : "file",
+					"content" : "
+                            $(\"#{{Entity_Name_Here}}_{{Property_Name_Here}}\").change(function () {
+                                var file = $(this)[0].files[0];
+                                if (!file) {
+                                    _{{property_Name_Here}}Token = null;
+                                    return;
+                                }
+                    
+                                var formData = new FormData();
+                                formData.append('file', file);
+                                _fileUploading.push(true);
+                    
+                                $.ajax({
+                                    url: '/App/{{Entity_Name_Plural_Here}}/Upload{{Property_Name_Here}}File',
+                                    type: 'POST',
+                                    data: formData,
+                                    processData: false,
+                                    contentType: false
+                                }).done(function (resp) {
+                                    if (resp.success && resp.result.fileToken) {
+                                        _{{property_Name_Here}}Token = resp.result.fileToken;
+                                    } else {
+                                        abp.message.error(resp.result.message);
+                                    }
+                                }).always(function () {
+                                    _fileUploading.pop();
+                                });
+                            });
+                    
+                            $(\"#{{Entity_Name_Here}}_{{Property_Name_Here}}_Remove\").click(function () {
+                                abp.message.confirm(
+                                    app.localize('DoYouWantToRemoveTheFile'),
+                                    app.localize('AreYouSure'),
+                                    function (isConfirmed) {
+                                        if (isConfirmed) {
+                                            var {{Entity_Name_Here}} = _${{entity_Name_Here}}InformationForm.serializeFormToObject();
+                                            _{{entity_Name_Plural_Here}}Service.remove{{Property_Name_Here}}File({
+                                                id: {{Entity_Name_Here}}.id
+                                            }).done(function () {
+                                                abp.notify.success(app.localize('SuccessfullyDeleted'));
+                                                _${{entity_Name_Here}}InformationForm.find(\"#div_current_file\").css(\"display\", \"none\");
+                                            });
+                                        }
+                                    }
+                                );
+                            });
+                            
+                            $('#{{Entity_Name_Here}}_{{Property_Name_Here}}').change(function () {
+                                var fileName = app.localize('ChooseAFile');
+                                if (this.files && this.files[0]) {
+                                    fileName = this.files[0].name;
+                                }
+                                $('#{{Entity_Name_Here}}_{{Property_Name_Here}}Label').text(fileName);
+                            });	
+					"
+					}
+				]
+		}
+	],
 "navigationPropertyTemplates":[
 		{
 			"placeholder" : "{{NP_Modal_Init_Here}}",
@@ -36,7 +151,7 @@
         });
 		
 "
-					}
+					} 
 				]
 		},
 		{

@@ -6,6 +6,11 @@
     /// </summary>
     public static class AppPermissions
     {
+        public const string Pages_Persons = "Pages.Persons";
+        public const string Pages_Persons_Create = "Pages.Persons.Create";
+        public const string Pages_Persons_Edit = "Pages.Persons.Edit";
+        public const string Pages_Persons_Delete = "Pages.Persons.Delete";
+
         //COMMON PERMISSIONS (FOR BOTH OF TENANTS AND HOST)
 
         public const string Pages = "Pages";

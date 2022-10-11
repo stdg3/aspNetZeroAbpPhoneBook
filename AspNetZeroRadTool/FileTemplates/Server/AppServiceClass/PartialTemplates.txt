@@ -93,7 +93,7 @@
                     "type" : "file",
                     "content" : "
                     [AbpAuthorize(AppPermissions.{{Permission_Name_Here}}_Edit)]
-                    public async Task Remove{{Property_Name_Here}}File(EntityDto input)
+                    public async Task Remove{{Property_Name_Here}}File(EntityDto{{Primary_Key_Inside_Tag_Here}} input)
                     {
                         var {{entity_Name_Here}} = await _{{entity_Name_Here}}Repository.FirstOrDefaultAsync(input.Id);
                         if ({{entity_Name_Here}} == null)
@@ -115,6 +115,7 @@
         },
 		{
 			"placeholder" : "{{File_Prop_Get_File_Name_Here}}",
+			"condition" : "{{Project_Version_Here}} >= 100100 && {{Property_Listed_Here}} == true",
 			"templates" : [
 					{
 					"type" : "file",
@@ -125,6 +126,7 @@
 		},
 		{
 			"placeholder" : "{{File_Prop_Get_File_Name_For_Edit_Here}}",
+			"condition" : "{{Project_Version_Here}} >= 100100 && {{Property_Listed_Here}} == true",
 			"templates" : [
 					{
 					"type" : "file",
@@ -136,6 +138,7 @@
 		},
 		{
 			"placeholder" : "{{File_Prop_Get_File_Name_For_View_Here}}",
+			"condition" : "{{Project_Version_Here}} >= 100100 && {{Property_Listed_Here}} == true",
 			"templates" : [
 					{
 					"type" : "file",
@@ -175,7 +178,7 @@
 					"relation" : "single",
 					"preventDuplicate" : true,
 					"content" : "
-						.WhereIf(!string.IsNullOrWhiteSpace(input.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter), e => e.{{NP_Object_Name_Here}}Fk != null && e.{{NP_Object_Name_Here}}Fk.{{NP_Display_Property_Name_Here}} == input.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter)"
+						.WhereIf(!string.IsNullOrWhiteSpace(input.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter), e => {{NP_Filter_By_Display_Property_Name_Here}} == input.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}}Filter)"
 					}
 				]
 		},
@@ -229,7 +232,7 @@
 					{
 					"relation" : "single",
 					"content" : ",
-                         	{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = s{{Loop_Index}} == null || s{{Loop_Index}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : s{{Loop_Index}}.{{NP_Display_Property_Name_Here}}.ToString()"
+                         	{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = {{NP_Display_Properties_For_Looped_Map_Join_Implementation_Here}}"
 					}
 				]
 		},
@@ -253,7 +256,7 @@
 		    if (output.{{Entity_Name_Here}}.{{NP_Name_Here}} != null)
             {
                 var _lookup{{NP_Foreign_Entity_Name_Here}} = await _lookup_{{nP_Foreign_Entity_Name_Here}}Repository.FirstOrDefaultAsync(({{NP_Id_Type_Here}})output.{{Entity_Name_Here}}.{{NP_Name_Here}});
-                output.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = _lookup{{NP_Foreign_Entity_Name_Here}}?.{{NP_Display_Property_Name_Here}}?.ToString();
+                output.{{NP_Foreign_Entity_Name_Here}}{{NP_Display_Property_Name_Here}}{{NP_Duplication_Number_Here}} = {{NP_Loop_Include_In_Get_Output_Definition_Here}};
             }"
 					}
 				]
@@ -295,7 +298,7 @@
          {
              var query = _lookup_{{nP_Foreign_Entity_Name_Here}}Repository.GetAll().WhereIf(
                     !string.IsNullOrWhiteSpace(input.Filter),
-                   e=> e.{{NP_Display_Property_Name_Here}} != null && e.{{NP_Display_Property_Name_Here}}.Contains(input.Filter)
+                   e=> {{NP_Looped_GetAllForLookupTable_Display_Name_Query_Here}}.Contains(input.Filter)
                 );
 
             var totalCount = await query.CountAsync();
@@ -309,7 +312,7 @@
 				lookupTableDtoList.Add(new {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableDto
 				{
 					Id = {{nP_Foreign_Entity_Name_Here}}.Id{{NP_Id_Type_ToStringIfNeeded_Here}},
-					DisplayName = {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}?.ToString()
+					DisplayName =  {{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Lookup_Table_Here}}
 				});
 			}
 
@@ -331,7 +334,7 @@
 					.Select({{nP_Foreign_Entity_Name_Here}} => new {{Entity_Name_Here}}{{NP_Foreign_Entity_Name_Here}}LookupTableDto
 					{
 						Id = {{nP_Foreign_Entity_Name_Here}}.Id{{NP_Id_Type_ToStringIfNeeded_Here}},
-						DisplayName = {{nP_Foreign_Entity_Name_Here}} == null || {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}.ToString()
+						DisplayName = {{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Dropdown_Table_Here}}
 					}).ToListAsync();
 			}
 							"
@@ -519,5 +522,70 @@ using {{Namespace_Here}}.{{Namespace_Relative_Full_Here}}.Exporting;"
                     _binaryObjectManager = binaryObjectManager;
 			"
 		},
+        {
+            "placeholder": "{{Primary_Key_Inside_Tag_Here}}",
+            "condition": "{{Primary_Key_Here}} != 'int'",
+            "content": "<{{Primary_Key_Here}}>"
+        },
+        {
+            "placeholder": "{{NP_Loop_Include_In_Get_Output_Definition_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Display_Property_Name_With_String_Format_With_Lookup_Prefix_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Loop_Include_In_Get_Output_Definition_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "_lookup{{NP_Foreign_Entity_Name_Here}}?.{{NP_Display_Property_Name_Here}}?.ToString()"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Query_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Looped_GetAllForLookupTable_Display_Name_For_Query_Contains_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Query_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "e.{{NP_Display_Property_Name_Here}} != null && e.{{NP_Display_Property_Name_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Lookup_Table_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Display_Property_Name_With_String_Format_With_Lowercased_Entity_Name_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Lookup_Table_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "{{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}?.ToString()"
+        },
+        {
+            "placeholder": "{{NP_Filter_By_Display_Property_Name_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Display_Property_Names_For_Query_With_E_Dot_Object_Name_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Filter_By_Display_Property_Name_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "e.{{NP_Object_Name_Here}}Fk != null && e.{{NP_Object_Name_Here}}Fk.{{NP_Display_Property_Name_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Display_Properties_For_Looped_Map_Join_Implementation_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Display_Properties_For_Looped_Map_Join_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Display_Properties_For_Looped_Map_Join_Implementation_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "s{{Loop_Index}} == null || s{{Loop_Index}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : s{{Loop_Index}}.{{NP_Display_Property_Name_Here}}.ToString()"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Dropdown_Table_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == true",
+            "content": "{{NP_Display_Property_Name_With_String_Format_With_Lowercased_Entity_Name_Here}}"
+        },
+        {
+            "placeholder": "{{NP_Looped_GetAllForLookupTable_Display_Name_Definition_For_ViewType_Dropdown_Table_Here}}",
+            "condition": "{{NP_Must_Use_Multiple_Display_Property_Name_Here}} == false",
+            "content": "{{nP_Foreign_Entity_Name_Here}} == null || {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}} == null ? \"\" : {{nP_Foreign_Entity_Name_Here}}.{{NP_Display_Property_Name_Here}}.ToString()"
+        },
 	],
 }

@@ -9,7 +9,7 @@
 					"content" : "
 							<div class=\"col-md-3\">
 								<label for=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">@L(\"{{Property_Name_Here}}\")</label>
-								<select class=\"form-control\" name=\"{{Property_Name_Here}}Filter\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">
+								<select class=\"form-select\" name=\"{{Property_Name_Here}}Filter\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">
 								<option value=\"-1\">@L(\"All\")</option>
 									{{Enum_Option_Looped_Template_Here}}
 								</select>
@@ -20,7 +20,7 @@
 					"content" : "
 							<div class=\"col-md-3\">
 								<label for=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">@L(\"{{Property_Name_Here}}\")</label>
-								<select class=\"form-control\" name=\"{{Property_Name_Here}}Filter\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">
+								<select class=\"form-select\" name=\"{{Property_Name_Here}}Filter\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Property_Name_Here}}FilterId\">
 									<option value=\"-1\">@L(\"All\")</option>
 									<option value=\"0\">@L(\"False\")</option>
 									<option value=\"1\">@L(\"True\")</option>
@@ -116,7 +116,7 @@
 		{
 			"placeholder": "{{Get_Excel_Button_Here}}",
 			"condition": "{{Create_Excel_Export_Here}} == true",
-			"content": "<button id=\"ExportToExcelButton\" class=\"btn btn-outline-success\"><i class=\"fa fa-file-excel\"></i> @L(\"ExportToExcel\")</button>
+			"content": "<button id=\"ExportToExcelButton\" class=\"btn btn-outline btn-outline-success btn-active-light-success me-1\"><i class=\"fa fa-file-excel\"></i> @L(\"ExportToExcel\")</button>
             "
 		},
 		{
@@ -240,18 +240,18 @@
         },
         {
             "placeholder": "{{Seperator_Div_Here}}",
-            "condition": "{{Project_Version_Here}} >= 090000",
+            "condition": "{{Project_Version_Here}} >= 090000 && {{Project_Version_Here}} < 110000",
             "content": "<div class=\"separator separator-dashed\"></div>"
         },
         {
             "placeholder": "{{Filter_Form_Group_Before_V110000_Here}}",
             "condition": "{{Project_Version_Here}} < 110000",
             "content": "
-                <div class="form-group align-items-center">
-                    <div class="input-group">
-                        <input type="text" id="{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter" class="form-control m-input" placeholder='@L("SearchWithThreeDot")' value="@Model.FilterText">
-                        <span class="input-group-btn">
-                            <button id="Get{{Entity_Name_Plural_Here}}Button" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                <div class=\"form-group align-items-center\">
+                    <div class=\"input-group\">
+                        <input type=\"text\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter\" class=\"form-control m-input\" placeholder='@L(\"SearchWithThreeDot\")' value=\"@Model.FilterText\">
+                        <span class=\"input-group-btn\">
+                            <button id=\"Get{{Entity_Name_Plural_Here}}Button\" class=\"btn btn-primary\" type=\"submit\"><i class=\"flaticon-search-1\"></i></button>
                         </span>
                     </div>
                 </div>
@@ -261,13 +261,23 @@
             "placeholder": "{{Filter_Form_Group_After_V110000_Here}}",
             "condition": "{{Project_Version_Here}} >= 110000",
             "content": "
-                <div class="my-3">
-                    <div class="input-group">
-                        <input type="text" id="{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter" class="form-control m-input" placeholder='@L("SearchWithThreeDot")' value="@Model.FilterText">
-                        <button id="Get{{Entity_Name_Plural_Here}}Button" class="btn btn-primary" type="submit"><i class="flaticon-search-1"></i></button>
+                <div class=\"my-3\">
+                    <div class=\"input-group\">
+                        <input type=\"text\" id=\"{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}TableFilter\" class=\"form-control m-input\" placeholder='@L(\"SearchWithThreeDot\")' value=\"@Model.FilterText\">
+                        <button id=\"Get{{Entity_Name_Plural_Here}}Button\" class=\"btn btn-primary\" type=\"submit\"><i class=\"flaticon-search-1\"></i></button>
                     </div>
                 </div>
             "
+        },
+        {
+            "placeholder": "{{Table_Class_Here}}",
+            "condition": "{{Project_Version_Here}} < 110000",
+            "content": "display table table-striped table-bordered table-hover dt-responsive nowrap"
+        },
+        {
+            "placeholder": "{{Table_Class_Here}}",
+            "condition": "{{Project_Version_Here}} >= 110000",
+            "content": "table align-middle table-row-dashed fs-6 gy-5 dataTable no-footer"
         }
 	],
 "navigationPropertyOneToManyTableTemplates": [

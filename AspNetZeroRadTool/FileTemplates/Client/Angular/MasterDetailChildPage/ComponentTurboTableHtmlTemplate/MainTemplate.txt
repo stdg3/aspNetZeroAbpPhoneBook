@@ -21,7 +21,7 @@
 {{NP_Filter_Template_After_V110000_Here}}
 
                         </div>
-                        <div class="row mb-2">
+                        <div class="row my-4">
                             <div class="col-sm-12">
                                 <span class="clickable-item text-muted" *ngIf="!advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-down"></i> {{l("ShowAdvancedFilters")}}</span>
                                 <span class="clickable-item text-muted" *ngIf="advancedFiltersAreShown" (click)="advancedFiltersAreShown=!advancedFiltersAreShown"><i class="fa fa-angle-up"></i> {{l("HideAdvancedFilters")}}</span>

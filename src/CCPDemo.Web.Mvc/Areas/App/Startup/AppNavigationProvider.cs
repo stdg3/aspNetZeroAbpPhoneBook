@@ -21,6 +21,14 @@ namespace CCPDemo.Web.Areas.App.Startup
                         icon: "flaticon-line-graph",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Administration_Host_Dashboard)
                     )
+                )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Common.Persons,
+                        L("Persons"),
+                        url: "App/Persons",
+                        icon: "flaticon-more",
+                        permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Persons)
+                    )
                 ).AddItem(new MenuItemDefinition(
                     AppPageNames.Host.Tenants,
                     L("Tenants"),
@@ -141,7 +149,14 @@ namespace CCPDemo.Web.Areas.App.Startup
                         icon: "flaticon-shapes",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_DemoUiComponents)
                     )
-                );
+                )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Tenant.PhoneBook,
+                        L("PhoneBook"),
+                        url: "App/PhoneBook",
+                        icon: "flaticon2-open-text-book"
+                        )
+                    );
         }
 
         private static ILocalizableString L(string name)
