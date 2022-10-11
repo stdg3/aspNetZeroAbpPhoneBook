@@ -1174,5 +1174,6 @@
     <text name="AllowedUserNameCharactersInfoText">Allowed characters: {0}</text>
 	<text name="PhoneBook">Phone Book</text>
 	<text name="PhoneBookInfo">Phone Book Info</text>
+    <text name="AllPeople">All People</text>	  
   </texts>
 </localizationDictionary>

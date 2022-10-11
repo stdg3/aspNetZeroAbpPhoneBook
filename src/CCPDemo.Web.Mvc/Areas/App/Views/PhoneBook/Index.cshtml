@@ -1,4 +1,6 @@
-﻿@using System.Threading.Tasks
+﻿@model CCPDemo.Web.Areas.App.Models.PhoneBook.IndexViewModel
+
+@using System.Threading.Tasks
 @using CCPDemo.Web.Areas.App.Startup
 
 @{
@@ -20,6 +22,20 @@
         </div>
     </div>
     <div class="container-fluid">
-        <p>PHONE BOOK CONTENT COMES HERE!</p>
+        <h5 class="kt-subheader__title">@L("AllPeople")</h5>
+
+        <div class="list-group">
+            @foreach (var person in Model.Items)
+            {
+                <a href="javascript:;" style="color: black" class="list-group-item">
+                    <h5 class="list-group-item-heading" style="font-weight: lighter">
+                        @person.Name @person.Surname
+                    </h5>
+                    <p class="list-group-item-text">
+                        @person.EmailAddress
+                    </p>
+                </a>
+            }
+        </div>
     </div>
 </div>
