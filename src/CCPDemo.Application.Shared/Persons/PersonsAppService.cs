@@ -163,5 +163,11 @@ namespace CCPDemo.Persons
             return _personsExcelExporter.ExportToFile(personListDtos);
         }
 
+        public async Task CreatePerson(CreatePersonInput input)
+        {
+            var person = ObjectMapper.Map<Person>(input);
+            await _personRepository.InsertAsync(person);
+        }
+
     }
 }

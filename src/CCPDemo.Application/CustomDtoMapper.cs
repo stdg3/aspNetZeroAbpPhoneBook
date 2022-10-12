@@ -51,6 +51,7 @@ namespace CCPDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreatePersonInput, Person>();
             configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CreateOrEditPersonDto, Person>().ReverseMap();
             configuration.CreateMap<PersonDto, Person>().ReverseMap();

@@ -8,7 +8,4 @@
     <PackageReference Include="Abp" Version="7.2.1" />
     <PackageReference Include="Abp.Zero.Common" Version="7.2.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\PersonConsts\" />
-  </ItemGroup>
 </Project>

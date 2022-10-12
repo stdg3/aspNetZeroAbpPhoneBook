@@ -1,6 +1,5 @@
 ﻿using CCPDemo.AppService;
 using CCPDemo.Dto;
-using CCPDemo.Persons.Dtos;
 using Shouldly;
 using System;
 using System.Collections.Generic;
@@ -9,33 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace CCPDemo.Tests
+namespace CCPDemo.Tests.PhoneBokkTestModules
 {
-    public class PersonAppService_Tests : AppTestBase
+    public class CreatePersonMethod_Tests: AppTestBase
     {
-        private readonly IPersonAppService _personAppService;
-
-        public PersonAppService_Tests()
-        {
-            _personAppService = Resolve<IPersonAppService>();
-        }
-
-        [Fact]
-        public void Should_Get_All_People_Without_Any_Filter()
-        {
-            //Act
-            var persons = _personAppService.GetPeople(new GetPeopleInput());
-
-            //Assert
-            persons.Items.Count.ShouldBe(2);
-        }
-
+        private readonly PersonAppService _personAppService;
 
         [Fact]
         public async Task Should_Create_Person_With_Valid_Arguments()
         {
             //Act
-            await _personAppService.GetPeople(
+            await _personAppService.CreatePerson(
                 new CreatePersonInput
                 {
                     Name = "John",
