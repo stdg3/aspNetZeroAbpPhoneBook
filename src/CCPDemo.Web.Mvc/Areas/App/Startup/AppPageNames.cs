@@ -31,7 +31,7 @@
             public const string Dashboard = "Dashboard.Tenant";
             public const string Settings = "Administration.Settings.Tenant";
             public const string SubscriptionManagement = "Administration.SubscriptionManagement.Tenant";
-            public const string PhoneBook = "";
+            public const string PhoneBook = "PhoneBook";
 
         }
     }
