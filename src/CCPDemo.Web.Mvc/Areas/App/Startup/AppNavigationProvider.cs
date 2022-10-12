@@ -141,6 +141,13 @@ namespace CCPDemo.Web.Areas.App.Startup
                         icon: "flaticon-shapes",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_DemoUiComponents)
                     )
+                )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Tenant.PhoneBook,
+                        L("PhoneBook"),
+                        url: "App/PhoneBook",
+                        icon: "glyphicon glyphicon-book"
+                    )
                 );
         }
 

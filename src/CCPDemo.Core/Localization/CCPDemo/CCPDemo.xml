@@ -1157,5 +1157,7 @@
     <text name="AdminSurname">Admin User's Surname</text>
     <text name="UnknownWidgetId">Unknown WidgetId: {0} </text>
     <text name="AllowedUserNameCharactersInfoText">Allowed characters: {0}</text>
+	<text name="PhoneBook">Phone book</text>
+
   </texts>
 </localizationDictionary>
