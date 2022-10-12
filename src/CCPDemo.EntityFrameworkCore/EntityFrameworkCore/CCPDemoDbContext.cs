@@ -11,12 +11,15 @@ using CCPDemo.MultiTenancy;
 using CCPDemo.MultiTenancy.Accounting;
 using CCPDemo.MultiTenancy.Payments;
 using CCPDemo.Storage;
+using CCPDemo.Persons;
 
 namespace CCPDemo.EntityFrameworkCore
 {
     public class CCPDemoDbContext : AbpZeroDbContext<Tenant, Role, User, CCPDemoDbContext>, IAbpPersistedGrantDbContext
     {
         /* Define an IDbSet for each entity of the application */
+
+        public virtual DbSet<Person> Persons { get; set; }
 
         public virtual DbSet<BinaryObject> BinaryObjects { get; set; }
 
