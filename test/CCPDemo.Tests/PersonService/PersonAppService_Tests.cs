@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Shouldly;
+using Abp.Runtime.Validation;
 
 namespace CCPDemo.Tests.PersonService
 {
@@ -35,6 +36,37 @@ namespace CCPDemo.Tests.PersonService
             persons.Items.Count.ShouldBe(1);
             persons.Items[0].Name.ShouldBe("Douglas");
             persons.Items[0].Surname.ShouldBe("Adams");
+        }
+
+        [Fact]
+        public async Task Should_Create_Person_With_Valid_Arguments()
+        {
+            //Act
+            await _personAppService.CreatePerson(
+                new CreatePersonInput
+                {
+                    Name = "John",
+                    Surname = "Nash",
+                    EmailAddress = "john.nash@abeautifulmind.com"
+                });
+            //    await Assert.ThrowsAsync<AbpValidationException>(
+            //async () =>
+            //{
+            //    await _personAppService.CreatePerson(
+            //        new CreatePersonInput
+            //        {
+            //            Name = "John"
+            //        });
+            //});
+
+            //Assert
+            UsingDbContext(
+                context =>
+                {
+                    var john = context.Persons.FirstOrDefault(p => p.EmailAddress == "john.nash@abeautifulmind.com");
+                    john.ShouldNotBe(null);
+                    john.Name.ShouldBe("John");
+                });
         }
     }
 }
