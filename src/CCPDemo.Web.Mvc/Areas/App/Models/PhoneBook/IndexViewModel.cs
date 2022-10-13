@@ -7,6 +7,6 @@ namespace CCPDemo.Web.Areas.App.Models.PhoneBook
     [AutoMapFrom(typeof(ListResultDto<PersonListDto>))]
     public class IndexViewModel : ListResultDto<PersonListDto>
     {
-
+        public string Filter { get; set; }
     }
 }

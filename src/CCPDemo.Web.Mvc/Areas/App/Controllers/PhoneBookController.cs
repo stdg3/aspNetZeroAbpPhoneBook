@@ -23,6 +23,7 @@ namespace CCPDemo.Web.Areas.App.Controllers
         {
             var output = _personAppService.GetPeople(input);
             var model = ObjectMapper.Map<IndexViewModel>(output);
+            model.Filter = input.Filter;
             return View(model);
         }
 
