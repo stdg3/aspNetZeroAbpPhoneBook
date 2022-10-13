@@ -146,7 +146,7 @@ namespace CCPDemo.Web.Areas.App.Startup
                         AppPageNames.Tenant.PhoneBook,
                         L("PhoneBook"),
                         url: "App/PhoneBook",
-                        icon: "glyphicon glyphicon-book"
+                        icon: "flaticon2-list-3"
                     )
                 );
         }
