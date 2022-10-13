@@ -48,5 +48,11 @@ namespace CCPDemo.PersonService
             var person = ObjectMapper.Map<Person>(input);
             await _personRepository.InsertAsync(person);
         }
+
+        [AbpAuthorize(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson)]
+        public async Task DeletePerson(EntityDto input)
+        {
+            await _personRepository.DeleteAsync(input.Id);
+        }
     }
 }

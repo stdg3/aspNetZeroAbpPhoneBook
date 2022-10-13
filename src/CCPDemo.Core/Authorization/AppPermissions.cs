@@ -85,6 +85,9 @@
 
         public const string Pages_Tenant_PhoneBook_CreatePerson = "Pages.Tenant.PhoneBook.CreatePerson";
 
+        public const string Pages_Tenant_PhoneBook_DeletePerson = "Pages.Tenant.PhoneBook.DeletePerson";
+
+
 
         //HOST-SPECIFIC PERMISSIONS
 

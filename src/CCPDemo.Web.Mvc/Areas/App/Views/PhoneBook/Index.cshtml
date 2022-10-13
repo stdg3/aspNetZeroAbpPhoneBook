@@ -8,6 +8,13 @@
     ViewBag.CurrentPageName = AppPageNames.Tenant.PhoneBook;
 }
 
+@section Styles
+{
+    <environment names="Development">
+        <link rel="stylesheet" href="~/view-resources/Areas/App/Views/PhoneBook/Index.css" asp-append-version="true" />
+    </environment>
+}
+
 @section Scripts
 {
     <environment names="Development">
@@ -42,12 +49,18 @@
 
         <h3>@L("AllPeople")</h3>
 
-        <div class="list-group">
+        <div id="AllPeopleList" class="list-group">
             @foreach (var person in Model.Items)
             {
-                <a href="javascript:;" class="list-group-item">
+                <a href="javascript:;" class="list-group-item" data-person-id="@person.Id">
                     <h4 class="list-group-item-heading">
                         @person.Name @person.Surname
+                @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson))
+                {
+                    <button title="@L("Delete")" class="btn btn-circle btn-icon-only btn-danger delete-person" href="javascript:;">
+                        <i class="la la-trash"></i>
+                    </button>
+                }
                     </h4>
                     <p class="list-group-item-text">
                         @person.EmailAddress

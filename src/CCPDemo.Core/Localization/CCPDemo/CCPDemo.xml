@@ -1161,6 +1161,14 @@
 	  <text name="PhoneBookInfo">Phone Book Info</text>
 	  <text name="AllPeople">All People</text>
 	  <text name="CreateNewPerson">Create New Person</text>
+	  <text name="DeletePerson">Delete Person</text>
+	  <text name="AreYouSureToDeleteThePerson">Are You Sure To Delete The Person</text>
+	  <text name="Deleting">Deleting ...</text>
+
+
+	  
+
+
 
   </texts>
 </localizationDictionary>
