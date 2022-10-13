@@ -41,6 +41,8 @@ using CCPDemo.Notifications.Dto;
 using CCPDemo.Organizations.Dto;
 using CCPDemo.Sessions.Dto;
 using CCPDemo.WebHooks.Dto;
+using CCPDemo.Dto;
+using CCPDemo.Persons;
 
 namespace CCPDemo
 {
@@ -49,6 +51,7 @@ namespace CCPDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             //Inputs
+            configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();
             configuration.CreateMap<SingleLineStringInputType, FeatureInputTypeDto>();
             configuration.CreateMap<ComboboxInputType, FeatureInputTypeDto>();
