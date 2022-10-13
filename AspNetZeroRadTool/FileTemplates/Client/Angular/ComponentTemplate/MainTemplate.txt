@@ -50,7 +50,10 @@ export class {{Entity_Name_Plural_Here}}Component extends AppComponentBase {
     get{{Entity_Name_Plural_Here}}(event?: LazyLoadEvent) {
         if (this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.shouldResetPaging(event)) {
             this.paginator.changePage(0);
-            return;
+            if (this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.records &&
+                this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.records.length > 0) {
+                return;
+            }
         }
 
         this.{{DataTable_Primenghelper_Here}}{{TruboTable_Primenghelper_Here}}.showLoadingIndicator();

@@ -4,6 +4,7 @@
 @using {{Namespace_Here}}.Web.Areas.{{App_Area_Name_Here}}.Models.{{Entity_Name_Plural_Here}}
 @using {{Namespace_Here}}.Web.Areas.{{App_Area_Name_Here}}.Startup
 @model CreateOrEdit{{Entity_Name_Here}}ViewModel
+@using Abp.Extensions
 {{Using_Tag_Helper_Here}}
 @{
     ViewBag.CurrentPageName = {{App_Area_Name_Here}}PageNames.{{Page_Names_Sub_Class_Name_Here}}.{{Entity_Name_Plural_Here}};

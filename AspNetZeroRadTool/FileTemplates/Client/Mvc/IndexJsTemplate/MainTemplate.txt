@@ -4,9 +4,37 @@
         var _${{entity_Name_Plural_Here}}Table = $('#{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Table');
         var _{{entity_Name_Plural_Here}}Service = abp.services.app.{{entity_Name_Plural_Here}};
 		{{EntityTypeFullName_Dec_Here}}
-        $('.date-picker').datetimepicker({
+       var $selectedDate = {
+            startDate: null,
+            endDate: null,
+        }
+
+        $('.date-picker').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('MM/DD/YYYY'));
+        });
+
+        $('.startDate').daterangepicker({
+            autoUpdateInput: false,
+            singleDatePicker: true,
             locale: abp.localization.currentLanguage.name,
-            format: 'L'
+            format: 'L',
+        }, (date) => {
+            $selectedDate.startDate = date;
+        }).on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val("");
+            $selectedDate.startDate = null;
+        });
+
+        $('.endDate').daterangepicker({
+            autoUpdateInput: false,
+            singleDatePicker: true,
+            locale: abp.localization.currentLanguage.name,
+            format: 'L',
+        }, (date) => {
+            $selectedDate.endDate = date;
+        }).on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val("");
+            $selectedDate.endDate = null;
         });
 
         var _permissions = {
@@ -22,17 +50,17 @@
 		{{EntityHistoryIsEnabled_Dec_Here}}
 
         var getDateFilter = function (element) {
-            if (element.data("DateTimePicker").date() == null) {
+            if ($selectedDate.startDate == null) {
                 return null;
             }
-            return element.data("DateTimePicker").date().format("YYYY-MM-DDT00:00:00Z"); 
+            return $selectedDate.startDate.format("YYYY-MM-DDT00:00:00Z"); 
         }
         
         var getMaxDateFilter = function (element) {
-            if (element.data("DateTimePicker").date() == null) {
+            if ($selectedDate.endDate == null) {
                 return null;
             }
-            return element.data("DateTimePicker").date().format("YYYY-MM-DDT23:59:59Z"); 
+            return $selectedDate.endDate.format("YYYY-MM-DDT23:59:59Z"); 
         }
 
         var dataTable = _${{entity_Name_Plural_Here}}Table.DataTable({

@@ -32,7 +32,7 @@
                     </div>
                 </div>
             <div class="row align-items-center">
-                <table id="{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Table" class="display table table-striped table-bordered table-hover dt-responsive nowrap">
+                <table id="{{Master_Detail_Child_Prefix_Here}}{{Entity_Name_Plural_Here}}Table" class="{{Table_Class_Here}}">
                     <thead>
                         <tr>
                             <th></th>

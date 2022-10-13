@@ -1,4 +1,5 @@
-﻿using Abp.IdentityServer4vNext;
+﻿using CCPDemo.Persons;
+using Abp.IdentityServer4vNext;
 using Abp.Zero.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CCPDemo.Authorization.Delegation;
@@ -17,6 +18,8 @@ namespace CCPDemo.EntityFrameworkCore
 {
     public class CCPDemoDbContext : AbpZeroDbContext<Tenant, Role, User, CCPDemoDbContext>, IAbpPersistedGrantDbContext
     {
+        public virtual DbSet<Person> Persons { get; set; }
+
         /* Define an IDbSet for each entity of the application */
 
         public virtual DbSet<Person> Persons { get; set; }
@@ -38,7 +41,7 @@ namespace CCPDemo.EntityFrameworkCore
         public virtual DbSet<SubscriptionPaymentExtensionData> SubscriptionPaymentExtensionDatas { get; set; }
 
         public virtual DbSet<UserDelegation> UserDelegations { get; set; }
-        
+
         public virtual DbSet<RecentPassword> RecentPasswords { get; set; }
 
         public CCPDemoDbContext(DbContextOptions<CCPDemoDbContext> options)

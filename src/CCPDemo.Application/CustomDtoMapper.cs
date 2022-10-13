@@ -1,3 +1,5 @@
+﻿using CCPDemo.Persons.Dtos;
+using CCPDemo.Persons;
 using Abp.Application.Editions;
 using Abp.Application.Features;
 using Abp.Auditing;
@@ -50,6 +52,10 @@ namespace CCPDemo
     {
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
+            configuration.CreateMap<CreatePersonInput, Person>();
+            configuration.CreateMap<Person, PersonListDto>();
+            configuration.CreateMap<CreateOrEditPersonDto, Person>().ReverseMap();
+            configuration.CreateMap<PersonDto, Person>().ReverseMap();
             //Inputs
             configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();
@@ -79,8 +85,6 @@ namespace CCPDemo
             configuration.CreateMap<Role, RoleListDto>();
             configuration.CreateMap<UserRole, UserListRoleDto>();
 
-            
-
             //Edition
             configuration.CreateMap<EditionEditDto, SubscribableEdition>().ReverseMap();
             configuration.CreateMap<EditionCreateDto, SubscribableEdition>();
@@ -93,7 +97,6 @@ namespace CCPDemo
             configuration.CreateMap<Edition, EditionEditDto>();
             configuration.CreateMap<Edition, SubscribableEdition>();
             configuration.CreateMap<Edition, EditionSelectDto>();
-
 
             //Payment
             configuration.CreateMap<SubscriptionPaymentDto, SubscriptionPayment>().ReverseMap();
@@ -162,7 +165,7 @@ namespace CCPDemo
             configuration.CreateMap<DynamicEntityPropertyDto, DynamicEntityProperty>();
 
             configuration.CreateMap<DynamicEntityPropertyValue, DynamicEntityPropertyValueDto>().ReverseMap();
-            
+
             //User Delegations
             configuration.CreateMap<CreateUserDelegationDto, UserDelegation>();
 

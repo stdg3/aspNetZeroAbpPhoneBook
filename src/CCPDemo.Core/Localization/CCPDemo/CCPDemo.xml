@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <localizationDictionary culture="en">
   <texts>
+    <text name="Persons">Persons</text>
+    <text name="Person">Person</text>
+    <text name="CCPDemo.Persons.Person">Person</text>
+    <text name="PersonsHeaderInfo">Persons header info</text>
+    <text name="CreateNewPerson">Create new person</text>
+    <text name="EditPerson">Edit person</text>
+    <text name="DeletePerson">Delete person</text>
+    <text name="{0}IsRequired">{0} is required.</text>
+    <text name="View">View</text>
+    <text name="Details">Details</text>
+    <text name="Pick">Pick</text>
+    <text name="True">True</text>
+    <text name="False">False</text>
+    <text name="MinValue">Min</text>
+    <text name="MaxValue">Max</text>
     <text name="HomePage">Home page</text>
     <text name="AboutUs">About us</text>
     <text name="Administration">Administration</text>
@@ -1157,9 +1172,11 @@
     <text name="AdminSurname">Admin User's Surname</text>
     <text name="UnknownWidgetId">Unknown WidgetId: {0} </text>
     <text name="AllowedUserNameCharactersInfoText">Allowed characters: {0}</text>
-	<text name="PhoneBook">Phone book</text>
+
+	  <text name="PhoneBook">Phone book</text>
 	  <text name="PhoneBookInfo">Phone Book Info</text>
 	  <text name="AllPeople">All People</text>
+
 
   </texts>
 </localizationDictionary>

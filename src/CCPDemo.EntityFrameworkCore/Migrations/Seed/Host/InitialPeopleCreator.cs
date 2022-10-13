@@ -45,4 +45,3 @@ namespace CCPDemo.Migrations.Seed.Host
         }
     }
 }
-

@@ -1,0 +1,37 @@
+﻿
+@using System.Globalization
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.Persons
+@model CreateOrEditPersonModalViewModel
+@using Abp.Extensions
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel(Model.IsEditMode ? (L("EditPerson")) : L("CreateNewPerson")))
+
+<div class="modal-body">
+    <div id="PersonInformationsTab">
+        <form name="PersonInformationsForm" role="form" novalidate class="form-validation">
+
+            @if (Model.IsEditMode)
+            {
+            <input type="hidden" name="id" value="@Model.Person.Id" />
+            }
+
+            <div class="my-3">
+                <label class="form-label" for="Person_Name">@L("Name")</label>
+                <input class="form-control" id="Person_Name" value="@Model.Person.Name" type="text" name="name" required maxlength="@CCPDemo.Persons.PersonConsts.MaxNameLength" minlength="@CCPDemo.Persons.PersonConsts.MinNameLength" />
+            </div>
+
+            <div class="my-3">
+                <label class="form-label" for="Person_Surname">@L("Surname")</label>
+                <input class="form-control" id="Person_Surname" value="@Model.Person.Surname" type="text" name="surname" required maxlength="@CCPDemo.Persons.PersonConsts.MaxSurnameLength" minlength="@CCPDemo.Persons.PersonConsts.MinSurnameLength" />
+            </div>
+
+            <div class="my-3">
+                <label class="form-label" for="Person_EmailAddress">@L("EmailAddress")</label>
+                <input class="form-control" id="Person_EmailAddress" value="@Model.Person.EmailAddress" type="text" name="emailAddress" maxlength="@CCPDemo.Persons.PersonConsts.MaxEmailAddressLength" minlength="@CCPDemo.Persons.PersonConsts.MinEmailAddressLength" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

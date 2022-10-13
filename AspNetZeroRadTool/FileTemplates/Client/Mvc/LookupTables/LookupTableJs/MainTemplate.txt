@@ -60,11 +60,10 @@
         });
 
         $(document).keypress(function (e) {
-            if (e.which === 13) {
+            if (e.which === 13 && e.target.tagName.toLocaleLowerCase() != 'textarea') {
                 get{{NP_Foreign_Entity_Name_Here}}();
             }
         });
 
     };
 })(jQuery);
-

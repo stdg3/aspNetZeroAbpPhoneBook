@@ -77,7 +77,7 @@
                                     if (resp.success && resp.result.fileToken) {
                                         _{{property_Name_Here}}Token = resp.result.fileToken;
                                     } else {
-                                        this.message.error(resp.result.message);
+                                        abp.message.error(resp.result.message);
                                     }
                                 }).always(function () {
                                     _fileUploading.pop();
