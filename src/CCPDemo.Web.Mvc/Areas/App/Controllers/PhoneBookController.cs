@@ -22,5 +22,9 @@ namespace CCPDemo.Web.Areas.App.Controllers
             var model = ObjectMapper.Map<IndexViewModel>(output);
             return View(model);
         }
+        public PartialViewResult CreatePersonModal()
+        {
+            return PartialView("_CreatePersonModal");
+        }
     }
 }
