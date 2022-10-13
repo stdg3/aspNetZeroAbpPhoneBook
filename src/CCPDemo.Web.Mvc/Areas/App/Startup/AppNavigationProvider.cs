@@ -146,7 +146,8 @@ namespace CCPDemo.Web.Areas.App.Startup
                         AppPageNames.Tenant.PhoneBook,
                         L("PhoneBook"),
                         url: "App/PhoneBook",
-                        icon: "flaticon2-list-3"
+                        icon: "flaticon2-list-3",
+                        permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenant_PhoneBook)
                     )
                 );
         }

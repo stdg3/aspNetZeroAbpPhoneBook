@@ -1,4 +1,6 @@
-﻿using Abp.AutoMapper;
+﻿using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AutoMapper;
+using CCPDemo.Authorization;
 using CCPDemo.Dto;
 using CCPDemo.InterfacePerson;
 using CCPDemo.Web.Areas.App.Models.PhoneBook;
@@ -8,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CCPDemo.Web.Areas.App.Controllers
 {
     [Area("App")]
+    [AbpMvcAuthorize(AppPermissions.Pages_Tenant_PhoneBook)]
     public class PhoneBookController : CCPDemoControllerBase
     {
         private readonly IPersonAppService _personAppService;
@@ -22,6 +25,8 @@ namespace CCPDemo.Web.Areas.App.Controllers
             var model = ObjectMapper.Map<IndexViewModel>(output);
             return View(model);
         }
+
+        [AbpMvcAuthorize(AppPermissions.Pages_Tenant_PhoneBook_CreatePerson)]
         public PartialViewResult CreatePersonModal()
         {
             return PartialView("_CreatePersonModal");

@@ -10,9 +10,12 @@ using System.Threading.Tasks;
 using CCPDemo.Persons;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
+using Abp.Authorization;
+using CCPDemo.Authorization;
 
 namespace CCPDemo.PersonService
 {
+    [AbpAuthorize(AppPermissions.Pages_Tenant_PhoneBook)]
     public class PersonAppService: CCPDemoAppServiceBase, IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
@@ -39,6 +42,7 @@ namespace CCPDemo.PersonService
             return new ListResultDto<PersonListDto>(ObjectMapper.Map<List<PersonListDto>>(persons));
         }
 
+        [AbpAuthorize(AppPermissions.Pages_Tenant_PhoneBook_CreatePerson)]
         public async Task CreatePerson(CreatePersonInput input)
         {
             var person = ObjectMapper.Map<Person>(input);

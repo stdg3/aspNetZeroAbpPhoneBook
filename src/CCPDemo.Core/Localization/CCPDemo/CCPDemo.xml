@@ -1160,6 +1160,7 @@
 	<text name="PhoneBook">Phone book</text>
 	  <text name="PhoneBookInfo">Phone Book Info</text>
 	  <text name="AllPeople">All People</text>
+	  <text name="CreateNewPerson">Create New Person</text>
 
   </texts>
 </localizationDictionary>

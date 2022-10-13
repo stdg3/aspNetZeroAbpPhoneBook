@@ -1,6 +1,7 @@
 ﻿@model CCPDemo.Web.Areas.App.Models.PhoneBook.IndexViewModel
 
 @using System.Threading.Tasks
+@using CCPDemo.Authorization
 @using CCPDemo.Web.Areas.App.Startup
 
 @{
@@ -28,7 +29,11 @@
     </div>
 
     <div class="col-xs-6 text-right">
-        <button id="CreateNewPersonButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>
+        @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_CreatePerson))
+        {
+            <button id="CreateNewPersonButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>
+        }
+        @*<button id="CreateNewPersonButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>*@
     </div>
 </div>
 
