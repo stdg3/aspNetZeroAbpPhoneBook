@@ -1,0 +1,23 @@
+﻿@using CCPDemo.People;
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("MODAL HEADER"))
+
+<div class="modal-body">
+    <form role="form" novalidate class="form-validation">
+        <div class="form-group form-md-line-input form-md-floating-label no-hint">
+            <input class="form-control" type="text" name="Name" required maxlength="@PersonConsts.MaxNameLength">
+            <label>@L("Name")</label>
+        </div>
+
+        <div class="form-group form-md-line-input form-md-floating-label no-hint">
+            <input type="text" name="Surname" class="form-control" required maxlength="@PersonConsts.MaxSurnameLength">
+            <label>@L("Surname")</label>
+        </div>
+
+        <div class="form-group form-md-line-input form-md-floating-label no-hint">
+            <input type="email" name="EmailAddress" class="form-control" maxlength="@PersonConsts.MaxEmailAddressLength">
+            <label>@L("EmailAddress")</label>
+        </div>
+    </form>
+
+@await Html.PartialAsync("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

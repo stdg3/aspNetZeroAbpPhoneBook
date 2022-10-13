@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CCPDemo
+namespace CCPDemo.People
 {
     public class PersonConsts
     {
