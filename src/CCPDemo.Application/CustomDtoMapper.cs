@@ -51,6 +51,7 @@ namespace CCPDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             //Inputs
+            configuration.CreateMap<CreatePersonInput, Person>();
             configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();
             configuration.CreateMap<SingleLineStringInputType, FeatureInputTypeDto>();
