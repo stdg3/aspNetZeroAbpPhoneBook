@@ -8,12 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using CCPDemo.People;
 using CCPDemo.Phones;
+using Abp.Domain.Entities;
 
 namespace CCPDemo.Persons
 {
     [Table("PbPersons")]
-    public class Person : FullAuditedEntity
+    public class Person : FullAuditedEntity, IMustHaveTenant
     {
+        public virtual int TenantId { get; set; }
+
         [Required]
         [MaxLength(PersonConsts.MaxNameLength)]
         public virtual string Name { get; set; }
