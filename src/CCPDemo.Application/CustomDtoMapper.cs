@@ -52,6 +52,7 @@ namespace CCPDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             //Inputs
+            configuration.CreateMap<Person, GetPersonForEditOutput>();
             configuration.CreateMap<AddPhoneInput, Phone>();
             configuration.CreateMap<Phone, PhoneInPersonListDto>();
             configuration.CreateMap<CreatePersonInput, Person>();

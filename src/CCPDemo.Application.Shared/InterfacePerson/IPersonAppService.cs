@@ -14,5 +14,7 @@ namespace CCPDemo.InterfacePerson
         Task DeletePerson(EntityDto input);
         Task DeletePhone(EntityDto<long> input);
         Task<PhoneInPersonListDto> AddPhone(AddPhoneInput input);
+        //Task GetPersonForEdit(EntityDto entityDto);
+        Task<GetPersonForEditOutput> GetPersonForEdit(IEntityDto input);
     }
 }

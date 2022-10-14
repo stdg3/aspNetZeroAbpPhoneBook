@@ -1,4 +1,5 @@
-﻿using Abp.AspNetCore.Mvc.Authorization;
+﻿using Abp.Application.Services.Dto;
+using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AutoMapper;
 using CCPDemo.Authorization;
 using CCPDemo.Dto;
@@ -41,6 +42,14 @@ namespace CCPDemo.Web.Areas.App.Controllers
             var model = new PhoneRowInPersonListViewModel(phoneInPersonList);
 
             return PartialView("_PhoneRowInPersonList", model);
+        }
+
+        public async Task<PartialViewResult> EditPersonModal(int id)
+        {
+            var output = await _personAppService.GetPersonForEdit(new EntityDto { Id = id });
+            var viewModel = ObjectMapper.Map<EditPersonModalViewModel>(output);
+
+            return PartialView("_EditPersonModal", viewModel);
         }
     }
 }

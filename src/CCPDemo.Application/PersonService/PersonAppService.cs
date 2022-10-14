@@ -78,5 +78,27 @@ namespace CCPDemo.PersonService
 
             return ObjectMapper.Map<PhoneInPersonListDto>(phone);
         }
+
+        public async Task<GetPersonForEditOutput> GetPersonForEdit(IEntityDto input)
+        {
+            var person = await _personRepository.GetAsync(input.Id);
+            return ObjectMapper.Map<GetPersonForEditOutput>(person);
+        }
+
+        public async Task EditPerson(EditPersonInput input)
+        {
+            var person = await _personRepository.GetAsync(input.Id);
+            person.Name = input.Name;
+            person.Surname = input.Surname;
+            person.EmailAddress = input.EmailAddress;
+            await _personRepository.UpdateAsync(person);
+        }
+
+
+        //public Task GetPersonForEdit(EntityDto input)
+        //{
+        //    var person = await _personRepository.GetAsync(input.Id);
+        //    return ObjectMapper.Map<GetPersonForEditOutput>(person);
+        //}
     }
 }

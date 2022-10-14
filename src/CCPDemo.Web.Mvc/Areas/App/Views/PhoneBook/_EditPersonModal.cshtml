@@ -1,0 +1,28 @@
+﻿@using CCPDemo.People
+@using CCPDemo.Web.Areas.App.Models.Common.Modals
+@using CCPDemo.Web.Areas.App.Models.PhoneBook
+@Html.Partial("~/Areas/App/Views/Common/Modals/_ModalHeader.cshtml", new ModalHeaderViewModel("Edit Person"))
+@model EditPersonModalViewModel
+
+<div class="modal-body">
+    <form role="form" novalidate class="form-validation">
+
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="form-group form-md-line-input  no-hint">
+            <input class="form-control" type="text" name="Name" value="@Model.Name" required maxlength="@PersonConsts.MaxNameLength">
+            <label>@L("Name")</label>
+        </div>
+        <div class="form-group form-md-line-input  no-hint">
+            <input type="text" name="Surname" value="@Model.Surname" class="form-control" required maxlength="@PersonConsts.MaxSurnameLength">
+            <label>@L("Surname")</label>
+        </div>
+
+        <div class="form-group form-md-line-input  no-hint">
+            <input type="email" name="EmailAddress" value="@Model.EmailAddress" class="form-control" maxlength="@PersonConsts.MaxEmailAddressLength">
+            <label>@L("EmailAddress")</label>
+        </div>
+    </form>
+</div>
+
+@Html.Partial("~/Areas/App/Views/Common/Modals/_ModalFooterWithSaveAndCancel.cshtml")

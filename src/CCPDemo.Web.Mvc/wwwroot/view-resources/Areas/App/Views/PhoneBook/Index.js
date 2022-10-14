@@ -95,3 +95,16 @@ $('#AllPeopleList').on('click', '.button-delete-phone', function (e) {
         $phoneRow.remove();
     });
 });
+
+var _editPersonModal = new app.ModalManager({
+    viewUrl: abp.appPath + 'App/PhoneBook/EditPersonModal',
+    scriptUrl: abp.appPath + 'view-resources/Areas/App/Views/PhoneBook/_EditPersonModal.js',
+    modalClass: 'EditPersonModal'
+});
+
+$('#AllPeopleList button.edit-person').click(function (e) {
+    e.preventDefault();
+    var $listItem = $(this).closest('.list-group-item');
+    var id = $listItem.data('person-id');
+    _editPersonModal.open({ id: id });
+});
