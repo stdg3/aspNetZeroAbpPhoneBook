@@ -1164,7 +1164,12 @@
 	  <text name="DeletePerson">Delete Person</text>
 	  <text name="AreYouSureToDeleteThePerson">Are You Sure To Delete The Person</text>
 	  <text name="Deleting">Deleting ...</text>
-	  <!--<text name="SearchWithThreeDot">Search With ThreeDot</text>-->
+	  <text name="PhoneType_Mobile">Mobile</text>
+	  <text name="PhoneType_Home">Home</text>
+	  <text name="PhoneType_Business">Business</text>
+	  <text name="Type">Type</text>
+
+
 
 
 

@@ -6,6 +6,7 @@ using CCPDemo.InterfacePerson;
 using CCPDemo.Web.Areas.App.Models.PhoneBook;
 using CCPDemo.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace CCPDemo.Web.Areas.App.Controllers
 {
@@ -31,6 +32,15 @@ namespace CCPDemo.Web.Areas.App.Controllers
         public PartialViewResult CreatePersonModal()
         {
             return PartialView("_CreatePersonModal");
+        }
+
+        [HttpPost]
+        public async Task<PartialViewResult> AddPhone([FromBody] AddPhoneInput input)
+        {
+            PhoneInPersonListDto phoneInPersonList = await _personAppService.AddPhone(input);
+            var model = new PhoneRowInPersonListViewModel(phoneInPersonList);
+
+            return PartialView("_PhoneRowInPersonList", model);
         }
     }
 }

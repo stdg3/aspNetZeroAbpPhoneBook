@@ -1,0 +1,10 @@
+﻿@model CCPDemo.Web.Areas.App.Models.PhoneBook.PhoneRowInPersonListViewModel
+<tr data-phone-id="@Model.Phone.Id">
+    <td>
+        <button class="btn btn-circle btn-icon-only btn-danger btn-sm default button-delete-phone">
+            <i class="la la-trash"></i>
+        </button>
+    </td>
+    <td>@Model.GetPhoneTypeAsString()</td>
+    <td>@Model.Phone.Number</td>
+</tr>

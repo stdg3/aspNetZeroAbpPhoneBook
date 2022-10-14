@@ -14,6 +14,7 @@ using Abp.Authorization;
 using CCPDemo.Authorization;
 using Abp.AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using CCPDemo.Phones;
 
 namespace CCPDemo.PersonService
 {
@@ -21,10 +22,12 @@ namespace CCPDemo.PersonService
     public class PersonAppService: CCPDemoAppServiceBase, IPersonAppService
     {
         private readonly IRepository<Person> _personRepository;
+        private readonly IRepository<Phone, long> _phoneRepository;
 
-        public PersonAppService(IRepository<Person> personRepository)
+        public PersonAppService(IRepository<Person> personRepository, IRepository<Phone, long> phoneRepository)
         {
             _personRepository = personRepository;
+            _phoneRepository = phoneRepository;
         }
 
         public ListResultDto<PersonListDto> GetPeople(GetPeopleInput input)
@@ -56,6 +59,24 @@ namespace CCPDemo.PersonService
         public async Task DeletePerson(EntityDto input)
         {
             await _personRepository.DeleteAsync(input.Id);
+        }
+
+        public async Task DeletePhone(EntityDto<long> input)
+        {
+            await _phoneRepository.DeleteAsync(input.Id);
+        }
+
+        public async Task<PhoneInPersonListDto> AddPhone(AddPhoneInput input)
+        {
+            var person = _personRepository.Get(input.PersonId);
+            await _personRepository.EnsureCollectionLoadedAsync(person, p => p.Phones);
+
+            var phone = ObjectMapper.Map<Phone>(input);
+            person.Phones.Add(phone);
+
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            return ObjectMapper.Map<PhoneInPersonListDto>(phone);
         }
     }
 }
