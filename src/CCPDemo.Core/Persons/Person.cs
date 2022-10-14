@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CCPDemo.People;
+using CCPDemo.Phones;
 
 namespace CCPDemo.Persons
 {
@@ -23,5 +24,7 @@ namespace CCPDemo.Persons
 
         [MaxLength(PersonConsts.MaxEmailAddressLength)]
         public virtual string EmailAddress { get; set; }
+
+        public virtual ICollection<Phone> Phones { get; set; }
     }
 }
