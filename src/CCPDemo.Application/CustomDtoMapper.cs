@@ -43,6 +43,7 @@ using CCPDemo.Sessions.Dto;
 using CCPDemo.WebHooks.Dto;
 using CCPDemo.Dto;
 using CCPDemo.Persons;
+using CCPDemo.Phones;
 
 namespace CCPDemo
 {
@@ -51,6 +52,7 @@ namespace CCPDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             //Inputs
+            configuration.CreateMap<Phone, PhoneInPersonListDto>();
             configuration.CreateMap<CreatePersonInput, Person>();
             configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();

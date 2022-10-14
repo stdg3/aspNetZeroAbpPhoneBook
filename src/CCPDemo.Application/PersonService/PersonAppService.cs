@@ -12,6 +12,8 @@ using Abp.Collections.Extensions;
 using Abp.Extensions;
 using Abp.Authorization;
 using CCPDemo.Authorization;
+using Abp.AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace CCPDemo.PersonService
 {
@@ -29,6 +31,7 @@ namespace CCPDemo.PersonService
         {
             var persons = _personRepository
                 .GetAll()
+                .Include(p => p.Phones)
                 .WhereIf(
                     !input.Filter.IsNullOrEmpty(),
                     p => p.Name.Contains(input.Filter) ||
