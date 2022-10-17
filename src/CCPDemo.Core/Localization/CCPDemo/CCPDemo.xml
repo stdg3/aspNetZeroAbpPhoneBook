@@ -1168,6 +1168,11 @@
 	  <text name="PhoneType_Home">Home</text>
 	  <text name="PhoneType_Business">Business</text>
 	  <text name="Type">Type</text>
+	  <text name="PhoneBookApp">Phone Book App</text>
+	  <text name="PhoneType">Phone Type</text>
+	  <!--<text name="Type">Type</text>-->
+	  <!--<text name="Type">Type</text>-->
+
 
 
 

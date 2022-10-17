@@ -144,11 +144,28 @@ namespace CCPDemo.Web.Areas.App.Startup
                 )
                 .AddItem(new MenuItemDefinition(
                         AppPageNames.Tenant.PhoneBook,
-                        L("PhoneBook"),
-                        url: "App/PhoneBook",
-                        icon: "flaticon2-list-3",
+                        L("PhoneBookApp"),
+                        url: "App/PhoneBookApp",
+                        icon: "flaticon-app",
                         permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenant_PhoneBook)
                     )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Tenant.PhoneBook,
+                        L("PhoneBook"),
+                        url: "App/PhoneBook",
+                        icon: "flaticon-user",
+                        permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenant_PhoneBook)
+                    )
+                
+                )
+                .AddItem(new MenuItemDefinition(
+                        AppPageNames.Tenant.PhoneBook,
+                        L("PhoneType"),
+                        url: "App/PhoneType",
+                        icon: "flaticon-list-1",
+                        permissionDependency: new SimplePermissionDependency(AppPermissions.Pages_Tenant_PhoneBook)
+                    )
+                )
                 );
         }
 
