@@ -13,12 +13,15 @@ using CCPDemo.MultiTenancy.Payments;
 using CCPDemo.Storage;
 using CCPDemo.Persons;
 using CCPDemo.Phones;
+using CCPDemo.PhoneTypeEntityDir;
 
 namespace CCPDemo.EntityFrameworkCore
 {
     public class CCPDemoDbContext : AbpZeroDbContext<Tenant, Role, User, CCPDemoDbContext>, IAbpPersistedGrantDbContext
     {
         /* Define an IDbSet for each entity of the application */
+
+        public virtual DbSet<PhoneType> PhoneTypes { get; set; }
 
         public virtual DbSet<Phone> Phones { get; set; }
 
