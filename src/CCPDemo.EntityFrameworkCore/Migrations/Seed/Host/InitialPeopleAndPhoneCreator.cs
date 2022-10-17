@@ -35,6 +35,9 @@ namespace CCPDemo.Migrations.Seed.Host
                                     {
                                     //new Phone {Type = PhoneType.Home, Number = "1112242"},
                                     //new Phone {Type = PhoneType.Mobile, Number = "2223342"}
+                                    new Phone{ Number = "234234", PhoneTypeId = 2 },
+                                    new Phone{ Number = "345345", PhoneTypeId = 3 }
+
                         }
                     });
             }
@@ -51,6 +54,7 @@ namespace CCPDemo.Migrations.Seed.Host
                         Phones = new List<Phone>
                                     {
                                     //new Phone {Type = PhoneType.Home, Number = "8889977"}
+                                    new Phone{ Number = "123123", PhoneTypeId = 1 }
                                     }
                     });
             }

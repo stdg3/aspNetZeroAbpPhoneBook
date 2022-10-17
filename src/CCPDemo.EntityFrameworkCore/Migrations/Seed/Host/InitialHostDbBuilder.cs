@@ -18,7 +18,7 @@ namespace CCPDemo.Migrations.Seed.Host
             new HostRoleAndUserCreator(_context).Create();
             new DefaultSettingsCreator(_context).Create();
             //new InitialPeopleCreator(_context).Create();
-            //new InitialPeopleAndPhoneCreator(_context).Create();
+            new InitialPeopleAndPhoneCreator(_context).Create();
             new InitialPhoneTypeCreator(_context).Create();
 
             _context.SaveChanges();
