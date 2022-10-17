@@ -44,6 +44,7 @@ using CCPDemo.WebHooks.Dto;
 using CCPDemo.Dto;
 using CCPDemo.Persons;
 using CCPDemo.Phones;
+using CCPDemo.PhoneTypeEntityDir;
 
 namespace CCPDemo
 {
@@ -52,6 +53,7 @@ namespace CCPDemo
         public static void CreateMappings(IMapperConfigurationExpression configuration)
         {
             //Inputs
+            configuration.CreateMap<PhoneType, PhoneTypeListDto>();
             configuration.CreateMap<Person, GetPersonForEditOutput>();
             configuration.CreateMap<AddPhoneInput, Phone>();
             configuration.CreateMap<Phone, PhoneInPersonListDto>();

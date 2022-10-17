@@ -33,8 +33,8 @@ namespace CCPDemo.Migrations.Seed.Host
                         EmailAddress = "douglas.adams@fortytwo.com",
                         Phones = new List<Phone>
                                     {
-                                    new Phone {Type = PhoneType.Home, Number = "1112242"},
-                                    new Phone {Type = PhoneType.Mobile, Number = "2223342"}
+                                    //new Phone {Type = PhoneType.Home, Number = "1112242"},
+                                    //new Phone {Type = PhoneType.Mobile, Number = "2223342"}
                         }
                     });
             }
@@ -50,7 +50,7 @@ namespace CCPDemo.Migrations.Seed.Host
                         EmailAddress = "isaac.asimov@foundation.org",
                         Phones = new List<Phone>
                                     {
-                                    new Phone {Type = PhoneType.Home, Number = "8889977"}
+                                    //new Phone {Type = PhoneType.Home, Number = "8889977"}
                                     }
                     });
             }

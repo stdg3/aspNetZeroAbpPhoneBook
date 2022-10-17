@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CCPDemo.PhoneConstDir;
-using CCPDemo.PhoneTypes;
+using CCPDemo.PhoneTypeEntityDir;
 using CCPDemo.Persons;
 
 namespace CCPDemo.Phones
@@ -20,8 +20,11 @@ namespace CCPDemo.Phones
         public virtual Person Person { get; set; }
         public virtual int PersonId { get; set; }
 
-        [Required]
-        public virtual PhoneType Type { get; set; }
+        [ForeignKey("PhoneTypeId")]
+        public virtual PhoneType PhoneType { get; set; }
+        public virtual int PhoneTypeId { get; set; }
+        //[Required]
+        //public virtual PhoneType Type { get; set; }
 
         [Required]
         [MaxLength(PhoneConsts.MaxNumberLength)]

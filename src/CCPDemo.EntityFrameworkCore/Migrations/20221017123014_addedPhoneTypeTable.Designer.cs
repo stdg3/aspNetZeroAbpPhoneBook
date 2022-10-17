@@ -4,6 +4,7 @@ using CCPDemo.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CCPDemo.Migrations
 {
     [DbContext(typeof(CCPDemoDbContext))]
-    partial class CCPDemoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221017123014_addedPhoneTypeTable")]
+    partial class addedPhoneTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2115,14 +2117,12 @@ namespace CCPDemo.Migrations
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PhoneTypeId")
-                        .HasColumnType("int");
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonId");
-
-                    b.HasIndex("PhoneTypeId");
 
                     b.ToTable("PbPhones");
                 });
@@ -2493,15 +2493,7 @@ namespace CCPDemo.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CCPDemo.PhoneTypeEntityDir.PhoneType", "PhoneType")
-                        .WithMany()
-                        .HasForeignKey("PhoneTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Person");
-
-                    b.Navigation("PhoneType");
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>

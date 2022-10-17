@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using CCPDemo.PhoneConstDir;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace CCPDemo.PhoneTypeEntityDir
     public class PhoneType : FullAuditedEntity
     {
         [Required]
+        [MaxLength(PhoneConsts.MaxNumberLength)]
         public virtual string PhoneTypeName { get; set; }
     }
 }
