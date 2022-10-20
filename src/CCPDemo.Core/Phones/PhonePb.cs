@@ -1,11 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CCPDemo.PhoneConstDir;
 using CCPDemo.PhoneTypeEntityDir;
 using CCPDemo.Persons;
@@ -13,7 +8,7 @@ using CCPDemo.Persons;
 namespace CCPDemo.Phones
 {
     [Table("PbPhones")]
-    public class Phone : CreationAuditedEntity<long>
+    public class PhonePb : CreationAuditedEntity<long>
     {
 
         [ForeignKey("PersonId")]
@@ -23,8 +18,6 @@ namespace CCPDemo.Phones
         [ForeignKey("PhoneTypeId")]
         public virtual PhoneType PhoneType { get; set; }
         public virtual int PhoneTypeId { get; set; }
-        //[Required]
-        //public virtual PhoneType Type { get; set; }
 
         [Required]
         [MaxLength(PhoneConsts.MaxNumberLength)]

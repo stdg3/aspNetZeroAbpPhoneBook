@@ -7,17 +7,18 @@
 
 @{
     ViewBag.CurrentPageName = AppPageNames.Tenant.PhoneBook;
+    var phoneTypes = ViewBag.PhoneTypes;
 }
 
 @section Styles
-{
+    {
     <environment names="Development">
         <link rel="stylesheet" href="~/view-resources/Areas/App/Views/PhoneBook/Index.css" asp-append-version="true" />
     </environment>
 }
 
-@section Scripts
-{
+    @section Scripts
+    {
     <environment names="Development">
         <script src="~/view-resources/Areas/App/Views/PhoneBook/_CreatePersonModal.js" asp-append-version="true"></script>
         <script src="~/view-resources/Areas/App/Views/PhoneBook/Index.js" asp-append-version="true"></script>
@@ -25,173 +26,195 @@
 }
 
 
-<div class="row kt-margin-b-5">
-    <div class="col-xs-6">
-        <div class="page-head">
-            <div class="page-title">
-                <h1>
-                    <span>@L("PhoneBook")</span>
-                </h1>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-xs-6 text-right">
+
+    <div id="kt_toolbar_container" class="container-fluid container-fluid d-flex flex-stack ">
+        <!--begin::Info-->
+        <div class="d-flex align-items-center flex-wrap me-1">
+            <!--begin::Page Title-->
+            <h5 class="text-dark font-weight-bold mt-2 mb-2 me-2">
+                @L("PhoneBook")
+            </h5>
+            <!--end::Page Title-->
+            <div class="subheader-separator subheader-separator-ver mt-2 mb-2 me-4 bg-gray-200"></div>
+            <span class="text-muted font-weight-bold me-4">Manage phone book.</span>
+
+        </div>
+        <!--end::Info-->
+        <!--begin::Toolbar-->
+        <div class="d-flex align-items-center">
         @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_CreatePerson))
         {
-            <button id="CreateNewPersonButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>
+            @*<button id="CreateNewPersonButton" class="btn btn-primary blue"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>*@
+
+            <div class="btn-group">
+                <button id="CreateNewPersonButton" class="btn btn-primary">
+                    <i class="fa fa-plus btn-md-icon"></i>
+                    <span class="d-none d-md-inline-block">
+                        @L("CreateNewPerson")
+                    </span>
+                </button>
+
+            </div>
         }
-        @*<button id="CreateNewPersonButton" class="btn btn-primary"><i class="fa fa-plus"></i> @L("CreateNewPerson")</button>*@
+        <!--end::Toolbar-->
     </div>
+    
 </div>
 
 
-<div class="kt-portlet">
-    <div class="kt-portlet__head">
-        <div class="kt-portlet__head-label">
-            <h3 class="kt-portlet__head-title">
-                <br />
-                @L("AllPeople") (@Model.Items.Count)
-            </h3>
-        </div>
-        <div class="kt-portlet__head-toolbar">
-            <div class="kt-portlet__head-actions">
-                <form action="@Url.Action("Index")" method="GET">
-                    <div class="input-group">
-                        <input id="FilterPeopleText" name="Filter" value="@Model.Filter" class="form-control"
-                            placeholder="@L("SearchWithThreeDot")" type="text">
-                        <span class="input-group-btn">
-                            <button id="FilterPeopleButton" class="btn default btn-success" type="submit"><i
-                                    class="la la-search-plus"></i></button>
-                        </span>
-                    </div>
-                </form>
+    <div class="kt-portlet">
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <h3 class="kt-portlet__head-title">
+                    <br />
+                    @L("AllPeople") (@Model.Items.Count)
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-actions">
+                    <form action="@Url.Action("Index")" method="GET">
+                        <div class="input-group">
+                            <input id="FilterPeopleText" name="Filter" value="@Model.Filter" class="form-control"
+                                   placeholder="@L("SearchWithThreeDot")" type="text">
+                            <span class="input-group-btn">
+                                <button id="FilterPeopleButton" class="btn default btn-success" type="submit">
+                                    <i class="la la-search-plus"></i>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    </div>
 
-<div class="portlet light">
-    <div class="portlet-body">
-        <br />
-        <h3>@L("AllPeople")</h3>
+    <div class="portlet light">
+        <div class="portlet-body">
+            <br />
+            <h3>@L("AllPeople")</h3>
 
 
-        <div id="AllPeopleList" class="list-group">
-    @foreach (var person in Model.Items)
-    {
-        <a href="javascript:;" class="list-group-item" data-person-id="@person.Id">
+            <div id="AllPeopleList" class="list-group">
+                @foreach (var person in Model.Items)
+                {
+                    <a href="javascript:;" class="list-group-item" data-person-id="@person.Id">
+                        <h4 class="list-group-item-heading">
+                            @person.Name @person.Surname
+
+                            <span class="person-buttons">
+                                <button title="@L("Edit")" class="btn btn-warning btn-circle btn-icon-only edit-person">
+                                    <i class="la la-pencil"></i>
+                                </button>
+                                @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson))
+                                {
+                                    <button title="@L("Delete")" class="btn btn-circle btn-icon-only btn-danger delete-person" href="javascript:;">
+                                        <i class="la la-trash"></i>
+                                    </button>
+                                }
+                            </span>
+                        </h4>
+                        <p class="list-group-item-text">
+                            @person.EmailAddress
+                        </p>
+                        <div class="table-scrollable table-phones">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width:10%"></th>
+                                        <th style="width:15%">@L("Type")</th>
+                                        <th style="width:75%">@L("PhoneNumber")</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var phone in person.Phones)
+                                    {
+                                        @*<p> @phone.Number; </p>
+                                <p> @person  <span>@phone.Number</span> </p>*@
+                                        @Html.Partial("_PhoneRowInPersonList", new PhoneRowInPersonListViewModel(phone))
+                                    }
+                                    <tr>
+                                        <td>
+                                            <button class="btn btn-sm btn-success button-save-phone">
+                                                <i class="la la-floppy-o"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <select name="Type">
+                                                @foreach (var phoneType in phoneTypes.Items)
+                                                {
+                                                    <option value="@phoneType.Id">@phoneType.PhoneTypeName</option>
+                                                }
+                                                @* <option value="1">@L("PhoneType_Mobile")</option>
+                                            <option value="1">@L("PhoneType_Home")</option>
+                                            <option value="2">@L("PhoneType_Business")</option>*@
+                                            </select>
+                                        </td>
+                                        <td><input type="text" name="Number" /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </a>
+                }
+            </div>
+
+            @*<div id="AllPeopleList" class="list-group">
+            @foreach (var person in Model.Items)
+            {
+            <a href="javascript:;" class="list-group-item" data-person-id="@person.Id">
             <h4 class="list-group-item-heading">
-                @person.Name @person.Surname
-
-                <span class="person-buttons">
-                            <button title="@L("Edit")" class="btn btn-warning btn-circle btn-icon-only edit-person">
-                        <i class="la la-pencil"></i>
-                    </button>
-                    @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson))
-                    {
-                        <button title="@L("Delete")" class="btn btn-circle btn-icon-only btn-danger delete-person" href="javascript:;">
-                        <i class="la la-trash"></i>
-                    </button>
-                    }
-                </span>
+            @person.Name @person.Surname
+            @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson))
+            {
+            <button title="@L("Delete")" class="btn btn-circle btn-icon-only btn-danger delete-person" href="javascript:;">
+            <i class="la la-trash"></i>
+            </button>
+            }
             </h4>
             <p class="list-group-item-text">
-                @person.EmailAddress
+            @person.EmailAddress
             </p>
-            <div class="table-scrollable table-phones">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th style="width:10%"></th>
-                            <th style="width:15%">@L("Type")</th>
-                            <th style="width:75%">@L("PhoneNumber")</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var phone in person.Phones)
-                        {
-                            @Html.Partial("_PhoneRowInPersonList", new PhoneRowInPersonListViewModel(phone))
-                        }
-                        <tr>
-                            <td>
-                                <button class="btn btn-sm btn-success button-save-phone">
-                                    <i class="la la-floppy-o"></i>
-                                </button>
-                            </td>
-                            <td>
-                                <select name="Type">
-                                    <option value="0">@L("PhoneType_Mobile")</option>
-                                    <option value="1">@L("PhoneType_Home")</option>
-                                    <option value="2">@L("PhoneType_Business")</option>
-                                </select>
-                            </td>
-                            <td><input type="text" name="Number" /></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </a>
-    }
-</div>
-
-        @*<div id="AllPeopleList" class="list-group">
-            @foreach (var person in Model.Items)
-            {
-                <a href="javascript:;" class="list-group-item" data-person-id="@person.Id">
-                    <h4 class="list-group-item-heading">
-                        @person.Name @person.Surname
-                @if (IsGranted(AppPermissions.Pages_Tenant_PhoneBook_DeletePerson))
-                {
-                    <button title="@L("Delete")" class="btn btn-circle btn-icon-only btn-danger delete-person" href="javascript:;">
-                        <i class="la la-trash"></i>
-                    </button>
-                }
-                    </h4>
-                    <p class="list-group-item-text">
-                        @person.EmailAddress
-                    </p>
-                </a>
+            </a>
             }
-        </div>*@
+            </div>*@
 
+        </div>
     </div>
-</div>
 
 
 
 
 
-
-@*<div class="content d-flex flex-column flex-column-fluid">
+    @*<div class="content d-flex flex-column flex-column-fluid">
     <div class="subheader py-2 py-lg-4 subheader-solid toolbar">
-        <div class="container-fluid container-fluid d-flex flex-stack ">
-            <div class="d-flex align-items-center flex-wrap me-1">
-                <h3 class="text-dark font-weight-bold mt-2 mb-2 me-2">
-                    <span>@L("PhoneBook")</span>
-                </h3>
-                <span class="subheader-separator subheader-separator-ver mt-2 mb-2 me-4 bg-gray-200"></span>
-                <span class="text-muted font-weight-bold me-4">
-                    @L("PhoneBookInfo")
-                </span>
-            </div>
-        </div>
+    <div class="container-fluid container-fluid d-flex flex-stack ">
+    <div class="d-flex align-items-center flex-wrap me-1">
+    <h3 class="text-dark font-weight-bold mt-2 mb-2 me-2">
+    <span>@L("PhoneBook")</span>
+    </h3>
+    <span class="subheader-separator subheader-separator-ver mt-2 mb-2 me-4 bg-gray-200"></span>
+    <span class="text-muted font-weight-bold me-4">
+    @L("PhoneBookInfo")
+    </span>
     </div>
-     <div class="container-fluid">
-        <h5 class="kt-subheader__title">@L("AllPeople")</h5>
+    </div>
+    </div>
+    <div class="container-fluid">
+    <h5 class="kt-subheader__title">@L("AllPeople")</h5>
 
-        <div class="list-group">
-            @foreach (var person in Model.Items)
-            {
-                <a href="javascript:;" style="color: black" class="list-group-item">
-                    <h5 class="list-group-item-heading" style="font-weight: lighter">
-                        @person.Name @person.Surname
-                    </h5>
-                    <p class="list-group-item-text">
-                        @person.EmailAddress
-                    </p>
-                </a>
-            }
-        </div>
+    <div class="list-group">
+    @foreach (var person in Model.Items)
+    {
+    <a href="javascript:;" style="color: black" class="list-group-item">
+    <h5 class="list-group-item-heading" style="font-weight: lighter">
+    @person.Name @person.Surname
+    </h5>
+    <p class="list-group-item-text">
+    @person.EmailAddress
+    </p>
+    </a>
+    }
     </div>
-</div>*@
+    </div>
+    </div>*@

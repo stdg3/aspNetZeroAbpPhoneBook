@@ -13,7 +13,7 @@ namespace CCPDemo.Dto
         public int PersonId { get; set; }
 
         [Required]
-        public PhoneType Type { get; set; }
+        public int PhoneTypeId { get; set; }
 
         [Required]
         [MaxLength(PhoneConsts.MaxNumberLength)]

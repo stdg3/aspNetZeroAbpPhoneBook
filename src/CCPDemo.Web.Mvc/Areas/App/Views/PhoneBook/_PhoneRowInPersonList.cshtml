@@ -5,6 +5,17 @@
             <i class="la la-trash"></i>
         </button>
     </td>
-    <td>@Model.GetPhoneTypeAsString()</td>
+    <td>@Model.Phone.PhoneType.PhoneTypeName</td>
+    
+
+
+    @*<p>@Model.Phone.PhoneType.PhoneTypeName</p>*@
+   @* @foreach(var type in Model.Phone){
+        if(type.PhoneTypeId == Model.Phone.PhoneTypeId){
+            <td>@type.PhoneTypeName</td>
+        }
+    }*@
+    @*<td>@Model.Phone.PhoneTypeList</td>*@
+
     <td>@Model.Phone.Number</td>
 </tr>

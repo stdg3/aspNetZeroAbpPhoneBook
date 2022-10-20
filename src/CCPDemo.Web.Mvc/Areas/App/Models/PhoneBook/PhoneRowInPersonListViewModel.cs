@@ -14,7 +14,7 @@ namespace CCPDemo.Web.Areas.App.Models.PhoneBook
 
         public string GetPhoneTypeAsString()
         {
-            return LocalizationHelper.GetString(CCPDemoConsts.LocalizationSourceName, "PhoneType_" + Phone.Type);
+            return LocalizationHelper.GetString(CCPDemoConsts.LocalizationSourceName, "PhoneType_" + Phone.Number);
 
             //C:\Users\avelicoglo\Desktop\internProjects\asp6Denemeler\CCPDemo\src\CCPDemo.Core\Localization\CCPDemo\CCPDemo.xml
         }

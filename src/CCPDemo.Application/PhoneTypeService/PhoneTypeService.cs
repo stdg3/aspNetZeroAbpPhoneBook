@@ -2,16 +2,12 @@
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
-using Abp.ObjectMapping;
-using Abp.Linq.Expressions;
 using CCPDemo.Dto;
-using CCPDemo.PhoneTypeEntityDir;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CCPDemo.InterfacePhoneType;
+using Microsoft.EntityFrameworkCore;
+using PhoneType = CCPDemo.PhoneTypeEntityDir.PhoneType;
 
 namespace CCPDemo.PhoneTypeService
 {
@@ -26,6 +22,7 @@ namespace CCPDemo.PhoneTypeService
 
         public ListResultDto<PhoneTypeListDto> GetPhoneType(GetPhoneTypeInput input)
         {
+            
             var phoneType = _repository
                 .GetAll()
                 .WhereIf(
@@ -33,6 +30,7 @@ namespace CCPDemo.PhoneTypeService
                 p => p.PhoneTypeName.Contains(input.PhoneTypeFilter))
                 .OrderBy(p => p.PhoneTypeName)
                 .ToList();
+            //return null;
             return new ListResultDto<PhoneTypeListDto>(ObjectMapper.Map<List<PhoneTypeListDto>>(phoneType));
            
         }

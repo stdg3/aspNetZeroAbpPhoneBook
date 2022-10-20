@@ -55,8 +55,8 @@ namespace CCPDemo
             //Inputs
             configuration.CreateMap<PhoneType, PhoneTypeListDto>();
             configuration.CreateMap<Person, GetPersonForEditOutput>();
-            configuration.CreateMap<AddPhoneInput, Phone>();
-            configuration.CreateMap<Phone, PhoneInPersonListDto>();
+            configuration.CreateMap<AddPhoneInput, PhonePb>();
+            configuration.CreateMap<PhonePb, PhoneInPersonListDto>();
             configuration.CreateMap<CreatePersonInput, Person>();
             configuration.CreateMap<Person, PersonListDto>();
             configuration.CreateMap<CheckboxInputType, FeatureInputTypeDto>();

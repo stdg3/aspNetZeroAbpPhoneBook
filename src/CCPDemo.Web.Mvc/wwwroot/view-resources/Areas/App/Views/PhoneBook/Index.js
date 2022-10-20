@@ -73,7 +73,7 @@ $('#AllPeopleList .button-save-phone').click(function (e) {
         dataType: 'html',
         data: JSON.stringify({
             personId: $phoneEditorRow.closest('.list-group-item').attr('data-person-id'),
-            Type: $phoneEditorRow.find('select[name=Type]').val(),
+            phoneTypeId: $phoneEditorRow.find(':selected').val(),
             Number: $phoneEditorRow.find('input[name=Number]').val()
         })
     }).done(function (result) {

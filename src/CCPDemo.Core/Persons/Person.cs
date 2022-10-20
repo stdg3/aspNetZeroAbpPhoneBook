@@ -1,11 +1,7 @@
 ﻿using Abp.Domain.Entities.Auditing;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CCPDemo.People;
 using CCPDemo.Phones;
 using Abp.Domain.Entities;
@@ -28,6 +24,6 @@ namespace CCPDemo.Persons
         [MaxLength(PersonConsts.MaxEmailAddressLength)]
         public virtual string EmailAddress { get; set; }
 
-        public virtual ICollection<Phone> Phones { get; set; }
+        public virtual ICollection<PhonePb> Phones { get; set; }
     }
 }

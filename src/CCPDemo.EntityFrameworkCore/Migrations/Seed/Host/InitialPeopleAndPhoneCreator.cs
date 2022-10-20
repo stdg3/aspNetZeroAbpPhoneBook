@@ -31,12 +31,12 @@ namespace CCPDemo.Migrations.Seed.Host
                         Name = "Douglas",
                         Surname = "Adams",
                         EmailAddress = "douglas.adams@fortytwo.com",
-                        Phones = new List<Phone>
+                        Phones = new List<PhonePb>
                                     {
                                     //new Phone {Type = PhoneType.Home, Number = "1112242"},
                                     //new Phone {Type = PhoneType.Mobile, Number = "2223342"}
-                                    new Phone{ Number = "234234", PhoneTypeId = 2 },
-                                    new Phone{ Number = "345345", PhoneTypeId = 3 }
+                                    new PhonePb{ Number = "234234", PhoneTypeId = 2 },
+                                    new PhonePb{ Number = "345345", PhoneTypeId = 3 }
 
                         }
                     });
@@ -51,10 +51,10 @@ namespace CCPDemo.Migrations.Seed.Host
                         Name = "Isaac",
                         Surname = "Asimov",
                         EmailAddress = "isaac.asimov@foundation.org",
-                        Phones = new List<Phone>
+                        Phones = new List<PhonePb>
                                     {
                                     //new Phone {Type = PhoneType.Home, Number = "8889977"}
-                                    new Phone{ Number = "123123", PhoneTypeId = 1 }
+                                    new PhonePb{ Number = "123123", PhoneTypeId = 1 }
                                     }
                     });
             }

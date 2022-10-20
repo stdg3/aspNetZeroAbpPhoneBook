@@ -4,6 +4,7 @@ using Abp.AutoMapper;
 using CCPDemo.Authorization;
 using CCPDemo.Dto;
 using CCPDemo.InterfacePerson;
+using CCPDemo.InterfacePhoneType;
 using CCPDemo.Web.Areas.App.Models.PhoneBook;
 using CCPDemo.Web.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -16,16 +17,23 @@ namespace CCPDemo.Web.Areas.App.Controllers
     public class PhoneBookController : CCPDemoControllerBase
     {
         private readonly IPersonAppService _personAppService;
+        private readonly IPhoneTypeService _phoneTypeAppService;
 
-        public PhoneBookController(IPersonAppService personAppService)
+        public PhoneBookController(IPersonAppService personAppService, IPhoneTypeService phoneTypeAppService)
         {
             _personAppService = personAppService;
+            _phoneTypeAppService = phoneTypeAppService;
+
         }
         public ActionResult Index(GetPeopleInput input)
         {
             var output = _personAppService.GetPeople(input);
             var model = ObjectMapper.Map<IndexViewModel>(output);
             model.Filter = input.Filter;
+
+            var pp = _phoneTypeAppService.GetPhoneType(new GetPhoneTypeInput());
+
+            ViewBag.PhoneTypes = pp;
             return View(model);
         }
 

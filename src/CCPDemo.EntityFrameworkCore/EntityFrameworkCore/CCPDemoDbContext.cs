@@ -23,7 +23,7 @@ namespace CCPDemo.EntityFrameworkCore
 
         public virtual DbSet<PhoneType> PhoneTypes { get; set; }
 
-        public virtual DbSet<Phone> Phones { get; set; }
+        public virtual DbSet<PhonePb> Phones { get; set; }
 
         public virtual DbSet<Person> Persons { get; set; }
 
